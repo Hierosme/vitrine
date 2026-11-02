@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie le référencement des pages : title et description en front-matter, longueurs, unicité"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - site mkdocs.yml <<'PY'
+import pathlib, re, sys
+
+root, cfg = pathlib.Path(sys.argv[1]), open(sys.argv[2], encoding="utf-8").read()
+site_name = re.search(r"^site_name:\s*(.+?)\s*$", cfg, re.M).group(1)
+SUFFIX = len(" - " + site_name)
+TITLE_MAX, DESC_MIN, DESC_MAX = 60, 70, 160          # longueurs affichées par les moteurs de recherche
+PLACEHOLDER = "Résumé de l'article"                   # texte par défaut de `mise run blog:new`
+
+def field(fm, key):
+    m = re.search(rf'^{key}:\s*(.+?)\s*$', fm, re.M)
+    return m.group(1).strip().strip('"').strip("'") if m else None
+
+bad, seen = [], {}
+for f in sorted(root.rglob("*.md")):
+    text = f.read_text(encoding="utf-8")
+    m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    fm = m.group(1) if m else ""
+    if re.search(r"^draft:\s*true", fm, re.M):
+        continue                                       # brouillon : non publié
+    is_post = "posts" in f.parts
+    title, desc = field(fm, "title"), field(fm, "description")
+    if not is_post and not title:
+        bad.append(f"{f} : « title » absent du front-matter (balise <title>)")
+    if title and len(title) + SUFFIX > TITLE_MAX:
+        bad.append(f"{f} : title trop long ({len(title) + SUFFIX} car. avec « - {site_name} », max {TITLE_MAX})")
+    if not desc:
+        bad.append(f"{f} : « description » absente du front-matter (meta description)")
+        continue
+    if PLACEHOLDER in desc:
+        bad.append(f"{f} : description par défaut à remplacer")
+    if not DESC_MIN <= len(desc) <= DESC_MAX:
+        bad.append(f"{f} : description de {len(desc)} car. (attendu {DESC_MIN}–{DESC_MAX})")
+    if desc in seen:
+        bad.append(f"{f} : description identique à {seen[desc]}")
+    seen.setdefault(desc, f)
+
+for b in bad:
+    print(f"  ✘ {b}")
+if not bad:
+    print(f"  ✔ OK ({len(seen)} pages publiées)")
+sys.exit(1 if bad else 0)
+PY

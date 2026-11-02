@@ -1,0 +1,9 @@
+# Outillage du projet — `mise trust && mise install`, puis `mise tasks` pour la liste des tâches.
+# Les tâches sont des scripts bash exécutables dans .mise/tasks/ (sous-dossier = namespace : site/serve → site:serve).
+[tools]
+python = "3.13"
+uv = "latest"
+
+[env]
+# Venv projet créé et activé automatiquement par mise (via uv)
+_.python.venv = { path = ".venv", create = true }

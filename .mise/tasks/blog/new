@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#MISE description="Crée un brouillon d'article de blog daté"
+#USAGE arg "<title>" help="Titre de l'article (entre guillemets)"
+#USAGE flag "-c --category <category>" help="Catégorie (doit figurer dans categories_allowed de mkdocs.yml)"
+#USAGE flag "--publish" help="Crée l'article publié directement (sans draft: true)"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+title="${usage_title:?titre requis}"
+category="${usage_category:-}"
+date="$(date +%Y-%m-%d)"
+
+# Slug : minuscules, sans accents, kebab-case
+slug="$(python3 -c '
+import re, sys, unicodedata
+s = unicodedata.normalize("NFKD", sys.argv[1]).encode("ascii", "ignore").decode()
+print(re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-"))
+' "$title")"
+
+# Catégories autorisées, lues dans mkdocs.yml
+allowed="$(awk '/categories_allowed:/{f=1;next} f&&/^ *- /{sub(/^ *- */,"");print;next} f{exit}' mkdocs.yml)"
+if [[ -n "$category" ]] && ! grep -qxF "$category" <<<"$allowed"; then
+  echo "✘ Catégorie inconnue : '$category'" >&2
+  echo "  Autorisées : $(paste -sd, - <<<"$allowed" | sed 's/,/, /g')" >&2
+  exit 1
+fi
+
+file="site/blog/posts/${date}-${slug}.md"
+[[ -e "$file" ]] && { echo "✘ Existe déjà : $file" >&2; exit 1; }
+
+{
+  echo "---"
+  echo "date: ${date}"
+  echo "authors:"
+  echo "  - jerome"
+  if [[ -n "$category" ]]; then echo "categories:"; echo "  - ${category}"; fi
+  echo "slug: ${slug}"
+  echo "description: \"Résumé de l'article pour les moteurs de recherche (70 à 160 caractères).\""
+  [[ "${usage_publish:-false}" == "true" ]] || echo "draft: true"
+  echo "---"
+  echo
+  echo "# ${title}"
+  echo
+  echo "Accroche de l'article (affichée dans la liste du blog)."
+  echo
+  echo "<!-- more -->"
+  echo
+  echo "Corps de l'article…"
+} > "$file"
+
+echo "✔ Créé : $file"

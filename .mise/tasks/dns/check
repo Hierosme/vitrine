@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie la config DNS / HTTPS du domaine pour GitHub Pages"
+#USAGE arg "[domain]" help="Domaine à vérifier (défaut : site_url de mkdocs.yml)"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+command -v dig >/dev/null || { echo "✘ dig requis" >&2; exit 1; }
+
+domain="${usage_domain:-$(sed -nE 's#^site_url: *https?://([^/ ]+).*#\1#p' mkdocs.yml)}"
+expected_a="185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153"
+fail=0
+q() { dig +short +time=3 +tries=2 "$@" 2>/dev/null | grep -v '^;;' || true; }
+
+echo "Domaine : $domain"
+dig +short +time=3 +tries=1 NS "$domain" >/dev/null 2>&1 || { echo "✘ Aucun serveur DNS joignable" >&2; exit 2; }
+
+a="$(q A "$domain" | sort | xargs)"
+echo "• A     $domain → ${a:-(aucun)}"
+[[ "$a" == "$expected_a" ]] && echo "  ✔ IPs GitHub Pages" || { echo "  ✘ attendu : $expected_a"; fail=1; }
+
+aaaa="$(q AAAA "$domain" | sort | xargs)"
+echo "• AAAA  $domain → ${aaaa:-(aucun)}"
+[[ "$aaaa" == *2606:50c0:800* ]] && echo "  ✔ IPv6 GitHub Pages" || echo "  ⚠ IPv6 absente ou inattendue"
+
+www="$(q CNAME "www.$domain" | xargs)"
+echo "• CNAME www.$domain → ${www:-(aucun)}"
+[[ "$www" == *.github.io. ]] && echo "  ✔ OK" || { echo "  ✘ attendu : <user>.github.io."; fail=1; }
+
+caa="$(q CAA "$domain" | xargs)"
+if [[ -n "$caa" && "$caa" != *letsencrypt.org* ]]; then
+  echo "• CAA   ✘ présent sans letsencrypt.org : $caa"; fail=1
+fi
+
+if command -v curl >/dev/null; then
+  code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "https://$domain/" || true)"
+  echo "• HTTPS https://$domain/ → ${code:-erreur}"
+  [[ "$code" == 200 ]] && echo "  ✔ OK" || { echo "  ✘ certificat pas encore émis ou site non déployé"; fail=1; }
+fi
+
+exit "$fail"

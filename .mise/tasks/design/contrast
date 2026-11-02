@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie les contrastes WCAG AA des thèmes clair et sombre (texte 4.5:1, accents et UI 3:1)"
+#USAGE flag "-v --verbose" help="Affiche toutes les paires, pas seulement les échecs"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+VERBOSE="${usage_verbose:-false}" python3 - site/stylesheets/extra.css <<'PY'
+import os, re, sys
+
+css = open(sys.argv[1], encoding="utf-8").read()
+verbose = os.environ.get("VERBOSE") == "true"
+
+def block(selector):
+    """Contenu de tous les blocs dont le sélecteur est exactement `selector`."""
+    out = ""
+    for m in re.finditer(re.escape(selector) + r"\s*\{(.*?)\}", css, re.S):
+        out += m.group(1)
+    return out
+
+def decls(text):
+    return dict(re.findall(r"(--vt-[\w-]+)\s*:\s*([^;]+);", text))
+
+root   = decls(block(":root"))
+common = decls(block("[data-md-color-scheme]"))
+themes = {
+    "clair":  {**root, **common, **decls(block('[data-md-color-scheme="default"]'))},
+    "sombre": {**root, **common, **decls(block('[data-md-color-scheme="slate"]'))},
+}
+
+def resolve(tokens, name, depth=0):
+    v = tokens.get(name)
+    if v is None or depth > 10:
+        return None
+    v = v.strip()
+    m = re.fullmatch(r"var\((--vt-[\w-]+)\)", v)
+    if m:
+        return resolve(tokens, m.group(1), depth + 1)
+    return v if re.fullmatch(r"#[0-9a-fA-F]{6}", v) else None
+
+def lum(h):
+    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+def ratio(a, b):
+    la, lb = sorted((lum(a), lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+TEXT, LARGE = 4.5, 3.0   # WCAG 2.2 SC 1.4.3 (texte) / 1.4.11 & gros texte
+pairs = [
+    ("color-text", "color-bg", TEXT), ("color-text", "color-surface", TEXT),
+    ("color-text-muted", "color-bg", TEXT), ("color-text-muted", "color-surface", TEXT),
+    ("color-heading", "color-bg", TEXT),
+    ("color-link", "color-bg", TEXT), ("color-link", "color-surface", TEXT),
+    ("color-link-hover", "color-bg", TEXT),
+    ("color-on-accent", "color-accent", TEXT), ("color-on-accent", "color-accent-hover", TEXT),
+    ("color-on-brand", "color-brand", TEXT), ("color-on-brand", "color-footer", TEXT),
+    ("color-on-brand", "color-footer-deep", TEXT),
+    ("color-focus", "color-bg", LARGE),
+    ("hero-text", "hero-from", TEXT), ("hero-text", "hero-via", TEXT), ("hero-text", "hero-to", LARGE),
+    ("hero-on-cta", "hero-cta", TEXT), ("hero-on-cta", "hero-cta-hover", TEXT),
+] + [(f"accent-{i}", bg, LARGE) for i in range(1, 7) for bg in ("color-bg", "color-surface")
+] + [(f"code-{k}", "code-bg", TEXT) for k in
+     ("fg", "keyword", "function", "constant", "string", "number", "special", "comment", "generic", "punctuation")]
+
+fail = 0
+for theme, tokens in themes.items():
+    print(f"• Thème {theme}")
+    bad = 0
+    for fg, bg, minimum in pairs:
+        a, b = resolve(tokens, f"--vt-{fg}"), resolve(tokens, f"--vt-{bg}")
+        if not a or not b:
+            print(f"  ✘ {fg} / {bg} : token introuvable ou non résolu"); bad += 1; continue
+        r = ratio(a, b)
+        ok = r >= minimum
+        if not ok or verbose:
+            print(f"  {'✔' if ok else '✘'} {fg:<20} sur {bg:<18} {r:5.2f}:1 (min {minimum})")
+        bad += not ok
+    if not bad:
+        print(f"  ✔ OK ({len(pairs)} paires)")
+    fail += bad
+sys.exit(1 if fail else 0)
+PY

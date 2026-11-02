@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#MISE description="Liste les articles du blog (date, statut, catégories, titre)"
+#MISE depends=["install"]
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - site/blog/posts <<'PY'
+import pathlib, re, sys
+rows = []
+for f in sorted(pathlib.Path(sys.argv[1]).glob("*.md"), reverse=True):
+    text = f.read_text(encoding="utf-8")
+    m = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    fm = m.group(1) if m else ""
+    date = (re.search(r"^date:\s*(\S+)", fm, re.M) or [None, "?"])[1]
+    status = "brouillon" if re.search(r"^draft:\s*true", fm, re.M) else "publié"
+    cats = re.search(r"^categories:\n((?:\s+-.*\n?)+)", fm, re.M)
+    cats = ", ".join(c.strip("- ").strip() for c in cats.group(1).splitlines()) if cats else "-"
+    title = (re.search(r"^# (.+)$", text, re.M) or [None, f.stem])[1]
+    rows.append((date, status, cats, title))
+if not rows:
+    sys.exit(print("Aucun article."))
+head = ("DATE", "STATUT", "CATÉGORIES", "TITRE")
+w = [max(len(r[i]) for r in rows + [head]) for i in range(3)]
+for r in [head] + rows:
+    print("  ".join(c.ljust(w[i]) for i, c in enumerate(r[:3])) + "  " + r[3])
+PY

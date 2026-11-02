@@ -1,0 +1,64 @@
+{#-
+  Surcharge Material : métadonnées SEO uniquement (aucune modification de mise en page).
+  - Open Graph / Twitter Card : aperçus de partage (LinkedIn, Slack, X…)
+  - JSON-LD schema.org Person : page d'accueil seulement, alimenté par config.extra.seo
+  Règles : docs/skills/site-navigation/SKILL.md § Référencement.
+-#}
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {%- if page.meta and page.meta.title -%}
+    {%- set seo_title = page.meta.title | striptags ~ " - " ~ config.site_name -%}
+  {%- elif page.title and not page.is_homepage -%}
+    {%- set seo_title = page.title | striptags ~ " - " ~ config.site_name -%}
+  {%- else -%}
+    {%- set seo_title = config.site_name -%}
+  {%- endif -%}
+  {%- set seo_description = (page.meta.description if page.meta and page.meta.description else config.site_description) -%}
+  {%- set seo = config.extra.seo -%}
+  {%- set seo_image = config.site_url ~ seo.image -%}
+  <meta property="og:type" content="{{ 'article' if page.meta and page.meta.date else 'website' }}">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="{{ seo_title }}">
+  <meta property="og:description" content="{{ seo_description }}">
+  {%- if page.canonical_url %}
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  {%- endif %}
+  <meta property="og:image" content="{{ seo_image }}">
+  <meta property="og:image:alt" content="Portrait de {{ config.site_author }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ seo_title }}">
+  <meta name="twitter:description" content="{{ seo_description }}">
+  <meta name="twitter:image" content="{{ seo_image }}">
+  <link rel="apple-touch-icon" href="{{ 'assets/images/apple-touch-icon.png' | url }}">
+
+  {%- if page.is_homepage %}
+    {%- set same_as = [] -%}
+    {%- for s in config.extra.social if s.link.startswith("http") -%}
+      {%- set _ = same_as.append(s.link) -%}
+    {%- endfor -%}
+    {%- set person = {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": config.site_author,
+      "jobTitle": seo.job_title,
+      "description": config.site_description,
+      "url": config.site_url,
+      "image": seo_image,
+      "knowsAbout": seo.knows_about,
+      "knowsLanguage": seo.languages,
+      "homeLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": seo.locality,
+          "addressRegion": seo.region,
+          "addressCountry": seo.country
+        }
+      },
+      "sameAs": same_as
+    } %}
+  <script type="application/ld+json">{{ person | tojson }}</script>
+  {%- endif %}
+{% endblock %}

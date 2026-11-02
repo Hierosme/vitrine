@@ -1,0 +1,485 @@
+/* ==========================================================================
+   Design system de la vitrine — SOURCE DE VÉRITÉ du look & feel
+   Règles   : docs/skills/site-look-and-feel/SKILL.md
+   Pourquoi : docs/explanation/design-system.md
+   Aucune couleur / rayon / ombre en dur hors de la section TOKENS.
+   ========================================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+/* Seule section autorisée à contenir des valeurs de couleur littérales.          */
+:root {
+  /* 1.a Palette Nord officielle — https://www.nordtheme.com/docs/colors-and-palettes */
+  /* Polar Night : fonds sombres, texte du thème clair */
+  --vt-nord0:  #2e3440;
+  --vt-nord1:  #3b4252;
+  --vt-nord2:  #434c5e;
+  --vt-nord3:  #4c566a;
+  /* Snow Storm : fonds clairs, texte du thème sombre */
+  --vt-nord4:  #d8dee9;
+  --vt-nord5:  #e5e9f0;
+  --vt-nord6:  #eceff4;
+  /* Frost : couleurs d'accent (teal → bleu) */
+  --vt-nord7:  #8fbcbb;
+  --vt-nord8:  #88c0d0;
+  --vt-nord9:  #81a1c1;
+  --vt-nord10: #5e81ac;
+  /* Aurora : couleurs sémantiques (erreur, alerte, succès…) */
+  --vt-nord11: #bf616a;
+  --vt-nord12: #d08770;
+  --vt-nord13: #ebcb8b;
+  --vt-nord14: #a3be8c;
+  --vt-nord15: #b48ead;
+
+  /* 1.b Dérivés accessibles (WCAG AA) — même teinte, luminosité ajustée.
+         Les couleurs Nord officielles n'atteignent pas 4.5:1 sur Snow Storm ;
+         facteur = multiplication RVB appliquée à la couleur d'origine. */
+  --vt-nord10-aa:       #4b678a; /* nord10 × 0.80 — liens, CTA (clair) : 5.0:1 sur nord6 */
+  --vt-nord10-aa-hover: #425a78; /* nord10 × 0.70 — survol CTA (clair) */
+  --vt-nord7-aa:        #4f6767; /* nord7  × 0.55 — code : fonctions (clair) */
+  --vt-nord11-aa:       #8f4950; /* nord11 × 0.75 — code : erreurs (clair) */
+  --vt-nord13-aa:       #766646; /* nord13 × 0.50 — code : spécial (clair) */
+  --vt-nord14-aa:       #5a694d; /* nord14 × 0.55 — code : chaînes (clair) */
+  --vt-nord15-aa:       #755c70; /* nord15 × 0.65 — code : nombres (clair) */
+  --vt-nord0-deep:      #2b303b; /* nord0  × 0.93 — fond de code (sombre) */
+  --vt-nord3-bright:    #9099ab; /* nord3 éclairci — commentaires de code (sombre) */
+  --vt-nord11-bright:   #d08b92; /* nord11 éclairci — erreurs de code (sombre) */
+
+  /* Dérivés « UI » : ≥ 3:1 sur nord5/nord6 (WCAG 1.4.11), pour icônes, bordures et repères
+     du thème clair. Moins sombres que les -aa : réservés aux éléments non textuels. */
+  --vt-nord8-ui:  #5f8692; /* nord8  × 0.70 */
+  --vt-nord12-ui: #af715e; /* nord12 × 0.84 */
+  --vt-nord13-ui: #927e56; /* nord13 × 0.62 */
+  --vt-nord14-ui: #748763; /* nord14 × 0.71 */
+  --vt-nord15-ui: #977791; /* nord15 × 0.84 */
+
+  /* 1.c Forme */
+  --vt-radius:    0.6rem;
+  --vt-radius-lg: 1rem;
+
+  /* 1.d Espacements (échelle 4px) */
+  --vt-space-1: 0.25rem;
+  --vt-space-2: 0.5rem;
+  --vt-space-3: 1rem;
+  --vt-space-4: 1.5rem;
+  --vt-space-5: 2.5rem;
+  --vt-space-6: 4rem;
+
+  /* 1.e Portrait */
+  --vt-portrait-size:        13rem;
+  --vt-portrait-size-mobile: 8rem;
+
+  /* 1.f Lisibilité : longueur de ligne max des textes d'accroche (~65 caractères) */
+  --vt-measure: 38rem;
+}
+
+/* ---------- 2. THÈMES (tokens sémantiques) ---------- */
+/* Chaque thème associe un rôle (fond, texte, lien…) à une couleur de la palette.
+   Les composants n'utilisent QUE ces rôles, jamais --vt-nordX directement.
+   Contrastes vérifiés par `mise run design:contrast`.                            */
+
+/* Thème clair — « Snow Storm » : fonds Snow Storm, texte Polar Night, accent Frost */
+[data-md-color-scheme="default"] {
+  --vt-color-bg:           var(--vt-nord6);
+  --vt-color-surface:      var(--vt-nord5);
+  --vt-color-border:       var(--vt-nord4);
+  --vt-color-text:         var(--vt-nord0);
+  --vt-color-text-muted:   var(--vt-nord3);
+  --vt-color-heading:      var(--vt-nord0);
+  --vt-color-brand:        var(--vt-nord0);   /* en-tête */
+  --vt-color-brand-2:      var(--vt-nord1);
+  --vt-color-on-brand:     var(--vt-nord6);
+  --vt-color-link:         var(--vt-nord10-aa);
+  --vt-color-link-hover:   var(--vt-nord10-aa-hover);
+  --vt-color-accent:       var(--vt-nord10-aa); /* fond du CTA principal */
+  --vt-color-accent-hover: var(--vt-nord10-aa-hover);
+  --vt-color-on-accent:    var(--vt-nord6);
+  --vt-color-focus:        var(--vt-nord10);
+  --vt-color-mark:         var(--vt-nord13);
+  --vt-color-footer:       var(--vt-nord1);
+  --vt-color-footer-deep:  var(--vt-nord0);
+
+  --vt-code-bg:            var(--vt-nord5);
+  --vt-code-fg:            var(--vt-nord0);
+  --vt-code-keyword:       var(--vt-nord10-aa);
+  --vt-code-function:      var(--vt-nord7-aa);
+  --vt-code-constant:      var(--vt-nord7-aa);
+  --vt-code-string:        var(--vt-nord14-aa);
+  --vt-code-number:        var(--vt-nord15-aa);
+  --vt-code-special:       var(--vt-nord13-aa);
+  --vt-code-comment:       var(--vt-nord3);
+  --vt-code-generic:       var(--vt-nord11-aa);
+  --vt-code-punctuation:   var(--vt-nord3);
+
+  /* Accents catégoriels (non textuels) : cartes, frise, tuiles, intertitres */
+  --vt-accent-1:           var(--vt-nord10);
+  --vt-accent-2:           var(--vt-nord8-ui);
+  --vt-accent-3:           var(--vt-nord14-ui);
+  --vt-accent-4:           var(--vt-nord13-ui);
+  --vt-accent-5:           var(--vt-nord12-ui);
+  --vt-accent-6:           var(--vt-nord15-ui);
+
+  --vt-hero-from:          var(--vt-nord0);
+  --vt-hero-via:           var(--vt-nord1);
+  --vt-hero-to:            var(--vt-nord10);
+}
+
+/* Thème sombre — « Polar Night » : fonds Polar Night, texte Snow Storm, accent Frost */
+[data-md-color-scheme="slate"] {
+  --vt-color-bg:           var(--vt-nord0);
+  --vt-color-surface:      var(--vt-nord1);
+  --vt-color-border:       var(--vt-nord2);
+  --vt-color-text:         var(--vt-nord6);
+  --vt-color-text-muted:   var(--vt-nord4);
+  --vt-color-heading:      var(--vt-nord6);
+  --vt-color-brand:        var(--vt-nord1);   /* en-tête, distinct du fond */
+  --vt-color-brand-2:      var(--vt-nord2);
+  --vt-color-on-brand:     var(--vt-nord6);
+  --vt-color-link:         var(--vt-nord8);
+  --vt-color-link-hover:   var(--vt-nord7);
+  --vt-color-accent:       var(--vt-nord8);
+  --vt-color-accent-hover: var(--vt-nord7);
+  --vt-color-on-accent:    var(--vt-nord0);
+  --vt-color-focus:        var(--vt-nord8);
+  --vt-color-mark:         var(--vt-nord13);
+  --vt-color-footer:       var(--vt-nord1);
+  --vt-color-footer-deep:  var(--vt-nord0-deep);
+
+  --vt-code-bg:            var(--vt-nord0-deep);
+  --vt-code-fg:            var(--vt-nord4);
+  --vt-code-keyword:       var(--vt-nord9);
+  --vt-code-function:      var(--vt-nord8);
+  --vt-code-constant:      var(--vt-nord7);
+  --vt-code-string:        var(--vt-nord14);
+  --vt-code-number:        var(--vt-nord15);
+  --vt-code-special:       var(--vt-nord13);
+  --vt-code-comment:       var(--vt-nord3-bright);
+  --vt-code-generic:       var(--vt-nord11-bright);
+  --vt-code-punctuation:   var(--vt-nord4);
+
+  --vt-accent-1:           var(--vt-nord9);
+  --vt-accent-2:           var(--vt-nord8);
+  --vt-accent-3:           var(--vt-nord14);
+  --vt-accent-4:           var(--vt-nord13);
+  --vt-accent-5:           var(--vt-nord12);
+  --vt-accent-6:           var(--vt-nord15);
+
+  --vt-hero-from:          var(--vt-nord1);
+  --vt-hero-via:           var(--vt-nord2);
+  --vt-hero-to:            var(--vt-nord10);
+}
+
+/* Tokens composés, communs aux deux thèmes */
+[data-md-color-scheme] {
+  /* Hero — seul geste « expressif » autorisé (Lavie & Tractinsky 2004) */
+  --vt-hero-gradient: linear-gradient(135deg, var(--vt-hero-from) 0%, var(--vt-hero-via) 60%, var(--vt-hero-to) 140%);
+  /* Le hero est sombre dans les deux thèmes : son CTA prend l'accent Frost clair */
+  --vt-hero-text:     var(--vt-nord6);
+  --vt-hero-cta:      var(--vt-nord8);
+  --vt-hero-cta-hover: var(--vt-nord7);
+  --vt-hero-on-cta:   var(--vt-nord0);
+  --vt-portrait-ring: var(--vt-nord8);  /* liseré Frost autour du portrait */
+
+  /* Encadrés (admonitions) : Frost pour l'information, Aurora pour le sémantique */
+  --vt-admonition-info:    var(--vt-nord10);
+  --vt-admonition-tip:     var(--vt-nord14);
+  --vt-admonition-warning: var(--vt-nord13);
+  --vt-admonition-danger:  var(--vt-nord11);
+  --vt-admonition-question: var(--vt-nord8);
+  --vt-admonition-example: var(--vt-nord15);
+  --vt-shadow: 0 1px 2px color-mix(in srgb, var(--vt-nord0) 8%, transparent),
+               0 4px 16px color-mix(in srgb, var(--vt-nord0) 10%, transparent);
+}
+
+/* ---------- 2bis. MAPPING TOKENS → THÈME MATERIAL ---------- */
+[data-md-color-scheme] {
+  --md-default-bg-color:            var(--vt-color-bg);
+  --md-default-bg-color--light:     color-mix(in srgb, var(--vt-color-bg) 70%, transparent);
+  --md-default-bg-color--lighter:   color-mix(in srgb, var(--vt-color-bg) 30%, transparent);
+  --md-default-bg-color--lightest:  color-mix(in srgb, var(--vt-color-bg) 12%, transparent);
+  --md-default-fg-color:            var(--vt-color-text);
+  --md-default-fg-color--light:     var(--vt-color-text-muted);
+  --md-default-fg-color--lighter:   color-mix(in srgb, var(--vt-color-text) 32%, transparent);
+  --md-default-fg-color--lightest:  color-mix(in srgb, var(--vt-color-text) 12%, transparent);
+
+  --md-primary-fg-color:            var(--vt-color-brand);
+  --md-primary-fg-color--light:     var(--vt-color-brand-2);
+  --md-primary-fg-color--dark:      var(--vt-color-brand);
+  --md-primary-bg-color:            var(--vt-color-on-brand);
+  --md-primary-bg-color--light:     color-mix(in srgb, var(--vt-color-on-brand) 70%, transparent);
+
+  --md-accent-fg-color:             var(--vt-color-link-hover);
+  --md-accent-fg-color--transparent: color-mix(in srgb, var(--vt-color-accent) 10%, transparent);
+  --md-accent-bg-color:             var(--vt-color-on-accent);
+  --md-accent-bg-color--light:      color-mix(in srgb, var(--vt-color-on-accent) 70%, transparent);
+
+  --md-typeset-color:               var(--vt-color-text);
+  --md-typeset-a-color:             var(--vt-color-link);
+  --md-typeset-mark-color:          color-mix(in srgb, var(--vt-color-mark) 45%, transparent);
+  --md-typeset-table-color:         color-mix(in srgb, var(--vt-color-text) 12%, transparent);
+  --md-typeset-table-color--light:  color-mix(in srgb, var(--vt-color-text) 4%, transparent);
+
+  --md-admonition-bg-color:         var(--vt-color-bg);
+  --md-admonition-fg-color:         var(--vt-color-text);
+
+  --md-footer-bg-color:             var(--vt-color-footer);
+  --md-footer-bg-color--dark:       var(--vt-color-footer-deep);
+  --md-footer-fg-color:             var(--vt-color-on-brand);
+  --md-footer-fg-color--light:      color-mix(in srgb, var(--vt-color-on-brand) 75%, transparent);
+  --md-footer-fg-color--lighter:    color-mix(in srgb, var(--vt-color-on-brand) 50%, transparent);
+
+  --md-code-bg-color:               var(--vt-code-bg);
+  --md-code-fg-color:               var(--vt-code-fg);
+  --md-code-hl-color:               color-mix(in srgb, var(--vt-color-focus) 25%, transparent);
+  --md-code-hl-keyword-color:       var(--vt-code-keyword);
+  --md-code-hl-operator-color:      var(--vt-code-keyword);
+  --md-code-hl-function-color:      var(--vt-code-function);
+  --md-code-hl-constant-color:      var(--vt-code-constant);
+  --md-code-hl-string-color:        var(--vt-code-string);
+  --md-code-hl-number-color:        var(--vt-code-number);
+  --md-code-hl-special-color:       var(--vt-code-special);
+  --md-code-hl-comment-color:       var(--vt-code-comment);
+  --md-code-hl-generic-color:       var(--vt-code-generic);
+  --md-code-hl-punctuation-color:   var(--vt-code-punctuation);
+  --md-code-hl-name-color:          var(--vt-code-fg);
+  --md-code-hl-variable-color:      var(--vt-code-fg);
+}
+
+/* Titres et focus clavier visibles dans les deux thèmes */
+.md-typeset h1, .md-typeset h2, .md-typeset h3 { color: var(--vt-color-heading); }
+/* H1 en gras, comme celui du hero : le titre de page domine les H2 (hiérarchie visuelle).
+   Graisses utilisées : 400 et 700 uniquement, celles chargées par theme.font (pas de 600 simulé). */
+.md-typeset h1 { font-weight: 700; }
+
+/* Cycle d'accent : tout élément répété (carte, étape, tuile) reçoit --vt-accent selon son rang */
+.md-typeset .grid.cards > ul > li,
+.vt-timeline h3,
+.vt-tiles li { --vt-accent: var(--vt-accent-1); }
+.md-typeset .grid.cards > ul > li:nth-child(6n+2), .vt-timeline h3:nth-of-type(6n+2), .vt-tiles li:nth-child(6n+2) { --vt-accent: var(--vt-accent-2); }
+.md-typeset .grid.cards > ul > li:nth-child(6n+3), .vt-timeline h3:nth-of-type(6n+3), .vt-tiles li:nth-child(6n+3) { --vt-accent: var(--vt-accent-3); }
+.md-typeset .grid.cards > ul > li:nth-child(6n+4), .vt-timeline h3:nth-of-type(6n+4), .vt-tiles li:nth-child(6n+4) { --vt-accent: var(--vt-accent-4); }
+.md-typeset .grid.cards > ul > li:nth-child(6n+5), .vt-timeline h3:nth-of-type(6n+5), .vt-tiles li:nth-child(6n+5) { --vt-accent: var(--vt-accent-5); }
+.md-typeset .grid.cards > ul > li:nth-child(6n+6), .vt-timeline h3:nth-of-type(6n+6), .vt-tiles li:nth-child(6n+6) { --vt-accent: var(--vt-accent-6); }
+:focus-visible { outline: 2px solid var(--vt-color-focus); outline-offset: 2px; }
+
+/* ---------- 3. COMPOSANTS ---------- */
+
+/* Hero de page d'accueil : <div class="vt-hero" markdown> */
+.vt-hero {
+  display: flex;
+  flex-direction: row-reverse;   /* portrait premier dans le source, affiché à droite */
+  align-items: center;
+  gap: var(--vt-space-5);
+  margin: 0 0 var(--vt-space-5);
+  padding: var(--vt-space-5);
+  border-radius: var(--vt-radius-lg);
+  background: var(--vt-hero-gradient);
+  color: var(--vt-hero-text);
+}
+/* Bloc texte du hero : <div class="vt-hero-text" markdown> autour du H1, de l'accroche et des boutons */
+.vt-hero-text { flex: 1 1 auto; min-width: 0; }
+.vt-hero h1 {
+  margin: 0 0 var(--vt-space-3);
+  color: inherit;
+  font-weight: 700;
+}
+.vt-hero p { font-size: 1.1em; max-width: var(--vt-measure); }
+.vt-hero .md-button { margin: var(--vt-space-2) var(--vt-space-2) 0 0; }
+.md-typeset .vt-hero .md-button--primary {
+  background-color: var(--vt-hero-cta);
+  border-color: var(--vt-hero-cta);
+  color: var(--vt-hero-on-cta);
+}
+.md-typeset .vt-hero .md-button--primary:hover,
+.md-typeset .vt-hero .md-button--primary:focus {
+  background-color: var(--vt-hero-cta-hover);
+  border-color: var(--vt-hero-cta-hover);
+  color: var(--vt-hero-on-cta);
+}
+.vt-hero .md-button:not(.md-button--primary) {
+  color: var(--vt-hero-text);
+  border-color: var(--vt-hero-text);
+}
+
+/* Portrait : ![Nom](assets/images/….jpg){ .vt-portrait }
+   Placé en premier dans le hero, avant .vt-hero-text ; une vraie photo, visage net (Cyr 2008 : images et confiance). */
+.vt-hero > p:has(> .vt-portrait) {
+  flex: none;
+  max-width: none;
+  margin: 0;
+}
+.md-typeset .vt-portrait {
+  display: block;
+  width: var(--vt-portrait-size);
+  height: var(--vt-portrait-size);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--vt-portrait-ring);
+  box-shadow: var(--vt-shadow);
+}
+
+/* Boutons — le secondaire prend la couleur des liens (visible dans les deux thèmes) */
+.md-typeset .md-button {
+  border-radius: var(--vt-radius);
+  color: var(--vt-color-link);
+  border-color: currentColor;
+}
+.md-typeset .md-button:not(.md-button--primary):hover,
+.md-typeset .md-button:not(.md-button--primary):focus {
+  color: var(--vt-color-on-accent);
+  background-color: var(--vt-color-accent-hover);
+  border-color: var(--vt-color-accent-hover);
+}
+.md-typeset .md-button--primary {
+  background-color: var(--vt-color-accent);
+  border-color: var(--vt-color-accent);
+  color: var(--vt-color-on-accent);
+}
+.md-typeset .md-button--primary:hover,
+.md-typeset .md-button--primary:focus {
+  background-color: var(--vt-color-accent-hover);
+  border-color: var(--vt-color-accent-hover);
+  color: var(--vt-color-on-accent);
+}
+
+/* Grille de cartes : <div class="grid cards" markdown> (composant Material)
+   Liseré supérieur et icône à la couleur d'accent de la carte. */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  border-radius: var(--vt-radius);
+  border-top: 3px solid var(--vt-accent);
+  box-shadow: var(--vt-shadow);
+}
+.md-typeset .grid.cards > ul > li:hover {
+  border-top-color: var(--vt-accent);
+  background-color: color-mix(in srgb, var(--vt-accent) 6%, transparent);
+}
+.md-typeset .grid.cards .twemoji { color: var(--vt-accent); }
+.md-typeset .grid.cards > ul > li > hr { border-bottom-color: color-mix(in srgb, var(--vt-accent) 35%, transparent); }
+
+/* Intertitres de contenu : barre d'accent Frost sous chaque H2 (repère de balayage) */
+.md-typeset h2 { font-weight: 700; }
+.md-typeset h2::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-top: var(--vt-space-2);
+  border-radius: var(--vt-radius);
+  background: linear-gradient(90deg, var(--vt-accent-1), var(--vt-accent-2));
+}
+
+/* Citation (devise) : liseré et texte appuyés */
+[dir] .md-typeset blockquote {
+  border-left: 4px solid var(--vt-accent-2);
+  color: var(--vt-color-text);
+  background: color-mix(in srgb, var(--vt-accent-2) 8%, transparent);
+  border-radius: 0 var(--vt-radius) var(--vt-radius) 0;
+  padding: var(--vt-space-2) var(--vt-space-4);
+}
+
+/* Frise chronologique : <div class="vt-timeline" markdown> autour des H3 d'expérience */
+.vt-timeline {
+  margin-left: var(--vt-space-2);
+  padding-left: var(--vt-space-4);
+  border-left: 2px solid var(--vt-color-border);
+}
+.md-typeset .vt-timeline h3 { position: relative; font-weight: 700; }
+.md-typeset .vt-timeline h3::before {
+  content: "";
+  position: absolute;
+  top: 0.35em;
+  left: calc(-1 * var(--vt-space-4) - 0.5rem - 1px);
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--vt-accent);
+  box-shadow: 0 0 0 4px var(--vt-color-bg);
+}
+
+/* Tuiles : <div class="vt-tiles" markdown> autour d'une liste courte (compétences, modalités) */
+[dir] .md-typeset .vt-tiles ul {
+  display: grid;
+  /* 3 colonnes au plus (6 tuiles = 3 + 3, jamais 4 + 2) ; 1 colonne sous ~14rem */
+  grid-template-columns: repeat(auto-fit, minmax(max(14rem, 30%), 1fr));
+  gap: var(--vt-space-3);
+  margin: var(--vt-space-3) 0;
+  margin-left: 0;
+  padding: 0;
+  list-style: none;
+}
+[dir] .md-typeset .vt-tiles li {
+  margin: 0;
+  margin-left: 0;
+  padding: var(--vt-space-3);
+  border-left: 4px solid var(--vt-accent);
+  border-radius: var(--vt-radius);
+  background: var(--vt-color-surface);
+}
+
+/* Section CTA de fin de page : <div class="vt-cta" markdown> */
+.vt-cta {
+  margin-top: var(--vt-space-5);
+  padding: var(--vt-space-4);
+  border-left: 4px solid var(--vt-color-accent);
+  border-radius: var(--vt-radius);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--vt-accent-1) 12%, var(--vt-color-surface)), var(--vt-color-surface));
+}
+
+/* Bandeau de preuves (références, certifications, logos) : <div class="vt-proof" markdown>
+   Uniquement des éléments réels et autorisés — crédibilité (Fogg 2003). */
+.vt-proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vt-space-3) var(--vt-space-5);
+  margin: var(--vt-space-5) 0;
+  padding: var(--vt-space-4) var(--vt-space-3);
+  border-top: 1px solid var(--vt-color-border);
+  border-bottom: 1px solid var(--vt-color-border);
+  color: var(--vt-color-text-muted);
+}
+.vt-proof p { margin: 0; }
+.vt-proof img {
+  height: 2.5rem;
+  width: auto;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+/* Encadrés aux couleurs Nord : !!! note|info|tip|success|warning|danger|question|example */
+.md-typeset .admonition, .md-typeset details { --vt-adm: var(--vt-admonition-info); }
+.md-typeset :is(.tip, .success, .hint, .check, .done)        { --vt-adm: var(--vt-admonition-tip); }
+.md-typeset :is(.warning, .caution, .attention)              { --vt-adm: var(--vt-admonition-warning); }
+.md-typeset :is(.danger, .error, .failure, .fail, .bug)      { --vt-adm: var(--vt-admonition-danger); }
+.md-typeset :is(.question, .help, .faq)                      { --vt-adm: var(--vt-admonition-question); }
+.md-typeset :is(.example, .quote, .cite)                     { --vt-adm: var(--vt-admonition-example); }
+.md-typeset :is(.admonition, details)[class] { border-color: var(--vt-adm); }
+.md-typeset :is(.admonition, details) > :is(.admonition-title, summary) {
+  background-color: color-mix(in srgb, var(--vt-adm) 15%, transparent);
+}
+.md-typeset :is(.admonition, details) > :is(.admonition-title, summary)::before {
+  background-color: var(--vt-adm);
+}
+
+/* Grilles de 4 éléments (cartes, tuiles) : 2 × 2 sur grand écran, jamais 3 + 1 orphelin (P1, ordre et symétrie) */
+@media screen and (min-width: 45em) {
+  .md-typeset .grid.cards:has(> ul > li:nth-child(4):last-child),
+  [dir] .md-typeset .vt-tiles ul:has(> li:nth-child(4):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 44.9375em) {
+  .vt-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--vt-space-3);
+    padding: var(--vt-space-5) var(--vt-space-3);
+  }
+  .md-typeset .vt-portrait {
+    width: var(--vt-portrait-size-mobile);
+    height: var(--vt-portrait-size-mobile);
+  }
+}

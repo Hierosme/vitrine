@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Build strict du site public dans build/ (utilisé par la CI)"
+#MISE alias="build"
+#MISE depends=["install"]
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+mkdocs build -f mkdocs.yml --strict
+echo "✔ Site généré dans build/"

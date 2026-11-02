@@ -1,0 +1,9 @@
+.venv/
+build/
+build-docs/
+.cache/
+__pycache__/
+.DS_Store
+.idea/
+_to_delete/
+Claude outputs/

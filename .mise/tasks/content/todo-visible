@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie qu'aucun TODO n'est visible sur le site publié (seuls les commentaires HTML sont tolérés)"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - site <<'PY'
+import pathlib, re, sys
+bad = 0
+for f in sorted(pathlib.Path(sys.argv[1]).rglob("*.md")):
+    text = f.read_text(encoding="utf-8")
+    if re.search(r"^draft:\s*true", text, re.M):
+        continue                                        # brouillon : non publié
+    visible = re.sub(r"<!--.*?-->", lambda m: "\n" * m.group(0).count("\n"), text, flags=re.S)
+    for n, line in enumerate(visible.splitlines(), 1):
+        if "TODO" in line:
+            print(f"  ✘ {f}:{n} : {line.strip()}"); bad += 1
+if not bad:
+    print("  ✔ OK")
+sys.exit(1 if bad else 0)
+PY

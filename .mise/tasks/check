@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie le projet : design system, navigation, builds stricts site et doc"
+#MISE alias="lint"
+#MISE depends=["install"]
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+fail=0
+css=site/stylesheets/extra.css
+
+echo "• Design system : aucune couleur en dur hors section TOKENS"
+# Ignore la section TOKENS (jusqu'au marqueur « ---------- 2. ») et les commentaires
+if out="$(awk '/---------- 2\./{f=1} f' "$css" | grep -nE '#[0-9a-fA-F]{3,8}([^0-9a-zA-Z]|$)|rgba?\(' | grep -v '^\s*/\*')"; then
+  echo "$out" | sed 's/^/  ✘ /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
+echo "• Design system : classes maison préfixées vt-"
+if out="$(grep -oE '^\.[a-z][a-z0-9-]*' "$css" | grep -vE '^\.(vt-|md-)' | sort -u)"; then
+  echo "$out" | sed 's/^/  ✘ /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
+echo "• Design system : la palette (--vt-nordX) n'est utilisée que via les rôles des thèmes"
+if out="$(awk '/---------- 3\./{f=1} f' "$css" | grep -n 'var(--vt-nord')"; then
+  echo "$out" | sed 's/^/  ✘ /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
+echo "• Design system : contrastes WCAG AA (clair + sombre)"
+"$(dirname "$0")/design/contrast" | sed 's/^/  /' || fail=1
+
+echo "• Hiérarchie des actions : au plus 1 bouton primaire par page (P6)"
+bad=""
+for f in $(find site -name '*.md' -not -path 'site/blog/*'); do
+  n="$(grep -c 'md-button--primary' "$f" || true)"
+  if (( n > 1 )); then bad="${bad}  ✘ $f : $n boutons primaires\n"; fi
+done
+if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
+
+echo "• Navigation : 6 onglets maximum (N1)"
+tabs="$(awk '/^nav:/{f=1;next} f&&/^[^ #]/{exit} f&&/^  - /{n++} END{print n+0}' mkdocs.yml)"
+if (( tabs > 6 )); then echo "  ✘ $tabs onglets"; fail=1; else echo "  ✔ OK ($tabs onglets)"; fi
+
+echo "• Contenu : chaque page de contenu se termine par un appel au contact (N6)"
+bad=""
+for f in $(find site -maxdepth 1 -name '*.md' -not -name index.md -not -name contact.md); do
+  if ! grep -q 'class="vt-cta"' "$f"; then bad="${bad}  ✘ $f : pas de bloc vt-cta\n"; fi
+done
+if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
+
+echo "• Navigation : pas de menu latéral sur les pages de premier niveau (N7)"
+bad=""
+for f in $(find site -maxdepth 1 -name '*.md'); do
+  fm="$(awk 'NR==1&&/^---$/{f=1;next} f&&/^---$/{exit} f' "$f")"
+  if ! grep -qE '^ *- *navigation *$' <<<"$fm"; then bad="${bad}  ✘ $f : ajouter « hide: [navigation] »\n"; fi
+done
+if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
+
+echo "• Contenu : chaque service détaillé fait au moins 500 caractères (N8)"
+"$(dirname "$0")/content/services" || fail=1
+
+echo "• Contenu : aucun TODO visible sur le site publié"
+"$(dirname "$0")/content/todo-visible" || fail=1
+
+echo "• Référencement : title et description uniques par page, longueurs"
+"$(dirname "$0")/content/seo" || fail=1
+
+echo "• Build strict du site"
+mkdocs build -q -f mkdocs.yml --strict && echo "  ✔ OK" || fail=1
+
+echo "• Build strict de la doc projet"
+mkdocs build -q -f mkdocs.docs.yml --strict && echo "  ✔ OK" || fail=1
+
+exit "$fail"

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie que chaque service détaillé (## Titre { #ancre }) fait au moins N caractères"
+#USAGE flag "-m --min <min>" default="500" help="Nombre minimum de caractères visibles par service"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+MIN="${usage_min:-500}" python3 - site/services.md <<'PY'
+import os, re, sys
+
+text = open(sys.argv[1], encoding="utf-8").read()
+minimum = int(os.environ.get("MIN", "500"))
+
+def visible(md):
+    md = re.sub(r"<[^>]+>", "", md)                   # HTML
+    md = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", md)  # liens → texte
+    md = re.sub(r"\{[^}]*\}", "", md)                 # attributs
+    md = re.sub(r"[*_`#>]", "", md)                   # emphase, titres, citations
+    md = re.sub(r"^\s*- ", "", md, flags=re.M)        # puces
+    return re.sub(r"\s+", " ", md).strip()
+
+# Un service = une section H2 avec un identifiant explicite « ## Titre { #ancre } »
+sections = list(re.finditer(r"^## ([^\n{]+?) \{ *#[\w-]+ *\}\n(.*?)(?=^## |\Z)", text, re.S | re.M))
+if not sections:
+    sys.exit(print("  ✘ aucun service détaillé trouvé dans site/services.md"))
+bad = 0
+for m in sections:
+    n = len(visible(m.group(2)))
+    ok = n >= minimum
+    bad += not ok
+    if not ok:
+        print(f"  ✘ {m.group(1).strip()} : {n} caractères (min {minimum})")
+if not bad:
+    print(f"  ✔ OK ({len(sections)} services ≥ {minimum} caractères)")
+sys.exit(1 if bad else 0)
+PY

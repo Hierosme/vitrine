@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Supprime les sorties de build (build/, build-docs/)"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+rm -rf build build-docs .cache
+echo "✔ Nettoyé"

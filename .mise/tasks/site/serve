@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Aperçu du site public avec rechargement à chaud"
+#MISE alias="serve"
+#MISE depends=["install"]
+#USAGE flag "-p --port <port>" default="8000" help="Port d'écoute"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+port="${usage_port:-8000}"
+echo "▶ Site : http://127.0.0.1:${port}"
+exec mkdocs serve -f mkdocs.yml -a "127.0.0.1:${port}"

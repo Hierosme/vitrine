@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Liste les TODO restants dans le site et la configuration"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+if grep -rn --color=auto 'TODO' site mkdocs.yml; then
+  echo
+  echo "$(grep -rc 'TODO' site mkdocs.yml | awk -F: '{s+=$2} END{print s}') TODO restant(s)."
+else
+  echo "✔ Aucun TODO."
+fi

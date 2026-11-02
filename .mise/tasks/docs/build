@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Build strict de la documentation projet dans build-docs/"
+#MISE depends=["install"]
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+mkdocs build -f mkdocs.docs.yml --strict
+echo "✔ Doc projet générée dans build-docs/"
