@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Régénère requirements.txt (verrouillé, multi-plateforme) depuis requirements.in"
+#USAGE flag "-U --upgrade" help="Met à jour les dépendances vers les dernières versions compatibles"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+args=(--universal --python-version 3.13)
+[[ "${usage_upgrade:-false}" == "true" ]] && args+=(--upgrade)
+uv pip compile "${args[@]}" requirements.in -o requirements.txt
+echo "✔ requirements.txt régénéré — lancer ensuite : mise run check"

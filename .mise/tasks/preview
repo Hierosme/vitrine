@@ -4,10 +4,12 @@
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
+source .mise/lib/zensical.sh
 trap 'kill $(jobs -p) 2>/dev/null || true' EXIT INT TERM
 
-mkdocs serve -f mkdocs.yml      -a 127.0.0.1:8000 2>&1 | sed -u 's/^/[site] /' &
-mkdocs serve -f mkdocs.docs.yml -a 127.0.0.1:8001 2>&1 | sed -u 's/^/[docs] /' &
+cfg="$(zensical_config zensical.toml)"
+zensical serve -f "$cfg"               -a 127.0.0.1:8000 2>&1 | sed -u 's/^/[site] /' &
+zensical serve -f zensical.docs.toml -a 127.0.0.1:8001 2>&1 | sed -u 's/^/[docs] /' &
 
 echo "▶ Site       : http://127.0.0.1:8000"
 echo "▶ Doc projet : http://127.0.0.1:8001"

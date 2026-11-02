@@ -1,5 +1,6 @@
 {#-
-  Surcharge Material : métadonnées SEO uniquement (aucune modification de mise en page).
+  Surcharge du thème Zensical (variante classic) : métadonnées SEO uniquement (aucune mise en page).
+  Moteur de templates : minijinja (sous-ensemble de Jinja2 — pas de méthodes Python comme .append ou .startswith).
   - Open Graph / Twitter Card : aperçus de partage (LinkedIn, Slack, X…)
   - JSON-LD schema.org Person : page d'accueil seulement, alimenté par config.extra.seo
   Règles : docs/skills/site-navigation/SKILL.md § Référencement.
@@ -33,11 +34,9 @@
   <meta name="twitter:image" content="{{ seo_image }}">
   <link rel="apple-touch-icon" href="{{ 'assets/images/apple-touch-icon.png' | url }}">
 
-  {%- if page.is_homepage %}
-    {%- set same_as = [] -%}
-    {%- for s in config.extra.social if s.link.startswith("http") -%}
-      {%- set _ = same_as.append(s.link) -%}
-    {%- endfor -%}
+  {#- Page d'accueil : URL vide (Zensical n'expose pas page.is_homepage) -#}
+  {%- if page.url == "" %}
+    {%- set same_as = config.extra.social | selectattr("link", "startingwith", "http") | map(attribute="link") | list -%}
     {%- set person = {
       "@context": "https://schema.org",
       "@type": "Person",

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie la hiérarchie des titres (accessibilité M3) : un seul H1, aucun niveau sauté"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - site <<'PY'
+import pathlib, re, sys
+bad = 0
+for f in sorted(pathlib.Path(sys.argv[1]).rglob("*.md")):
+    text = f.read_text(encoding="utf-8")
+    if re.search(r"^draft:\s*true", text, re.M):
+        continue                                          # brouillon : non publié
+    text = re.sub(r"^---\n.*?\n---\n", "", text, count=1, flags=re.S)   # front-matter
+    text = re.sub(r"^```.*?^```", "", text, flags=re.S | re.M)          # blocs de code
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)                   # commentaires
+    levels = [len(m.group(1)) for m in re.finditer(r"^(#{1,6}) \S", text, re.M)]
+    if levels.count(1) != 1:
+        print(f"  ✘ {f} : {levels.count(1)} titre(s) H1 (attendu : 1)"); bad += 1
+    prev = 0
+    for lvl in levels:
+        if lvl > prev + 1:
+            print(f"  ✘ {f} : saut de niveau H{prev} → H{lvl}"); bad += 1
+        prev = lvl
+if not bad:
+    print("  ✔ OK")
+sys.exit(1 if bad else 0)
+PY

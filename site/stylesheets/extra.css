@@ -2,11 +2,16 @@
    Design system de la vitrine — SOURCE DE VÉRITÉ du look & feel
    Règles   : docs/skills/site-look-and-feel/SKILL.md
    Pourquoi : docs/explanation/design-system.md
-   Aucune couleur / rayon / ombre en dur hors de la section TOKENS.
+   Structure inspirée de Material Design 3 (https://m3.material.io) : rôles de couleur,
+   échelle typographique, formes, élévation, couches d'état, mouvement, points de rupture.
+   Identité conservée : palette Nord, polices Inter et JetBrains Mono.
+   Aucune valeur littérale (couleur, rayon, ombre, taille de texte, durée) hors de la section TOKENS.
    ========================================================================== */
 
 /* ---------- 1. TOKENS ---------- */
-/* Seule section autorisée à contenir des valeurs de couleur littérales.          */
+/* Seule section autorisée à contenir des valeurs littérales.
+   Unités : le thème fixe la racine à 125 % (1rem = 20 px, agrandie sur très grand écran),
+   donc 1dp M3 = 0.05rem. Les tailles de texte sont en em du corps de texte (16 px).        */
 :root {
   /* 1.a Palette Nord officielle — https://www.nordtheme.com/docs/colors-and-palettes */
   /* Polar Night : fonds sombres, texte du thème clair */
@@ -30,74 +35,177 @@
   --vt-nord14: #a3be8c;
   --vt-nord15: #b48ead;
 
-  /* 1.b Dérivés accessibles (WCAG AA) — même teinte, luminosité ajustée.
-         Les couleurs Nord officielles n'atteignent pas 4.5:1 sur Snow Storm ;
-         facteur = multiplication RVB appliquée à la couleur d'origine. */
-  --vt-nord10-aa:       #4b678a; /* nord10 × 0.80 — liens, CTA (clair) : 5.0:1 sur nord6 */
-  --vt-nord10-aa-hover: #425a78; /* nord10 × 0.70 — survol CTA (clair) */
+  /* 1.b Dérivés de même teinte — facteur = multiplication RVB (assombri) ou mélange
+         vers une autre couleur Nord / le blanc (éclairci). Ratios vérifiés par design:contrast. */
+  /* Texte et actions (WCAG AA, 4.5:1) */
+  --vt-nord10-aa:       #4b678a; /* nord10 × 0.80 — primary (clair), primary-container (sombre) */
+  --vt-nord8-aa:        #4b6a72; /* nord8  × 0.55 — secondary (clair) : 5.1:1 sur nord6 */
+  --vt-nord9-bright:    #9cb4ce; /* nord9 → nord6 25 % — primary (sombre) : 4.7:1 sur nord1 */
+  --vt-nord15-bright:   #bfa1bb; /* nord15 → nord6 20 % — tertiary (sombre) */
   --vt-nord7-aa:        #4f6767; /* nord7  × 0.55 — code : fonctions (clair) */
-  --vt-nord11-aa:       #8f4950; /* nord11 × 0.75 — code : erreurs (clair) */
+  --vt-nord11-aa:       #8f4950; /* nord11 × 0.75 — error (clair), code : erreurs (clair) */
   --vt-nord13-aa:       #766646; /* nord13 × 0.50 — code : spécial (clair) */
   --vt-nord14-aa:       #5a694d; /* nord14 × 0.55 — code : chaînes (clair) */
-  --vt-nord15-aa:       #755c70; /* nord15 × 0.65 — code : nombres (clair) */
-  --vt-nord0-deep:      #2b303b; /* nord0  × 0.93 — fond de code (sombre) */
-  --vt-nord3-bright:    #9099ab; /* nord3 éclairci — commentaires de code (sombre) */
-  --vt-nord11-bright:   #d08b92; /* nord11 éclairci — erreurs de code (sombre) */
-
-  /* Dérivés « UI » : ≥ 3:1 sur nord5/nord6 (WCAG 1.4.11), pour icônes, bordures et repères
-     du thème clair. Moins sombres que les -aa : réservés aux éléments non textuels. */
+  --vt-nord15-aa:       #755c70; /* nord15 × 0.65 — tertiary (clair), code : nombres (clair) */
+  --vt-nord3-bright:    #9099ab; /* nord3 éclairci — outline (sombre), commentaires de code (sombre) */
+  --vt-nord3-outline:   #6f788a; /* nord3 → nord4 25 % — outline (clair) : 3.9:1 sur nord6 */
+  --vt-nord11-bright:   #d08b92; /* nord11 éclairci — error (sombre), erreurs de code (sombre) */
+  /* Surfaces (M3 : surface containers, du plus clair au plus foncé en thème clair) */
+  --vt-nord6-bright:    #f7f9fb; /* nord6 → blanc 60 % — surface-container-lowest (clair) */
+  --vt-nord5-soft:      #e8ecf2; /* nord6 ↔ nord5 50 % — surface-container-low (clair) */
+  --vt-nord4-soft:      #dee4ec; /* nord5 ↔ nord4 50 % — surface-container-high (clair) */
+  --vt-nord0-deep:      #2b303b; /* nord0 × 0.93 — surface-container-lowest (sombre), fond de code (sombre) */
+  --vt-nord1-dim:       #343b49; /* nord0 ↔ nord1 50 % — surface-container-low (sombre) */
+  --vt-nord2-bright:    #485164; /* nord2 ↔ nord3 50 % — surface-container-highest (sombre) */
+  /* Conteneurs (M3 : *-container et on-*-container) */
+  --vt-nord10-container:    #c4d0e0; /* nord10 → nord6 72 % — primary-container (clair) */
+  --vt-nord10-on-container: #273648; /* nord10 × 0.42 — on-primary-container (clair) */
+  --vt-nord8-container:     #c9dfe7; /* nord8  → nord6 65 % — secondary-container (clair) */
+  --vt-nord8-on-container:  #34494f; /* nord8  × 0.38 — on-secondary-container (clair), secondary-container (sombre) */
+  --vt-nord15-container:    #dad0dd; /* nord15 → nord6 68 % — tertiary-container (clair) */
+  --vt-nord15-on-container: #51404e; /* nord15 × 0.45 — on-tertiary-container (clair), tertiary-container (sombre) */
+  --vt-nord11-container:    #dfc7cd; /* nord11 → nord6 72 % — error-container (clair) */
+  --vt-nord11-on-container: #5c2f33; /* nord11 × 0.48 — on-error-container (clair), error-container (sombre) */
+  /* Accents « UI » : ≥ 3:1 sur les surfaces claires (WCAG 1.4.11), éléments non textuels uniquement */
   --vt-nord8-ui:  #5f8692; /* nord8  × 0.70 */
   --vt-nord12-ui: #af715e; /* nord12 × 0.84 */
   --vt-nord13-ui: #927e56; /* nord13 × 0.62 */
   --vt-nord14-ui: #748763; /* nord14 × 0.71 */
   --vt-nord15-ui: #977791; /* nord15 × 0.84 */
 
-  /* 1.c Forme */
-  --vt-radius:    0.6rem;
-  --vt-radius-lg: 1rem;
+  /* 1.c Formes — échelle M3 des rayons (m3.material.io/styles/shape/corner-radius-scale) */
+  --vt-shape-none:                  0;
+  --vt-shape-extra-small:           0.2rem;  /*  4dp */
+  --vt-shape-small:                 0.4rem;  /*  8dp */
+  --vt-shape-medium:                0.6rem;  /* 12dp */
+  --vt-shape-large:                 0.8rem;  /* 16dp */
+  --vt-shape-large-increased:       1rem;    /* 20dp */
+  --vt-shape-extra-large:           1.4rem;  /* 28dp */
+  --vt-shape-extra-large-increased: 1.6rem;  /* 32dp */
+  --vt-shape-extra-extra-large:     2.4rem;  /* 48dp */
+  --vt-shape-full:                  9999px;  /* entièrement arrondi */
 
-  /* 1.d Espacements (échelle 4px) */
-  --vt-space-1: 0.25rem;
-  --vt-space-2: 0.5rem;
-  --vt-space-3: 1rem;
-  --vt-space-4: 1.5rem;
-  --vt-space-5: 2.5rem;
-  --vt-space-6: 4rem;
+  /* 1.d Élévation — 6 niveaux M3 (m3.material.io/styles/elevation). Ombre clé 30 % + ambiante 15 %.
+         Au repos : niveaux 0 à 3 ; 4 et 5 réservés aux états (survol, glisser). */
+  --vt-elevation-0: none;
+  --vt-elevation-1: 0 1px 2px 0 color-mix(in srgb, var(--vt-nord0) 30%, transparent), 0 1px 3px 1px color-mix(in srgb, var(--vt-nord0) 15%, transparent);
+  --vt-elevation-2: 0 1px 2px 0 color-mix(in srgb, var(--vt-nord0) 30%, transparent), 0 2px 6px 2px color-mix(in srgb, var(--vt-nord0) 15%, transparent);
+  --vt-elevation-3: 0 1px 3px 0 color-mix(in srgb, var(--vt-nord0) 30%, transparent), 0 4px 8px 3px color-mix(in srgb, var(--vt-nord0) 15%, transparent);
+  --vt-elevation-4: 0 2px 3px 0 color-mix(in srgb, var(--vt-nord0) 30%, transparent), 0 6px 10px 4px color-mix(in srgb, var(--vt-nord0) 15%, transparent);
+  --vt-elevation-5: 0 4px 4px 0 color-mix(in srgb, var(--vt-nord0) 30%, transparent), 0 8px 12px 6px color-mix(in srgb, var(--vt-nord0) 15%, transparent);
 
-  /* 1.e Portrait */
+  /* 1.e Couches d'état — opacités M3 (m3.material.io/foundations/interaction/states/state-layers).
+         Une couche d'état = couleur du contenu (on-*) superposée au conteneur à cette opacité. */
+  --vt-state-hover:    8%;
+  --vt-state-focus:    10%;
+  --vt-state-pressed:  10%;
+  --vt-state-dragged:  16%;
+  --vt-state-disabled: 38%;
+  /* Indicateur de focus M3 : 3dp, couleur secondary, décalé de 2dp vers l'extérieur */
+  --vt-focus-ring-width:  3px;
+  --vt-focus-ring-offset: 2px;
+
+  /* 1.f Typographie — échelle M3 (m3.material.io/styles/typography), 5 rôles × 3 tailles.
+         Taille et interlignage repris de M3 ; police Inter au lieu de Roboto.
+         Approche d'Inter : 0 pour body large / medium (les valeurs M3 de 0.5 et 0.25 px sont calibrées pour Roboto). */
+  --vt-font-weight-regular:  400;
+  --vt-font-weight-medium:   500;
+  --vt-font-weight-bold:     700;   /* variante « emphasized » (M3 Expressive) : titres de page et de section */
+  --vt-type-display-small-size:    2.25em;   --vt-type-display-small-line:    1.2222; /* 36/44 */
+  --vt-type-headline-large-size:   2em;      --vt-type-headline-large-line:   1.25;   /* 32/40 */
+  --vt-type-headline-medium-size:  1.75em;   --vt-type-headline-medium-line:  1.2857; /* 28/36 */
+  --vt-type-headline-small-size:   1.5em;    --vt-type-headline-small-line:   1.3333; /* 24/32 */
+  --vt-type-title-large-size:      1.375em;  --vt-type-title-large-line:      1.2727; /* 22/28 */
+  --vt-type-title-medium-size:     1em;      --vt-type-title-medium-line:     1.5;    /* 16/24 */
+  --vt-type-title-medium-tracking: 0.0094em;                                          /* 0.15px */
+  --vt-type-body-large-size:       1em;      --vt-type-body-large-line:       1.5;    /* 16/24 */
+  --vt-type-body-medium-size:      0.875em;  --vt-type-body-medium-line:      1.4286; /* 14/20 */
+  --vt-type-body-small-size:       0.75em;   --vt-type-body-small-line:       1.3333; /* 12/16 */
+  --vt-type-body-small-tracking:   0.0333em;                                          /* 0.4px */
+  --vt-type-label-large-size:      0.875em;  --vt-type-label-large-line:      1.4286; /* 14/20 */
+  --vt-type-label-large-tracking:  0.0071em;                                          /* 0.1px */
+  --vt-type-tracking-none:         0;
+
+  /* 1.g Mouvement — easing et durées M3 (m3.material.io/styles/motion/easing-and-duration).
+         Uniquement pour les retours d'état : aucune animation décorative (P7). */
+  --vt-motion-easing-standard:            cubic-bezier(0.2, 0, 0, 1);
+  --vt-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --vt-motion-duration-short3:            150ms;
+  --vt-motion-duration-short4:            200ms;
+
+  /* 1.h Espacements — grille M3 de 4dp */
+  --vt-space-1: 0.2rem;  /*  4dp */
+  --vt-space-2: 0.4rem;  /*  8dp */
+  --vt-space-3: 0.8rem;  /* 16dp */
+  --vt-space-4: 1.2rem;  /* 24dp */
+  --vt-space-5: 2rem;    /* 40dp */
+  --vt-space-6: 3.2rem;  /* 64dp */
+
+  /* 1.i Dimensions */
+  --vt-size-button: 2rem;              /* 40dp : hauteur d'un bouton M3 (taille S) */
+  --vt-size-target: 2.4rem;            /* 48dp : cible tactile minimale M3 */
   --vt-portrait-size:        13rem;
-  --vt-portrait-size-mobile: 8rem;
+  --vt-portrait-size-compact: 8rem;
+  --vt-measure: 60ch;                  /* M3 : 40 à 60 caractères par ligne de texte courant */
 
-  /* 1.f Lisibilité : longueur de ligne max des textes d'accroche (~65 caractères) */
-  --vt-measure: 38rem;
+  /* 1.j Points de rupture M3 (m3.material.io/foundations/layout/breakpoints) — rappel, les
+         variables CSS sont interdites dans @media : valeurs écrites dans la section 3.
+         compact < 37.5em (600dp) · medium 37.5–52.4375em · expanded 52.5–74.9375em (840dp)
+         · large 75–99.9375em (1200dp) · extra-large ≥ 100em (1600dp)                        */
 }
 
-/* ---------- 2. THÈMES (tokens sémantiques) ---------- */
-/* Chaque thème associe un rôle (fond, texte, lien…) à une couleur de la palette.
+/* ---------- 2. THÈMES (rôles de couleur M3) ---------- */
+/* Rôles M3 (m3.material.io/styles/color/roles) définis pour chaque thème, à partir de la palette.
    Les composants n'utilisent QUE ces rôles, jamais --vt-nordX directement.
-   Contrastes vérifiés par `mise run design:contrast`.                            */
+   Règle d'appariement M3 : un rôle « on-X » s'emploie sur « X », jamais ailleurs.
+   Contrastes vérifiés par `mise run design:contrast`.                                          */
 
-/* Thème clair — « Snow Storm » : fonds Snow Storm, texte Polar Night, accent Frost */
+/* Thème clair — « Snow Storm » : surfaces Snow Storm, texte Polar Night, accents Frost */
 [data-md-color-scheme="default"] {
-  --vt-color-bg:           var(--vt-nord6);
-  --vt-color-surface:      var(--vt-nord5);
-  --vt-color-border:       var(--vt-nord4);
-  --vt-color-text:         var(--vt-nord0);
-  --vt-color-text-muted:   var(--vt-nord3);
-  --vt-color-heading:      var(--vt-nord0);
-  --vt-color-brand:        var(--vt-nord0);   /* en-tête */
-  --vt-color-brand-2:      var(--vt-nord1);
-  --vt-color-on-brand:     var(--vt-nord6);
-  --vt-color-link:         var(--vt-nord10-aa);
-  --vt-color-link-hover:   var(--vt-nord10-aa-hover);
-  --vt-color-accent:       var(--vt-nord10-aa); /* fond du CTA principal */
-  --vt-color-accent-hover: var(--vt-nord10-aa-hover);
-  --vt-color-on-accent:    var(--vt-nord6);
-  --vt-color-focus:        var(--vt-nord10);
-  --vt-color-mark:         var(--vt-nord13);
-  --vt-color-footer:       var(--vt-nord1);
-  --vt-color-footer-deep:  var(--vt-nord0);
+  /* Accents */
+  --vt-primary:                 var(--vt-nord10-aa);
+  --vt-on-primary:              var(--vt-nord6);
+  --vt-primary-container:       var(--vt-nord10-container);
+  --vt-on-primary-container:    var(--vt-nord10-on-container);
+  --vt-secondary:               var(--vt-nord8-aa);
+  --vt-on-secondary:            var(--vt-nord6);
+  --vt-secondary-container:     var(--vt-nord8-container);
+  --vt-on-secondary-container:  var(--vt-nord8-on-container);
+  --vt-tertiary:                var(--vt-nord15-aa);
+  --vt-on-tertiary:             var(--vt-nord6);
+  --vt-tertiary-container:      var(--vt-nord15-container);
+  --vt-on-tertiary-container:   var(--vt-nord15-on-container);
+  --vt-error:                   var(--vt-nord11-aa);
+  --vt-on-error:                var(--vt-nord6);
+  --vt-error-container:         var(--vt-nord11-container);
+  --vt-on-error-container:      var(--vt-nord11-on-container);
+  /* Surfaces */
+  --vt-surface:                   var(--vt-nord6);
+  --vt-on-surface:                var(--vt-nord0);
+  --vt-on-surface-variant:        var(--vt-nord3);
+  --vt-surface-container-lowest:  var(--vt-nord6-bright);
+  --vt-surface-container-low:     var(--vt-nord5-soft);
+  --vt-surface-container:         var(--vt-nord5);
+  --vt-surface-container-high:    var(--vt-nord4-soft);
+  --vt-surface-container-highest: var(--vt-nord4);
+  --vt-inverse-surface:           var(--vt-nord1);
+  --vt-inverse-on-surface:        var(--vt-nord6);
+  --vt-inverse-primary:           var(--vt-nord8);
+  /* Contours */
+  --vt-outline:                 var(--vt-nord3-outline);
+  --vt-outline-variant:         var(--vt-nord4);
+  --vt-scrim:                   var(--vt-nord0);
+  --vt-shadow:                  var(--vt-nord0);
 
+  /* Couleurs personnalisées (M3 « custom colors », avec leur rôle on-*) */
+  /* Marque : en-tête et pied de page Polar Night dans les deux thèmes */
+  --vt-brand:            var(--vt-nord0);
+  --vt-brand-variant:    var(--vt-nord1);
+  --vt-on-brand:         var(--vt-nord6);
+  --vt-brand-focus:      var(--vt-nord8);
+  /* Surlignage */
+  --vt-mark:             var(--vt-nord13);
+  /* Code */
   --vt-code-bg:            var(--vt-nord5);
   --vt-code-fg:            var(--vt-nord0);
   --vt-code-keyword:       var(--vt-nord10-aa);
@@ -109,7 +217,6 @@
   --vt-code-comment:       var(--vt-nord3);
   --vt-code-generic:       var(--vt-nord11-aa);
   --vt-code-punctuation:   var(--vt-nord3);
-
   /* Accents catégoriels (non textuels) : cartes, frise, tuiles, intertitres */
   --vt-accent-1:           var(--vt-nord10);
   --vt-accent-2:           var(--vt-nord8-ui);
@@ -117,33 +224,55 @@
   --vt-accent-4:           var(--vt-nord13-ui);
   --vt-accent-5:           var(--vt-nord12-ui);
   --vt-accent-6:           var(--vt-nord15-ui);
-
+  /* Hero : dégradé Polar Night → Frost */
   --vt-hero-from:          var(--vt-nord0);
   --vt-hero-via:           var(--vt-nord1);
   --vt-hero-to:            var(--vt-nord10);
 }
 
-/* Thème sombre — « Polar Night » : fonds Polar Night, texte Snow Storm, accent Frost */
+/* Thème sombre — « Polar Night » : surfaces Polar Night, texte Snow Storm, accents Frost */
 [data-md-color-scheme="slate"] {
-  --vt-color-bg:           var(--vt-nord0);
-  --vt-color-surface:      var(--vt-nord1);
-  --vt-color-border:       var(--vt-nord2);
-  --vt-color-text:         var(--vt-nord6);
-  --vt-color-text-muted:   var(--vt-nord4);
-  --vt-color-heading:      var(--vt-nord6);
-  --vt-color-brand:        var(--vt-nord1);   /* en-tête, distinct du fond */
-  --vt-color-brand-2:      var(--vt-nord2);
-  --vt-color-on-brand:     var(--vt-nord6);
-  --vt-color-link:         var(--vt-nord8);
-  --vt-color-link-hover:   var(--vt-nord7);
-  --vt-color-accent:       var(--vt-nord8);
-  --vt-color-accent-hover: var(--vt-nord7);
-  --vt-color-on-accent:    var(--vt-nord0);
-  --vt-color-focus:        var(--vt-nord8);
-  --vt-color-mark:         var(--vt-nord13);
-  --vt-color-footer:       var(--vt-nord1);
-  --vt-color-footer-deep:  var(--vt-nord0-deep);
+  /* Accents */
+  --vt-primary:                 var(--vt-nord9-bright);
+  --vt-on-primary:              var(--vt-nord0);
+  --vt-primary-container:       var(--vt-nord10-aa);
+  --vt-on-primary-container:    var(--vt-nord6);
+  --vt-secondary:               var(--vt-nord8);
+  --vt-on-secondary:            var(--vt-nord0);
+  --vt-secondary-container:     var(--vt-nord8-on-container);
+  --vt-on-secondary-container:  var(--vt-nord6);
+  --vt-tertiary:                var(--vt-nord15-bright);
+  --vt-on-tertiary:             var(--vt-nord0);
+  --vt-tertiary-container:      var(--vt-nord15-on-container);
+  --vt-on-tertiary-container:   var(--vt-nord6);
+  --vt-error:                   var(--vt-nord11-bright);
+  --vt-on-error:                var(--vt-nord0);
+  --vt-error-container:         var(--vt-nord11-on-container);
+  --vt-on-error-container:      var(--vt-nord6);
+  /* Surfaces */
+  --vt-surface:                   var(--vt-nord0);
+  --vt-on-surface:                var(--vt-nord6);
+  --vt-on-surface-variant:        var(--vt-nord4);
+  --vt-surface-container-lowest:  var(--vt-nord0-deep);
+  --vt-surface-container-low:     var(--vt-nord1-dim);
+  --vt-surface-container:         var(--vt-nord1);
+  --vt-surface-container-high:    var(--vt-nord2);
+  --vt-surface-container-highest: var(--vt-nord2-bright);
+  --vt-inverse-surface:           var(--vt-nord6);
+  --vt-inverse-on-surface:        var(--vt-nord1);
+  --vt-inverse-primary:           var(--vt-nord10-aa);
+  /* Contours */
+  --vt-outline:                 var(--vt-nord3-bright);
+  --vt-outline-variant:         var(--vt-nord3);
+  --vt-scrim:                   var(--vt-nord0);
+  --vt-shadow:                  var(--vt-nord0);
 
+  /* Couleurs personnalisées */
+  --vt-brand:            var(--vt-nord1);   /* en-tête, distinct de la surface */
+  --vt-brand-variant:    var(--vt-nord0-deep);
+  --vt-on-brand:         var(--vt-nord6);
+  --vt-brand-focus:      var(--vt-nord8);
+  --vt-mark:             var(--vt-nord13);
   --vt-code-bg:            var(--vt-nord0-deep);
   --vt-code-fg:            var(--vt-nord4);
   --vt-code-keyword:       var(--vt-nord9);
@@ -155,14 +284,12 @@
   --vt-code-comment:       var(--vt-nord3-bright);
   --vt-code-generic:       var(--vt-nord11-bright);
   --vt-code-punctuation:   var(--vt-nord4);
-
   --vt-accent-1:           var(--vt-nord9);
   --vt-accent-2:           var(--vt-nord8);
   --vt-accent-3:           var(--vt-nord14);
   --vt-accent-4:           var(--vt-nord13);
   --vt-accent-5:           var(--vt-nord12);
   --vt-accent-6:           var(--vt-nord15);
-
   --vt-hero-from:          var(--vt-nord1);
   --vt-hero-via:           var(--vt-nord2);
   --vt-hero-to:            var(--vt-nord10);
@@ -170,66 +297,77 @@
 
 /* Tokens composés, communs aux deux thèmes */
 [data-md-color-scheme] {
-  /* Hero — seul geste « expressif » autorisé (Lavie & Tractinsky 2004) */
-  --vt-hero-gradient: linear-gradient(135deg, var(--vt-hero-from) 0%, var(--vt-hero-via) 60%, var(--vt-hero-to) 140%);
-  /* Le hero est sombre dans les deux thèmes : son CTA prend l'accent Frost clair */
-  --vt-hero-text:     var(--vt-nord6);
-  --vt-hero-cta:      var(--vt-nord8);
-  --vt-hero-cta-hover: var(--vt-nord7);
-  --vt-hero-on-cta:   var(--vt-nord0);
-  --vt-portrait-ring: var(--vt-nord8);  /* liseré Frost autour du portrait */
+  /* Hero — seul geste « expressif » autorisé (Lavie & Tractinsky 2004).
+     Toujours sombre : ses couleurs sont une couleur personnalisée M3 avec ses propres rôles on-*. */
+  --vt-hero-gradient:   linear-gradient(135deg, var(--vt-hero-from) 0%, var(--vt-hero-via) 60%, var(--vt-hero-to) 140%);
+  --vt-hero-text:       var(--vt-nord6);
+  --vt-hero-cta:        var(--vt-nord8);
+  --vt-hero-on-cta:     var(--vt-nord0);
+  --vt-hero-focus:      var(--vt-nord8);
+  --vt-portrait-ring:   var(--vt-nord8);
 
-  /* Encadrés (admonitions) : Frost pour l'information, Aurora pour le sémantique */
-  --vt-admonition-info:    var(--vt-nord10);
-  --vt-admonition-tip:     var(--vt-nord14);
-  --vt-admonition-warning: var(--vt-nord13);
-  --vt-admonition-danger:  var(--vt-nord11);
-  --vt-admonition-question: var(--vt-nord8);
-  --vt-admonition-example: var(--vt-nord15);
-  --vt-shadow: 0 1px 2px color-mix(in srgb, var(--vt-nord0) 8%, transparent),
-               0 4px 16px color-mix(in srgb, var(--vt-nord0) 10%, transparent);
+  /* Encadrés : rôles M3 pour l'information, couleurs Aurora pour succès et alerte */
+  --vt-admonition-info:     var(--vt-primary);
+  --vt-admonition-tip:      var(--vt-nord14);
+  --vt-admonition-warning:  var(--vt-nord13);
+  --vt-admonition-danger:   var(--vt-error);
+  --vt-admonition-question: var(--vt-secondary);
+  --vt-admonition-example:  var(--vt-tertiary);
+
+  /* Transitions d'état (M3 : easing standard, durées courtes) */
+  --vt-transition-state:
+    background-color var(--vt-motion-duration-short3) var(--vt-motion-easing-standard),
+    border-color     var(--vt-motion-duration-short3) var(--vt-motion-easing-standard),
+    box-shadow       var(--vt-motion-duration-short3) var(--vt-motion-easing-standard),
+    color            var(--vt-motion-duration-short3) var(--vt-motion-easing-standard),
+    border-radius    var(--vt-motion-duration-short4) var(--vt-motion-easing-emphasized-decelerate);
 }
 
-/* ---------- 2bis. MAPPING TOKENS → THÈME MATERIAL ---------- */
+/* ---------- 2bis. MAPPING TOKENS → THÈME (variables Material reprises par Zensical) ---------- */
 [data-md-color-scheme] {
-  --md-default-bg-color:            var(--vt-color-bg);
-  --md-default-bg-color--light:     color-mix(in srgb, var(--vt-color-bg) 70%, transparent);
-  --md-default-bg-color--lighter:   color-mix(in srgb, var(--vt-color-bg) 30%, transparent);
-  --md-default-bg-color--lightest:  color-mix(in srgb, var(--vt-color-bg) 12%, transparent);
-  --md-default-fg-color:            var(--vt-color-text);
-  --md-default-fg-color--light:     var(--vt-color-text-muted);
-  --md-default-fg-color--lighter:   color-mix(in srgb, var(--vt-color-text) 32%, transparent);
-  --md-default-fg-color--lightest:  color-mix(in srgb, var(--vt-color-text) 12%, transparent);
+  --md-default-bg-color:            var(--vt-surface);
+  --md-default-bg-color--light:     color-mix(in srgb, var(--vt-surface) 70%, transparent);
+  --md-default-bg-color--lighter:   color-mix(in srgb, var(--vt-surface) 30%, transparent);
+  --md-default-bg-color--lightest:  color-mix(in srgb, var(--vt-surface) 12%, transparent);
+  --md-default-fg-color:            var(--vt-on-surface);
+  --md-default-fg-color--light:     var(--vt-on-surface-variant);
+  --md-default-fg-color--lighter:   color-mix(in srgb, var(--vt-on-surface) 32%, transparent);
+  --md-default-fg-color--lightest:  var(--vt-outline-variant);
 
-  --md-primary-fg-color:            var(--vt-color-brand);
-  --md-primary-fg-color--light:     var(--vt-color-brand-2);
-  --md-primary-fg-color--dark:      var(--vt-color-brand);
-  --md-primary-bg-color:            var(--vt-color-on-brand);
-  --md-primary-bg-color--light:     color-mix(in srgb, var(--vt-color-on-brand) 70%, transparent);
+  --md-primary-fg-color:            var(--vt-brand);
+  --md-primary-fg-color--light:     var(--vt-brand-variant);
+  --md-primary-fg-color--dark:      var(--vt-brand);
+  --md-primary-bg-color:            var(--vt-on-brand);
+  --md-primary-bg-color--light:     color-mix(in srgb, var(--vt-on-brand) 70%, transparent);
 
-  --md-accent-fg-color:             var(--vt-color-link-hover);
-  --md-accent-fg-color--transparent: color-mix(in srgb, var(--vt-color-accent) 10%, transparent);
-  --md-accent-bg-color:             var(--vt-color-on-accent);
-  --md-accent-bg-color--light:      color-mix(in srgb, var(--vt-color-on-accent) 70%, transparent);
+  --md-accent-fg-color:             color-mix(in srgb, var(--vt-primary) 80%, var(--vt-on-surface));
+  --md-accent-fg-color--transparent: color-mix(in srgb, var(--vt-primary) 10%, transparent);
+  --md-accent-bg-color:             var(--vt-on-primary);
+  --md-accent-bg-color--light:      color-mix(in srgb, var(--vt-on-primary) 70%, transparent);
 
-  --md-typeset-color:               var(--vt-color-text);
-  --md-typeset-a-color:             var(--vt-color-link);
-  --md-typeset-mark-color:          color-mix(in srgb, var(--vt-color-mark) 45%, transparent);
-  --md-typeset-table-color:         color-mix(in srgb, var(--vt-color-text) 12%, transparent);
-  --md-typeset-table-color--light:  color-mix(in srgb, var(--vt-color-text) 4%, transparent);
+  --md-typeset-color:               var(--vt-on-surface);
+  --md-typeset-a-color:             var(--vt-primary);
+  --md-typeset-mark-color:          color-mix(in srgb, var(--vt-mark) 45%, transparent);
+  --md-typeset-table-color:         var(--vt-outline-variant);
+  --md-typeset-table-color--light:  color-mix(in srgb, var(--vt-on-surface) 4%, transparent);
 
-  --md-admonition-bg-color:         var(--vt-color-bg);
-  --md-admonition-fg-color:         var(--vt-color-text);
+  --md-admonition-bg-color:         var(--vt-surface);
+  --md-admonition-fg-color:         var(--vt-on-surface);
 
-  --md-footer-bg-color:             var(--vt-color-footer);
-  --md-footer-bg-color--dark:       var(--vt-color-footer-deep);
-  --md-footer-fg-color:             var(--vt-color-on-brand);
-  --md-footer-fg-color--light:      color-mix(in srgb, var(--vt-color-on-brand) 75%, transparent);
-  --md-footer-fg-color--lighter:    color-mix(in srgb, var(--vt-color-on-brand) 50%, transparent);
+  --md-footer-bg-color:             var(--vt-brand-variant);
+  --md-footer-bg-color--dark:       var(--vt-brand);
+  --md-footer-fg-color:             var(--vt-on-brand);
+  --md-footer-fg-color--light:      color-mix(in srgb, var(--vt-on-brand) 75%, transparent);
+  --md-footer-fg-color--lighter:    color-mix(in srgb, var(--vt-on-brand) 50%, transparent);
+
+  /* Ombres du thème → niveaux d'élévation M3 */
+  --md-shadow-z1:                   var(--vt-elevation-1);
+  --md-shadow-z2:                   var(--vt-elevation-2);
+  --md-shadow-z3:                   var(--vt-elevation-3);
 
   --md-code-bg-color:               var(--vt-code-bg);
   --md-code-fg-color:               var(--vt-code-fg);
-  --md-code-hl-color:               color-mix(in srgb, var(--vt-color-focus) 25%, transparent);
+  --md-code-hl-color:               color-mix(in srgb, var(--vt-secondary) 25%, transparent);
   --md-code-hl-keyword-color:       var(--vt-code-keyword);
   --md-code-hl-operator-color:      var(--vt-code-keyword);
   --md-code-hl-function-color:      var(--vt-code-function);
@@ -244,11 +382,69 @@
   --md-code-hl-variable-color:      var(--vt-code-fg);
 }
 
-/* Titres et focus clavier visibles dans les deux thèmes */
-.md-typeset h1, .md-typeset h2, .md-typeset h3 { color: var(--vt-color-heading); }
-/* H1 en gras, comme celui du hero : le titre de page domine les H2 (hiérarchie visuelle).
-   Graisses utilisées : 400 et 700 uniquement, celles chargées par theme.font (pas de 600 simulé). */
-.md-typeset h1 { font-weight: 700; }
+/* ---------- 3. COMPOSANTS ---------- */
+
+/* Typographie de contenu : rôles M3 (titres « emphasized » en gras, corps en body large) */
+.md-typeset {
+  line-height: var(--vt-type-body-large-line);
+  letter-spacing: var(--vt-type-tracking-none);
+}
+.md-typeset :is(h1, h2, h3, h4) { color: var(--vt-on-surface); letter-spacing: var(--vt-type-tracking-none); }
+.md-typeset h1 {               /* headline large */
+  font-size: var(--vt-type-headline-large-size);
+  line-height: var(--vt-type-headline-large-line);
+  font-weight: var(--vt-font-weight-bold);
+}
+/* Ancre ¶ inutile sur le titre de page (l'URL y mène déjà) ; elle passait à la ligne en compact et créait un vide */
+.md-typeset h1 .headerlink { display: none; }
+.md-typeset h2 {               /* headline small */
+  font-size: var(--vt-type-headline-small-size);
+  line-height: var(--vt-type-headline-small-line);
+  font-weight: var(--vt-font-weight-bold);
+}
+.md-typeset h3 {               /* title large */
+  font-size: var(--vt-type-title-large-size);
+  line-height: var(--vt-type-title-large-line);
+  font-weight: var(--vt-font-weight-bold);
+}
+.md-typeset h4 {               /* title medium */
+  font-size: var(--vt-type-title-medium-size);
+  line-height: var(--vt-type-title-medium-line);
+  font-weight: var(--vt-font-weight-medium);
+  letter-spacing: var(--vt-type-title-medium-tracking);
+}
+
+/* Longueur de ligne : M3 recommande 40 à 60 caractères pour le texte courant */
+.md-typeset > :is(p, ul, ol, dl, blockquote),
+.md-typeset .vt-timeline > :is(p, ul, ol) { max-width: var(--vt-measure); }
+
+/* Liens : M3 exige un lien souligné, couleur primary (le soulignement évite de porter le sens par la seule couleur) */
+.md-typeset a:not(.md-button):not(.headerlink) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.md-typeset a:not(.md-button):not(.headerlink):hover { text-decoration-thickness: 2px; }
+
+/* Indicateur de focus M3 : anneau secondary de 3dp, décalé de 2dp ; couleur adaptée sur les fonds sombres fixes */
+:focus-visible,
+.md-typeset :is(a, summary, button, [tabindex]):is(:focus-visible, .focus-visible) {   /* le thème colore sinon le focus du contenu avec sa couleur d'accent */
+  outline: var(--vt-focus-ring-width) solid var(--vt-secondary);
+  outline-offset: var(--vt-focus-ring-offset);
+}
+:is(.md-header, .md-tabs, .md-footer) :focus-visible { outline-color: var(--vt-brand-focus); }
+.md-typeset .vt-hero :is(a, button):is(:focus-visible, .focus-visible) { outline-color: var(--vt-hero-focus); }
+
+/* Cibles tactiles M3 : 48dp minimum pour les icônes sociales du pied de page */
+.md-social__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  min-width: var(--vt-size-target);
+  min-height: var(--vt-size-target);
+}
 
 /* Cycle d'accent : tout élément répété (carte, étape, tuile) reçoit --vt-accent selon son rang */
 .md-typeset .grid.cards > ul > li,
@@ -259,44 +455,115 @@
 .md-typeset .grid.cards > ul > li:nth-child(6n+4), .vt-timeline h3:nth-of-type(6n+4), .vt-tiles li:nth-child(6n+4) { --vt-accent: var(--vt-accent-4); }
 .md-typeset .grid.cards > ul > li:nth-child(6n+5), .vt-timeline h3:nth-of-type(6n+5), .vt-tiles li:nth-child(6n+5) { --vt-accent: var(--vt-accent-5); }
 .md-typeset .grid.cards > ul > li:nth-child(6n+6), .vt-timeline h3:nth-of-type(6n+6), .vt-tiles li:nth-child(6n+6) { --vt-accent: var(--vt-accent-6); }
-:focus-visible { outline: 2px solid var(--vt-color-focus); outline-offset: 2px; }
 
-/* ---------- 3. COMPOSANTS ---------- */
+/* Boutons M3 (m3.material.io/components/buttons) : deux styles seulement (P5).
+   - principal = bouton « filled » (primary / on-primary), un seul par page (P6) ;
+   - secondaire = bouton « outlined » (contour outline, libellé on-surface-variant).
+   Forme ronde (full), hauteur 40dp, libellé label large, marge verticale de 4dp → cible de 48dp.
+   États : couche d'état de la couleur du libellé (survol 8 %, focus 10 %, appui 10 %) ;
+   à l'appui, la forme se resserre (rayon small), comme le « shape morph » M3. */
+.md-typeset .md-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vt-space-2);
+  min-height: var(--vt-size-button);
+  margin: var(--vt-space-1) 0;
+  padding: 0 var(--vt-space-4);
+  vertical-align: middle;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--vt-shape-full);
+  font-size: var(--vt-type-label-large-size);
+  line-height: var(--vt-type-label-large-line);
+  font-weight: var(--vt-font-weight-medium);
+  letter-spacing: var(--vt-type-label-large-tracking);
+  transition: var(--vt-transition-state);
+}
+.md-typeset .md-button:active { border-radius: var(--vt-shape-small); }
 
-/* Hero de page d'accueil : <div class="vt-hero" markdown> */
+/* Secondaire : outlined */
+.md-typeset .md-button:not(.md-button--primary),
+.md-typeset .md-button:not(.md-button--primary):focus {
+  --vt-btn-label: var(--vt-on-surface-variant);
+  color: var(--vt-btn-label);
+  background-color: transparent;
+  border-color: var(--vt-outline);
+}
+.md-typeset .md-button:not(.md-button--primary):hover {
+  color: var(--vt-btn-label);
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-hover), transparent);
+  border-color: var(--vt-outline);
+}
+.md-typeset .md-button:not(.md-button--primary):focus-visible {
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-focus), transparent);
+}
+.md-typeset .md-button:not(.md-button--primary):active {
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-pressed), transparent);
+}
+
+/* Principal : filled */
+.md-typeset .md-button--primary,
+.md-typeset .md-button--primary:focus {
+  --vt-btn-container: var(--vt-primary);
+  --vt-btn-label: var(--vt-on-primary);
+  color: var(--vt-btn-label);
+  background-color: var(--vt-btn-container);
+  border-color: var(--vt-btn-container);
+  box-shadow: var(--vt-elevation-0);
+}
+.md-typeset .md-button--primary:hover {
+  color: var(--vt-btn-label);
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-hover), var(--vt-btn-container));
+  border-color: transparent;
+  box-shadow: var(--vt-elevation-1);          /* M3 : un bouton filled survolé monte au niveau 1 */
+}
+.md-typeset .md-button--primary:focus-visible {
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-focus), var(--vt-btn-container));
+}
+.md-typeset .md-button--primary:active {
+  background-color: color-mix(in srgb, var(--vt-btn-label) var(--vt-state-pressed), var(--vt-btn-container));
+  box-shadow: var(--vt-elevation-0);
+}
+
+/* Hero de page d'accueil : <div class="vt-hero" markdown>, portrait puis <div class="vt-hero-text" markdown>.
+   Mobile d'abord : colonne (compact), ligne dès medium, typographie display à partir d'expanded. */
 .vt-hero {
   display: flex;
-  flex-direction: row-reverse;   /* portrait premier dans le source, affiché à droite */
-  align-items: center;
-  gap: var(--vt-space-5);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--vt-space-3);
   margin: 0 0 var(--vt-space-5);
-  padding: var(--vt-space-5);
-  border-radius: var(--vt-radius-lg);
+  padding: var(--vt-space-5) var(--vt-space-4);
+  border-radius: var(--vt-shape-extra-large);
   background: var(--vt-hero-gradient);
   color: var(--vt-hero-text);
 }
-/* Bloc texte du hero : <div class="vt-hero-text" markdown> autour du H1, de l'accroche et des boutons */
 .vt-hero-text { flex: 1 1 auto; min-width: 0; }
-.vt-hero h1 {
+.md-typeset .vt-hero h1 {      /* headline large (compact) → display small (expanded+) */
   margin: 0 0 var(--vt-space-3);
   color: inherit;
-  font-weight: 700;
 }
-.vt-hero p { font-size: 1.1em; max-width: var(--vt-measure); }
-.vt-hero .md-button { margin: var(--vt-space-2) var(--vt-space-2) 0 0; }
-.md-typeset .vt-hero .md-button--primary {
-  background-color: var(--vt-hero-cta);
-  border-color: var(--vt-hero-cta);
-  color: var(--vt-hero-on-cta);
+.vt-hero-text > p:not(:last-child) {   /* accroche : body large (compact) → title large (expanded+) */
+  max-width: var(--vt-measure);
+  font-size: var(--vt-type-body-large-size);
+  line-height: var(--vt-type-body-large-line);
 }
+.vt-hero .md-button { margin-right: var(--vt-space-2); }
+.md-typeset .vt-hero .md-button--primary,
+.md-typeset .vt-hero .md-button--primary:focus,
 .md-typeset .vt-hero .md-button--primary:hover,
-.md-typeset .vt-hero .md-button--primary:focus {
-  background-color: var(--vt-hero-cta-hover);
-  border-color: var(--vt-hero-cta-hover);
-  color: var(--vt-hero-on-cta);
+.md-typeset .vt-hero .md-button--primary:focus-visible,
+.md-typeset .vt-hero .md-button--primary:active {
+  --vt-btn-container: var(--vt-hero-cta);
+  --vt-btn-label: var(--vt-hero-on-cta);
 }
-.vt-hero .md-button:not(.md-button--primary) {
-  color: var(--vt-hero-text);
+.md-typeset .vt-hero .md-button:not(.md-button--primary),
+.md-typeset .vt-hero .md-button:not(.md-button--primary):focus,
+.md-typeset .vt-hero .md-button:not(.md-button--primary):hover,
+.md-typeset .vt-hero .md-button:not(.md-button--primary):focus-visible,
+.md-typeset .vt-hero .md-button:not(.md-button--primary):active {
+  --vt-btn-label: var(--vt-hero-text);
   border-color: var(--vt-hero-text);
 }
 
@@ -309,81 +576,64 @@
 }
 .md-typeset .vt-portrait {
   display: block;
-  width: var(--vt-portrait-size);
-  height: var(--vt-portrait-size);
-  border-radius: 50%;
+  width: var(--vt-portrait-size-compact);
+  height: var(--vt-portrait-size-compact);
+  border-radius: var(--vt-shape-full);
   object-fit: cover;
   border: 4px solid var(--vt-portrait-ring);
-  box-shadow: var(--vt-shadow);
+  box-shadow: var(--vt-elevation-2);
 }
 
-/* Boutons — le secondaire prend la couleur des liens (visible dans les deux thèmes) */
-.md-typeset .md-button {
-  border-radius: var(--vt-radius);
-  color: var(--vt-color-link);
-  border-color: currentColor;
-}
-.md-typeset .md-button:not(.md-button--primary):hover,
-.md-typeset .md-button:not(.md-button--primary):focus {
-  color: var(--vt-color-on-accent);
-  background-color: var(--vt-color-accent-hover);
-  border-color: var(--vt-color-accent-hover);
-}
-.md-typeset .md-button--primary {
-  background-color: var(--vt-color-accent);
-  border-color: var(--vt-color-accent);
-  color: var(--vt-color-on-accent);
-}
-.md-typeset .md-button--primary:hover,
-.md-typeset .md-button--primary:focus {
-  background-color: var(--vt-color-accent-hover);
-  border-color: var(--vt-color-accent-hover);
-  color: var(--vt-color-on-accent);
-}
-
-/* Grille de cartes : <div class="grid cards" markdown> (composant Material)
-   Liseré supérieur et icône à la couleur d'accent de la carte. */
+/* Grille de cartes : <div class="grid cards" markdown> — carte M3 « elevated »
+   (surface-container-low, niveau 1, rayon medium, marge interne 16dp, 8dp entre cartes).
+   Les cartes ne sont pas cliquables en entier : pas d'effet de survol (M3 : pas de couche d'état sans interaction). */
 .md-typeset .grid.cards > ul > li,
-.md-typeset .grid.cards > ol > li {
-  border-radius: var(--vt-radius);
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ul > li:focus-within {
+  padding: var(--vt-space-3);
+  border: 0;
   border-top: 3px solid var(--vt-accent);
-  box-shadow: var(--vt-shadow);
+  border-radius: var(--vt-shape-medium);
+  background-color: var(--vt-surface-container-low);
+  box-shadow: var(--vt-elevation-1);
+  font-size: var(--vt-type-body-medium-size);       /* texte de soutien : body medium */
+  line-height: var(--vt-type-body-medium-line);
 }
-.md-typeset .grid.cards > ul > li:hover {
-  border-top-color: var(--vt-accent);
-  background-color: color-mix(in srgb, var(--vt-accent) 6%, transparent);
+.md-typeset .grid.cards > ul > li > p:first-child {  /* titre de carte : title medium */
+  font-size: var(--vt-type-title-medium-size);
+  line-height: var(--vt-type-title-medium-line);
+  letter-spacing: var(--vt-type-title-medium-tracking);
 }
 .md-typeset .grid.cards .twemoji { color: var(--vt-accent); }
-.md-typeset .grid.cards > ul > li > hr { border-bottom-color: color-mix(in srgb, var(--vt-accent) 35%, transparent); }
+.md-typeset .grid.cards > ul > li > hr { border-bottom-color: color-mix(in srgb, var(--vt-accent) 35%, var(--vt-outline-variant)); }
 
 /* Intertitres de contenu : barre d'accent Frost sous chaque H2 (repère de balayage) */
-.md-typeset h2 { font-weight: 700; }
 .md-typeset h2::after {
   content: "";
   display: block;
   width: 2.5rem;
   height: 3px;
   margin-top: var(--vt-space-2);
-  border-radius: var(--vt-radius);
+  border-radius: var(--vt-shape-full);
   background: linear-gradient(90deg, var(--vt-accent-1), var(--vt-accent-2));
 }
 
-/* Citation (devise) : liseré et texte appuyés */
+/* Citation (devise) : rôles secondary-container, rayon medium côté contenu */
 [dir] .md-typeset blockquote {
-  border-left: 4px solid var(--vt-accent-2);
-  color: var(--vt-color-text);
-  background: color-mix(in srgb, var(--vt-accent-2) 8%, transparent);
-  border-radius: 0 var(--vt-radius) var(--vt-radius) 0;
   padding: var(--vt-space-2) var(--vt-space-4);
+  border-left: 4px solid var(--vt-secondary);
+  border-radius: var(--vt-shape-none) var(--vt-shape-medium) var(--vt-shape-medium) var(--vt-shape-none);
+  background: var(--vt-secondary-container);
+  color: var(--vt-on-secondary-container);
 }
 
 /* Frise chronologique : <div class="vt-timeline" markdown> autour des H3 d'expérience */
 .vt-timeline {
   margin-left: var(--vt-space-2);
   padding-left: var(--vt-space-4);
-  border-left: 2px solid var(--vt-color-border);
+  border-left: 2px solid var(--vt-outline-variant);
 }
-.md-typeset .vt-timeline h3 { position: relative; font-weight: 700; }
+.md-typeset .vt-timeline h3 { position: relative; }
 .md-typeset .vt-timeline h3::before {
   content: "";
   position: absolute;
@@ -391,17 +641,19 @@
   left: calc(-1 * var(--vt-space-4) - 0.5rem - 1px);
   width: 1rem;
   height: 1rem;
-  border-radius: 50%;
+  border-radius: var(--vt-shape-full);
   background: var(--vt-accent);
-  box-shadow: 0 0 0 4px var(--vt-color-bg);
+  outline: 4px solid var(--vt-surface);
 }
 
-/* Tuiles : <div class="vt-tiles" markdown> autour d'une liste courte (compétences, modalités) */
+/* Tuiles : <div class="vt-tiles" markdown> autour d'une liste courte (compétences, modalités)
+   Carte M3 « filled » (sans ombre, rayon medium), remappée de surface-container-highest vers
+   surface-container-high : les liserés d'accent y gardent 3:1 (M3 autorise le remappage de rôle). */
 [dir] .md-typeset .vt-tiles ul {
   display: grid;
   /* 3 colonnes au plus (6 tuiles = 3 + 3, jamais 4 + 2) ; 1 colonne sous ~14rem */
   grid-template-columns: repeat(auto-fit, minmax(max(14rem, 30%), 1fr));
-  gap: var(--vt-space-3);
+  gap: var(--vt-space-2);
   margin: var(--vt-space-3) 0;
   margin-left: 0;
   padding: 0;
@@ -412,17 +664,29 @@
   margin-left: 0;
   padding: var(--vt-space-3);
   border-left: 4px solid var(--vt-accent);
-  border-radius: var(--vt-radius);
-  background: var(--vt-color-surface);
+  border-radius: var(--vt-shape-medium);
+  background: var(--vt-surface-container-high);
+  color: var(--vt-on-surface);
+  font-size: var(--vt-type-body-medium-size);
+  line-height: var(--vt-type-body-medium-line);
 }
 
-/* Section CTA de fin de page : <div class="vt-cta" markdown> */
+/* Section CTA de fin de page : <div class="vt-cta" markdown> — rôles primary-container, rayon large */
 .vt-cta {
   margin-top: var(--vt-space-5);
   padding: var(--vt-space-4);
-  border-left: 4px solid var(--vt-color-accent);
-  border-radius: var(--vt-radius);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--vt-accent-1) 12%, var(--vt-color-surface)), var(--vt-color-surface));
+  border-radius: var(--vt-shape-large);
+  background: var(--vt-primary-container);
+  color: var(--vt-on-primary-container);
+}
+.md-typeset .vt-cta > p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vt-space-3);
+  margin: 0;
+  font-size: var(--vt-type-title-medium-size);
+  line-height: var(--vt-type-title-medium-line);
 }
 
 /* Bandeau de preuves (références, certifications, logos) : <div class="vt-proof" markdown>
@@ -435,9 +699,11 @@
   gap: var(--vt-space-3) var(--vt-space-5);
   margin: var(--vt-space-5) 0;
   padding: var(--vt-space-4) var(--vt-space-3);
-  border-top: 1px solid var(--vt-color-border);
-  border-bottom: 1px solid var(--vt-color-border);
-  color: var(--vt-color-text-muted);
+  border-top: 1px solid var(--vt-outline-variant);
+  border-bottom: 1px solid var(--vt-outline-variant);
+  color: var(--vt-on-surface-variant);
+  font-size: var(--vt-type-label-large-size);
+  line-height: var(--vt-type-label-large-line);
 }
 .vt-proof p { margin: 0; }
 .vt-proof img {
@@ -447,14 +713,18 @@
   opacity: 0.8;
 }
 
-/* Encadrés aux couleurs Nord : !!! note|info|tip|success|warning|danger|question|example */
+/* Encadrés (articles) : !!! note|info|tip|success|warning|danger|question|example — rayon small (contenu dense) */
 .md-typeset .admonition, .md-typeset details { --vt-adm: var(--vt-admonition-info); }
 .md-typeset :is(.tip, .success, .hint, .check, .done)        { --vt-adm: var(--vt-admonition-tip); }
 .md-typeset :is(.warning, .caution, .attention)              { --vt-adm: var(--vt-admonition-warning); }
 .md-typeset :is(.danger, .error, .failure, .fail, .bug)      { --vt-adm: var(--vt-admonition-danger); }
 .md-typeset :is(.question, .help, .faq)                      { --vt-adm: var(--vt-admonition-question); }
 .md-typeset :is(.example, .quote, .cite)                     { --vt-adm: var(--vt-admonition-example); }
-.md-typeset :is(.admonition, details)[class] { border-color: var(--vt-adm); }
+.md-typeset :is(.admonition, details)[class] {
+  border-color: var(--vt-adm);
+  border-radius: var(--vt-shape-small);
+  box-shadow: var(--vt-elevation-0);
+}
 .md-typeset :is(.admonition, details) > :is(.admonition-title, summary) {
   background-color: color-mix(in srgb, var(--vt-adm) 15%, transparent);
 }
@@ -462,24 +732,43 @@
   background-color: var(--vt-adm);
 }
 
-/* Grilles de 4 éléments (cartes, tuiles) : 2 × 2 sur grand écran, jamais 3 + 1 orphelin (P1, ordre et symétrie) */
-@media screen and (min-width: 45em) {
+/* Code : rayons extra-small (en ligne) et small (blocs) */
+.md-typeset code { border-radius: var(--vt-shape-extra-small); }
+.md-typeset pre > code { border-radius: var(--vt-shape-small); }
+
+/* ---------- 4. MISE EN PAGE ADAPTATIVE (points de rupture M3) ---------- */
+
+/* medium et plus (≥ 600dp) : hero en ligne, grilles de 4 éléments en 2 × 2 (jamais 3 + 1 orphelin) */
+@media screen and (min-width: 37.5em) {
+  .vt-hero {
+    flex-direction: row-reverse;   /* portrait premier dans le source, affiché à droite */
+    align-items: center;
+    gap: var(--vt-space-5);
+    padding: var(--vt-space-5);
+  }
   .md-typeset .grid.cards:has(> ul > li:nth-child(4):last-child),
   [dir] .md-typeset .vt-tiles ul:has(> li:nth-child(4):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Responsive */
-@media screen and (max-width: 44.9375em) {
-  .vt-hero {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--vt-space-3);
-    padding: var(--vt-space-5) var(--vt-space-3);
-  }
+/* expanded et plus (≥ 840dp) : portrait pleine taille, titre display small, accroche title large */
+@media screen and (min-width: 52.5em) {
   .md-typeset .vt-portrait {
-    width: var(--vt-portrait-size-mobile);
-    height: var(--vt-portrait-size-mobile);
+    width: var(--vt-portrait-size);
+    height: var(--vt-portrait-size);
   }
+  .md-typeset .vt-hero h1 {
+    font-size: var(--vt-type-display-small-size);
+    line-height: var(--vt-type-display-small-line);
+  }
+  .vt-hero-text > p:not(:last-child) {
+    font-size: var(--vt-type-title-large-size);
+    line-height: var(--vt-type-title-large-line);
+  }
+}
+
+/* Mouvement réduit : aucune transition */
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .md-button { transition: none; }
 }

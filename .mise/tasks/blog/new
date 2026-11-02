@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #MISE description="Crée un brouillon d'article de blog daté"
 #USAGE arg "<title>" help="Titre de l'article (entre guillemets)"
-#USAGE flag "-c --category <category>" help="Catégorie (doit figurer dans categories_allowed de mkdocs.yml)"
+#USAGE flag "-c --category <category>" help="Catégorie (doit figurer dans plugins.blog.categories_allowed de zensical.toml)"
 #USAGE flag "--publish" help="Crée l'article publié directement (sans draft: true)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
+source .mise/lib/zensical.sh
 
 title="${usage_title:?titre requis}"
 category="${usage_category:-}"
@@ -17,8 +18,8 @@ s = unicodedata.normalize("NFKD", sys.argv[1]).encode("ascii", "ignore").decode(
 print(re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-"))
 ' "$title")"
 
-# Catégories autorisées, lues dans mkdocs.yml
-allowed="$(awk '/categories_allowed:/{f=1;next} f&&/^ *- /{sub(/^ *- */,"");print;next} f{exit}' mkdocs.yml)"
+# Catégories autorisées, lues dans zensical.toml
+allowed="$(toml_get zensical.toml plugins.blog.categories_allowed)"
 if [[ -n "$category" ]] && ! grep -qxF "$category" <<<"$allowed"; then
   echo "✘ Catégorie inconnue : '$category'" >&2
   echo "  Autorisées : $(paste -sd, - <<<"$allowed" | sed 's/,/, /g')" >&2

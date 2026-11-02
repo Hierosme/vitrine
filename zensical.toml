@@ -1,0 +1,141 @@
+# Configuration du site public — Zensical (https://zensical.org), successeur de Material for MkDocs.
+# Navigation : voir docs/skills/site-navigation/SKILL.md
+# Look & feel : voir docs/skills/site-look-and-feel/SKILL.md
+# Ne pas lancer `zensical` directement : passer par les tâches mise (`mise tasks`).
+
+[project]
+site_name = "Jérôme Ornech"
+site_description = "Expert DevOps freelance — automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery"
+site_author = "Jérôme Ornech"
+site_url = "https://mondomaine.fr/"   # TODO: remplacer par le domaine réel (backlog.md, B-02)
+
+docs_dir = "site"    # sources du site
+site_dir = "build"   # sortie du build (≠ « site », déjà pris par les sources)
+
+copyright = "&copy; Jérôme Ornech — Expert DevOps freelance"
+
+extra_css = ["stylesheets/extra.css"]
+
+# Source de vérité unique de la navigation principale (6 onglets maximum, vérifié par `mise run check`)
+nav = [
+  { "Accueil" = "index.md" },
+  { "Services" = "services.md" },
+  { "Parcours" = "parcours.md" },
+  { "Blog" = ["blog/index.md"] },
+  { "Contact" = "contact.md" },
+]
+
+[project.theme]
+variant = "classic"        # rendu et classes CSS de Material for MkDocs, sur lesquels repose extra.css
+custom_dir = "overrides"   # SEO : balises Open Graph, JSON-LD, apple-touch-icon (overrides/main.html)
+language = "fr"
+favicon = "assets/images/favicon.svg"
+features = [
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.indexes",
+  "navigation.top",
+  # navigation.footer désactivé : liens Précédent/Suivant hors sujet sur une vitrine (et fuite des pages d'archives du blog)
+  "search.highlight",
+  "content.code.copy",
+]
+
+[project.theme.font]
+text = "Inter"
+code = "JetBrains Mono"
+
+[project.theme.icon]
+logo = "material/infinity"
+
+# Thèmes Nord clair (default) / sombre (slate) : couleurs définies dans site/stylesheets/extra.css
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/weather-night"
+toggle.name = "Passer au thème sombre"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "material/weather-sunny"
+toggle.name = "Passer au thème clair"
+
+[project.extra]
+generator = false
+
+# Données structurées (JSON-LD Person, overrides/main.html) — uniquement des faits présents sur le site
+[project.extra.seo]
+job_title = "Expert DevOps freelance"
+image = "assets/images/jerome-ornech.jpg"
+locality = "Propriano"
+region = "Corse"
+country = "FR"
+languages = ["fr", "en"]
+knows_about = [
+  "Ansible",
+  "Python",
+  "Network as Code",
+  "Continuous Delivery",
+  "CI/CD",
+  "Calcul haute performance (HPC)",
+  "Conformité ANSSI",
+]
+
+[[project.extra.social]]
+icon = "fontawesome/brands/linkedin"
+link = "https://www.linkedin.com/in/j%C3%A9r%C3%B4me-ornech-5a6281356"
+name = "LinkedIn"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/Hierosme"
+name = "GitHub"
+
+[[project.extra.social]]
+icon = "material/email"
+link = "mailto:contact@mondomaine.fr"   # TODO: adresse réelle (backlog.md, B-02)
+name = "Email"
+
+[project.plugins.search]
+
+# Polices Google auto-hébergées au build (RGPD : aucune requête vers Google depuis le navigateur du visiteur).
+# Le 1er build télécharge les polices dans .cache/ (réseau requis). Hors ligne : VITRINE_PRIVACY=false mise run …
+# Ne pas ajouter de clé `enabled` ici : elle est injectée par .mise/lib/zensical.sh en mode hors ligne.
+[project.plugins.privacy]
+assets_exclude = ["unpkg.com/*"]   # pyodide (exécution de code Python dans la page) : fonction non utilisée, inutile de l'embarquer
+
+[project.plugins.blog]
+blog_dir = "blog"
+blog_toc = true
+post_date_format = "long"
+post_url_format = "{slug}"   # URL courtes et pérennes : /blog/<slug>/
+post_readtime = true
+archive_name = "Archives"
+categories_name = "Catégories"
+categories_allowed = [
+  "Ansible",
+  "Network as Code",
+  "CI/CD",
+  "Python",
+  "Sécurité",
+  "Culture DevOps",
+  "Freelance",
+]
+
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+md_in_html = {}
+toc.permalink = true
+pymdownx.details = {}
+pymdownx.superfences = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.inlinehilite = {}
+pymdownx.emoji.emoji_index = "zensical.extensions.emoji.twemoji"
+pymdownx.emoji.emoji_generator = "zensical.extensions.emoji.to_svg"

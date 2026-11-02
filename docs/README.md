@@ -12,7 +12,7 @@ Documentation **du projet** (pas du site public : celui-ci vit dans `site/`). Ap
 ## Ajouter un skill
 
 1. Créer `docs/skills/<nom-en-kebab-case>/SKILL.md` avec un front-matter `name` + `description`.
-2. Le référencer dans la table « Skills » de `AGENTS.md` (déclencheurs + chemin) et dans `nav` de `mkdocs.docs.yml`.
+2. Le référencer dans la table « Skills » de `AGENTS.md` (déclencheurs + chemin) et dans `nav` de `zensical.docs.toml`.
 3. Le lien `.claude/skills → docs/skills` le rend découvrable automatiquement par Claude.
 
 ## Organisation (Diátaxis)

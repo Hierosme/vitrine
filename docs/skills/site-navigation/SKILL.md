@@ -1,6 +1,6 @@
 ---
 name: site-navigation
-description: Maintenir la navigation, l'architecture de l'information et la structure des pages de la vitrine MkDocs (onglets, pages, URLs, titres, blog, catégories). À utiliser pour toute création, suppression, renommage ou déplacement de page, tout changement de menu, toute rédaction ou restructuration de contenu de page, et tout ajout d'article de blog.
+description: Maintenir la navigation, l'architecture de l'information et la structure des pages de la vitrine Zensical (onglets, pages, URLs, titres, blog, catégories). À utiliser pour toute création, suppression, renommage ou déplacement de page, tout changement de menu, toute rédaction ou restructuration de contenu de page, et tout ajout d'article de blog.
 ---
 
 # Navigation et architecture de l'information
@@ -11,14 +11,14 @@ description: Maintenir la navigation, l'architecture de l'information et la stru
 
 | Élément | Fichier |
 |---|---|
-| Menu principal (onglets) | `mkdocs.yml` → clé `nav` |
-| Comportement de navigation | `mkdocs.yml` → `theme.features` |
-| Catégories de blog autorisées | `mkdocs.yml` → `plugins.blog.categories_allowed` |
+| Menu principal (onglets) | `zensical.toml` → clé `nav` |
+| Comportement de navigation | `zensical.toml` → `theme.features` |
+| Catégories de blog autorisées | `zensical.toml` → `plugins.blog.categories_allowed` |
 | Auteurs du blog | `site/blog/.authors.yml` (avatar : `site/assets/images/`) |
 | Articles | `site/blog/posts/AAAA-MM-JJ-slug.md` (URL publiée : `/blog/<slug>/`) |
 | Titre `<title>` et meta description | front-matter `title` / `description` de chaque page |
-| Open Graph, JSON-LD, apple-touch-icon | `overrides/main.html` ; données de la personne : `mkdocs.yml` → `extra.seo` |
-| `robots.txt` | généré par `hooks/robots.py` à partir de `site_url` |
+| Open Graph, JSON-LD, apple-touch-icon | `overrides/main.html` ; données de la personne : `zensical.toml` → `extra.seo` |
+| `robots.txt` | généré par la tâche `site:build` à partir de `site_url` (Zensical vide `build/` à chaque build) |
 
 ## Structure actuelle
 
@@ -41,7 +41,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 
 ## Règles de navigation
 
-1. **Toute page de `site/` figure dans `nav`**, sauf les articles de blog, gérés par le plugin. Le build `--strict` le vérifie.
+1. **Toute page de `site/` figure dans `nav`**, sauf les articles de blog, gérés par le plugin, et les pages déclarées dans `not_in_nav` (`zensical.toml`). `mise run check` le vérifie pour les pages de premier niveau ; le build `--strict` vérifie les liens internes.
 2. Au-delà de 6 onglets, regrouper en section avec une page `index.md` (feature `navigation.indexes`).
 3. Libellés de menu : **un mot, en français, majuscule initiale**, sans emoji.
 4. Noms de fichiers : `kebab-case`, sans accent, extension `.md`. L'URL en découle : renommer casse des liens externes, donc à éviter après la mise en ligne.
@@ -117,7 +117,7 @@ Corps…
 
 ## Checklist avant de terminer
 
-- [ ] `mise run check` passe : builds stricts, budget d'onglets, un seul CTA principal par page, pas de menu latéral (N7), services d'au moins 500 caractères (N8), aucun TODO visible (S5), `title` et `description` conformes (S1, S2).
+- [ ] `mise run check` passe : builds stricts, budget d'onglets, pages de premier niveau dans `nav`, un seul CTA principal par page, pas de menu latéral (N7), services d'au moins 500 caractères (N8), aucun TODO visible (S5), `title` et `description` conformes (S1, S2).
 - [ ] Le menu est lisible sur desktop et sur mobile (`mise run site:serve`, fenêtre sous 76em).
 - [ ] Chaque page modifiée respecte la structure : H1 unique, première phrase utile, H2 réguliers, `vt-cta` final.
 - [ ] Aucun lien interne cassé, aucune page orpheline.

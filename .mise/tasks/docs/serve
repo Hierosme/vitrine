@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Aperçu de la documentation projet (docs/ et skills)"
+#MISE description="Aperçu de la documentation projet (docs/, skills inclus)"
 #MISE depends=["install"]
 #USAGE flag "-p --port <port>" default="8001" help="Port d'écoute"
 set -euo pipefail
@@ -7,4 +7,4 @@ cd "${MISE_PROJECT_ROOT:-.}"
 
 port="${usage_port:-8001}"
 echo "▶ Doc projet : http://127.0.0.1:${port}"
-exec mkdocs serve -f mkdocs.docs.yml -a "127.0.0.1:${port}"
+exec zensical serve -f zensical.docs.toml -a "127.0.0.1:${port}"

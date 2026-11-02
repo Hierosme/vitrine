@@ -4,5 +4,5 @@
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
-mkdocs build -f mkdocs.docs.yml --strict
+zensical build -f zensical.docs.toml --strict
 echo "✔ Doc projet générée dans build-docs/"

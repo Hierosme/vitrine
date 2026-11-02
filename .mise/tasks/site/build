@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
-#MISE description="Build strict du site public dans build/ (utilisé par la CI)"
+#MISE description="Build strict du site public dans build/, avec robots.txt (utilisé par la CI)"
 #MISE alias="build"
 #MISE depends=["install"]
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
+source .mise/lib/zensical.sh
 
-mkdocs build -f mkdocs.yml --strict
-echo "✔ Site généré dans build/"
+cfg="$(zensical_config zensical.toml)"
+zensical build -f "$cfg" --strict
+
+# robots.txt : Zensical vide build/ à chaque build ; l'URL du sitemap dérive de site_url (seul endroit où figure le domaine)
+site_dir="$(toml_get zensical.toml site_dir)"
+site_url="$(toml_get zensical.toml site_url)"
+{
+  echo "User-agent: *"
+  echo "Allow: /"
+  [[ -n "$site_url" ]] && printf '\nSitemap: %s/sitemap.xml\n' "${site_url%/}"
+} > "${site_dir:-build}/robots.txt"
+echo "✔ Site généré dans ${site_dir:-build}/"

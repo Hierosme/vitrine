@@ -7,3 +7,4 @@ __pycache__/
 .idea/
 _to_delete/
 Claude outputs/
+.*.offline.toml

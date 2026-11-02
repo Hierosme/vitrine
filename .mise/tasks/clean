@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#MISE description="Supprime les sorties de build (build/, build-docs/)"
+#MISE description="Supprime les sorties de build, le cache Zensical (polices comprises) et les configs hors ligne"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
-rm -rf build build-docs .cache
+rm -rf build build-docs .cache .zensical.offline.toml
 echo "✔ Nettoyé"

@@ -4,6 +4,7 @@
 #MISE depends=["install"]
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
+source .mise/lib/zensical.sh
 
 fail=0
 css=site/stylesheets/extra.css
@@ -12,6 +13,17 @@ echo "• Design system : aucune couleur en dur hors section TOKENS"
 # Ignore la section TOKENS (jusqu'au marqueur « ---------- 2. ») et les commentaires
 if out="$(awk '/---------- 2\./{f=1} f' "$css" | grep -nE '#[0-9a-fA-F]{3,8}([^0-9a-zA-Z]|$)|rgba?\(' | grep -v '^\s*/\*')"; then
   echo "$out" | sed 's/^/  ✘ /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
+echo "• Design system : rayons, ombres, typographie et durées passent par les tokens (M3)"
+# Hors section TOKENS, ces propriétés n'acceptent que des var(--vt-…), 0, none, inherit, transparent
+if out="$(awk '/---------- 2\./{f=1} f{print NR": "$0}' "$css" \
+  | grep -E '^[0-9]+: +(border-radius|box-shadow|font-size|line-height|font-weight|letter-spacing|transition|transition-duration|transition-timing-function|animation)[[:space:]]*:' \
+  | sed -E -e 's#/\*.*\*/##g' -e 's/var\(--vt-[a-z0-9-]+\)//g' \
+  | grep -E ':[^:]*[0-9]' | grep -vE ':[[:space:]]*0;')"; then
+  echo "$out" | sed 's/^/  ✘ ligne /'; fail=1
 else
   echo "  ✔ OK"
 fi
@@ -42,8 +54,18 @@ done
 if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 
 echo "• Navigation : 6 onglets maximum (N1)"
-tabs="$(awk '/^nav:/{f=1;next} f&&/^[^ #]/{exit} f&&/^  - /{n++} END{print n+0}' mkdocs.yml)"
+tabs="$(toml_get zensical.toml nav | wc -l | tr -d ' ')"
 if (( tabs > 6 )); then echo "  ✘ $tabs onglets"; fail=1; else echo "  ✔ OK ($tabs onglets)"; fi
+
+echo "• Navigation : toute page de premier niveau figure dans nav (règle 1)"
+nav="$(toml_get zensical.toml nav)"
+not_in_nav="$(toml_get zensical.toml not_in_nav)"   # exceptions déclarées (ex. mentions légales)
+bad=""
+for f in $(cd site && find . -maxdepth 1 -name '*.md' | sed 's#^\./##'); do
+  grep -qF "/$f" <<<"$not_in_nav" && continue
+  grep -qF "'$f'" <<<"$nav" || bad="${bad}  ✘ site/$f : absente de nav (zensical.toml)\n"
+done
+if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 
 echo "• Contenu : chaque page de contenu se termine par un appel au contact (N6)"
 bad=""
@@ -66,13 +88,22 @@ echo "• Contenu : chaque service détaillé fait au moins 500 caractères (N8)
 echo "• Contenu : aucun TODO visible sur le site publié"
 "$(dirname "$0")/content/todo-visible" || fail=1
 
+echo "• Accessibilité : un seul H1 par page, aucun niveau de titre sauté (M3)"
+"$(dirname "$0")/content/headings" || fail=1
+
 echo "• Référencement : title et description uniques par page, longueurs"
 "$(dirname "$0")/content/seo" || fail=1
 
-echo "• Build strict du site"
-mkdocs build -q -f mkdocs.yml --strict && echo "  ✔ OK" || fail=1
+# Builds : sortie affichée seulement en cas d'échec
+build_step() {
+  local out
+  if out="$("$@" 2>&1)"; then echo "  ✔ OK"; else echo "$out" | sed 's/^/  /'; fail=1; fi
+}
 
-echo "• Build strict de la doc projet"
-mkdocs build -q -f mkdocs.docs.yml --strict && echo "  ✔ OK" || fail=1
+echo "• Build strict du site (Zensical) + robots.txt"
+build_step "$(dirname "$0")/site/build"
+
+echo "• Build strict de la doc projet (Zensical)"
+build_step "$(dirname "$0")/docs/build"
 
 exit "$fail"

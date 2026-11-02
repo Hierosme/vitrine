@@ -1,6 +1,6 @@
 # AGENTS.md — vitrine DevOps freelance
 
-Site vitrine statique de **Jérôme Ornech**, Expert DevOps freelance (automatisation systèmes et réseaux, Ansible, Python, Network as Code, Continuous Delivery), généré avec **MkDocs + Material** (plugin blog), thèmes clair et sombre sur la palette **Nord**, hébergé sur **GitHub Pages** avec un domaine personnel (DNS chez DNSimple).
+Site vitrine statique de **Jérôme Ornech**, Expert DevOps freelance (automatisation systèmes et réseaux, Ansible, Python, Network as Code, Continuous Delivery), généré avec **[Zensical](https://zensical.org)** (successeur de Material for MkDocs, variante `classic`, plugin blog), thèmes clair et sombre sur la palette **Nord**, design system structuré selon **Material Design 3** (rôles de couleur, échelles, états), hébergé sur **GitHub Pages** avec un domaine personnel (DNS chez DNSimple).
 
 ## À charger au démarrage de chaque session
 
@@ -16,8 +16,8 @@ Avant de modifier quoi que ce soit, identifie les skills concernés et **lis leu
 
 | Skill | Chemin | À charger si la tâche touche… |
 |---|---|---|
-| `site-navigation` | `docs/skills/site-navigation/SKILL.md` | `mkdocs.yml` (`nav`, `features`, `plugins.blog`), ajout/renommage/suppression de page dans `site/`, article de blog, liens internes |
-| `site-look-and-feel` | `docs/skills/site-look-and-feel/SKILL.md` | `site/stylesheets/`, `mkdocs.yml` (`theme`), palette Nord, thèmes clair et sombre, mise en page, composants, couleurs, polices, icônes |
+| `site-navigation` | `docs/skills/site-navigation/SKILL.md` | `zensical.toml` (`nav`, `features`, `plugins.blog`), ajout/renommage/suppression de page dans `site/`, article de blog, liens internes |
+| `site-look-and-feel` | `docs/skills/site-look-and-feel/SKILL.md` | `site/stylesheets/`, `zensical.toml` (`theme`), `overrides/`, palette Nord, rôles et échelles M3, thèmes clair et sombre, mise en page, composants, couleurs, polices, icônes |
 
 En cas de doute, charge les deux. Une nouvelle page de contenu les concerne toujours tous les deux.
 
@@ -27,13 +27,14 @@ En cas de doute, charge les deux. Une nouvelle page de contenu les concerne touj
 
 - `site/` — sources **du site public** (Markdown, CSS). Rien d'autre.
 - `docs/` — documentation **du projet** et skills. Jamais publiée.
-- `overrides/` (métadonnées SEO), `hooks/` (génération de `robots.txt`) : extensions du build, voir `docs/architecture.md`.
+- `zensical.toml` (site), `zensical.docs.toml` (doc projet) : configuration Zensical. Le projet n'utilise **plus MkDocs** : ne pas réintroduire `mkdocs.yml` ni de dépendance `mkdocs*`.
+- `overrides/` (métadonnées SEO) : surcharge de template, rendue par minijinja — voir `docs/architecture.md`.
 - `backlog.md` — tâches en attente, avec prompts, questions à l'opérateur et suivi.
 - `build/`, `build-docs/` — sorties générées, ne pas éditer, ne pas committer.
 
 ## Commandes
 
-Toujours passer par les tâches mise (`.mise/tasks/`), jamais par `mkdocs` directement :
+Toujours passer par les tâches mise (`.mise/tasks/`), jamais par `zensical` directement :
 
 ```bash
 mise run preview                       # aperçu site (:8000) + doc projet (:8001)

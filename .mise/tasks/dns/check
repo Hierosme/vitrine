@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 #MISE description="Vérifie la config DNS / HTTPS du domaine pour GitHub Pages"
-#USAGE arg "[domain]" help="Domaine à vérifier (défaut : site_url de mkdocs.yml)"
+#USAGE arg "[domain]" help="Domaine à vérifier (défaut : site_url de zensical.toml)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
+source .mise/lib/zensical.sh
 
 command -v dig >/dev/null || { echo "✘ dig requis" >&2; exit 1; }
 
-domain="${usage_domain:-$(sed -nE 's#^site_url: *https?://([^/ ]+).*#\1#p' mkdocs.yml)}"
+domain="${usage_domain:-$(toml_get zensical.toml site_url | sed -E 's#^https?://([^/]+).*#\1#')}"
 expected_a="185.199.108.153 185.199.109.153 185.199.110.153 185.199.111.153"
 fail=0
 q() { dig +short +time=3 +tries=2 "$@" 2>/dev/null | grep -v '^;;' || true; }

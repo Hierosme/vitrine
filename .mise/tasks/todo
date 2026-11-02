@@ -3,9 +3,9 @@
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
-if grep -rn --color=auto 'TODO' site mkdocs.yml; then
+if grep -rn --color=auto 'TODO' site zensical.toml; then
   echo
-  echo "$(grep -rc 'TODO' site mkdocs.yml | awk -F: '{s+=$2} END{print s}') TODO restant(s)."
+  echo "$(grep -rc 'TODO' site zensical.toml | awk -F: '{s+=$2} END{print s}') TODO restant(s)."
 else
   echo "✔ Aucun TODO."
 fi

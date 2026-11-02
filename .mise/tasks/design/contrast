@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie les contrastes WCAG AA des thèmes clair et sombre (texte 4.5:1, accents et UI 3:1)"
+#MISE description="Vérifie les contrastes WCAG AA des rôles de couleur M3, thèmes clair et sombre (texte 4.5:1, UI 3:1)"
 #USAGE flag "-v --verbose" help="Affiche toutes les paires, pas seulement les échecs"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
@@ -46,22 +46,35 @@ def ratio(a, b):
     la, lb = sorted((lum(a), lum(b)), reverse=True)
     return (la + 0.05) / (lb + 0.05)
 
-TEXT, LARGE = 4.5, 3.0   # WCAG 2.2 SC 1.4.3 (texte) / 1.4.11 & gros texte
-pairs = [
-    ("color-text", "color-bg", TEXT), ("color-text", "color-surface", TEXT),
-    ("color-text-muted", "color-bg", TEXT), ("color-text-muted", "color-surface", TEXT),
-    ("color-heading", "color-bg", TEXT),
-    ("color-link", "color-bg", TEXT), ("color-link", "color-surface", TEXT),
-    ("color-link-hover", "color-bg", TEXT),
-    ("color-on-accent", "color-accent", TEXT), ("color-on-accent", "color-accent-hover", TEXT),
-    ("color-on-brand", "color-brand", TEXT), ("color-on-brand", "color-footer", TEXT),
-    ("color-on-brand", "color-footer-deep", TEXT),
-    ("color-focus", "color-bg", LARGE),
-    ("hero-text", "hero-from", TEXT), ("hero-text", "hero-via", TEXT), ("hero-text", "hero-to", LARGE),
-    ("hero-on-cta", "hero-cta", TEXT), ("hero-on-cta", "hero-cta-hover", TEXT),
-] + [(f"accent-{i}", bg, LARGE) for i in range(1, 7) for bg in ("color-bg", "color-surface")
-] + [(f"code-{k}", "code-bg", TEXT) for k in
+TEXT, LARGE = 4.5, 3.0   # WCAG 2.2 SC 1.4.3 (texte) / 1.4.11 & gros texte — M3 : paires de rôles accessibles
+SURFACES = ["surface", "surface-container-lowest", "surface-container-low", "surface-container",
+            "surface-container-high", "surface-container-highest"]
+pairs = (
+    # Texte courant et texte secondaire sur toutes les surfaces (M3 : on-surface / on-surface-variant)
+    [("on-surface", s, TEXT) for s in SURFACES]
+  + [("on-surface-variant", s, TEXT) for s in SURFACES]
+    # Liens (primary) sur les surfaces où il y a du texte : page, cartes, conteneur par défaut
+  + [("primary", s, TEXT) for s in ("surface", "surface-container-low", "surface-container")]
+  + [("error", "surface", TEXT)]
+    # Paires « on-X / X » des rôles d'accent et de leurs conteneurs
+  + [(f"on-{r}", r, TEXT) for r in ("primary", "primary-container", "secondary", "secondary-container",
+                                    "tertiary", "tertiary-container", "error", "error-container")]
+    # Rôles inverses
+  + [("inverse-on-surface", "inverse-surface", TEXT), ("inverse-primary", "inverse-surface", TEXT)]
+    # Contours : outline délimite des cibles (3:1) ; anneau de focus (secondary) visible sur la page
+  + [("outline", s, LARGE) for s in ("surface", "surface-container-low")]
+  + [("secondary", "surface", LARGE)]
+    # Couleurs personnalisées : marque (en-tête, pied), hero
+  + [("on-brand", "brand", TEXT), ("on-brand", "brand-variant", TEXT), ("brand-focus", "brand", LARGE)]
+  + [("hero-text", "hero-from", TEXT), ("hero-text", "hero-via", TEXT), ("hero-text", "hero-to", LARGE),
+     ("hero-on-cta", "hero-cta", TEXT), ("hero-focus", "hero-from", LARGE), ("hero-focus", "hero-via", LARGE)]
+    # Accents catégoriels (non textuels) : sur la page, les cartes et les tuiles
+  + [(f"accent-{i}", bg, LARGE) for i in range(1, 7)
+     for bg in ("surface", "surface-container-low", "surface-container-high")]
+    # Code
+  + [(f"code-{k}", "code-bg", TEXT) for k in
      ("fg", "keyword", "function", "constant", "string", "number", "special", "comment", "generic", "punctuation")]
+)
 
 fail = 0
 for theme, tokens in themes.items():

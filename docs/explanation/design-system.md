@@ -1,7 +1,7 @@
 # Le design system de la vitrine et ses fondements
 
 !!! abstract "Type de document"
-    **Explication** au sens [Diátaxis](https://diataxis.fr/explanation/) : ce document dit *pourquoi* le design system est ainsi fait. Le *comment* est dans les skills [`site-look-and-feel`](../skills/site-look-and-feel/SKILL.md) et [`site-navigation`](../skills/site-navigation/SKILL.md). Les valeurs exactes sont dans `site/stylesheets/extra.css` et `mkdocs.yml`.
+    **Explication** au sens [Diátaxis](https://diataxis.fr/explanation/) : ce document dit *pourquoi* le design system est ainsi fait. Le *comment* est dans les skills [`site-look-and-feel`](../skills/site-look-and-feel/SKILL.md) et [`site-navigation`](../skills/site-navigation/SKILL.md). Les valeurs exactes sont dans `site/stylesheets/extra.css` et `zensical.toml`.
 
 ## Le problème à résoudre
 
@@ -88,7 +88,7 @@ L'actualisation de 2017 précise que le motif en F est surtout le symptôme d'un
 - **Les pages sont écrites pour le balayage.** Un seul H1 ; un H2 toutes les deux ou trois idées ; le mot-clé en tête de titre et de puce ; des listes plutôt que des paragraphes denses ; le gras réservé aux termes clés.
 - **L'essentiel est au-dessus de la ligne de flottaison.** Sur l'accueil, la proposition de valeur et le bouton de contact sont dans le hero.
 - **Pas de charge extrinsèque gratuite.** Pas de carrousel, d'animation décorative, de vidéo en lecture automatique ni de pop-up.
-- **Les conventions plutôt que l'originalité de structure.** La structure fournie par Material for MkDocs (en-tête, onglets, pied de page) est conservée. On personnalise par les tokens, on ne réinvente pas la mise en page.
+- **Les conventions plutôt que l'originalité de structure.** La structure fournie par le thème (Zensical, variante `classic`, héritée de Material for MkDocs : en-tête, onglets, pied de page) est conservée. On personnalise par les tokens, on ne réinvente pas la mise en page.
 
 ## 4. Pourquoi un design system outillé
 
@@ -99,7 +99,7 @@ Les règles ci-dessus ne tiennent dans le temps que si elles sont **écrites, ce
 - les **skills** traduisent ces principes en règles opérationnelles pour les humains et les agents IA ;
 - la tâche **`mise run check`** automatise ce qui peut l'être : couleurs en dur, usage de la palette via les rôles, contrastes WCAG des deux thèmes, préfixes de classes, nombre de CTA principaux, budget de navigation, builds stricts.
 
-Le choix de Material for MkDocs relève de la même logique. Le thème apporte une base accessible, responsive et conforme aux conventions. Le design system se contente de l'**habiller**, ce qui limite la dette de maintenance.
+Le choix de Zensical (successeur de Material for MkDocs, par la même équipe) relève de la même logique. Le thème apporte une base accessible, responsive et conforme aux conventions. Le design system se contente de l'**habiller**, ce qui limite la dette de maintenance.
 
 ## 5. Pourquoi la palette Nord, en deux thèmes
 
@@ -147,6 +147,35 @@ Le visiteur visé arrive souvent d'un moteur de recherche ou d'un lien partagé 
 - **Des URL stables.** Une URL courte et sans date (`/blog/<slug>/`) ne vieillit pas ; une URL modifiée perd les liens et l'historique acquis.
 - **Polices hébergées sur le site.** Charger les polices depuis Google transmet l'adresse IP du visiteur à un tiers ; le plugin `privacy` les embarque au build. C'est aussi une requête vers un domaine externe en moins au chargement.
 
+## 7. Pourquoi structurer le design system selon Material Design 3
+
+### Le constat
+
+Les sections précédentes fixent des **principes** (sobriété, crédibilité, guidage) et une **identité** (Nord). Il manquait une **grammaire** commune pour les décliner : jusqu'ici, chaque besoin créait son jeton ad hoc (`--vt-color-surface`, `--vt-radius-lg`, `--vt-shadow`…), sans échelle explicite pour la typographie, les formes, l'élévation ou les états. [Material Design 3](https://m3.material.io) fournit cette grammaire, documentée, outillée (kit Figma, tokens) et éprouvée à grande échelle.
+
+### Ce que l'on reprend, et pourquoi
+
+- **Les rôles de couleur et leurs paires** (`primary` / `on-primary`, `surface-container-*`, `outline` / `outline-variant`…). M3 construit ses rôles sur des appariements accessibles : un texte posé sur `X` prend `on-X`. Le contraste devient une propriété du système, vérifiable paire par paire (`design:contrast`), plutôt qu'un contrôle au cas par cas (critère d'**homogénéité** de Bastien & Scapin).
+- **Les échelles** : typographie (5 rôles × 3 tailles), formes (10 rayons), élévation (6 niveaux), espacement sur une grille de 4dp. Des échelles fermées produisent l'ordre et la régularité de l'**esthétique classique** (Lavie & Tractinsky, § 1) et réduisent les décisions arbitraires.
+- **Les couches d'état** (survol 8 %, focus 10 %, appui 10 %). Un état se lit comme une modulation de l'élément, pas comme un autre élément : c'est le **feedback** du critère de guidage, sans changer de teinte. M3 réserve les états aux éléments interactifs : les cartes de la vitrine, non cliquables, n'en ont plus.
+- **L'élévation par la teinte d'abord**, l'ombre ensuite. M3 sépare les surfaces par des différences de ton et réserve les ombres aux éléments qui doivent ressortir ; « moins il y a de niveaux, plus chacun a de poids ». C'est cohérent avec le principe d'un seul geste expressif.
+- **Les composants de référence** : bouton *filled* pour l'action principale (« idéalement une seule par page », ce que la règle P6 imposait déjà), bouton *outlined* pour les actions secondaires, cartes *elevated* et *filled*.
+- **Les règles d'accessibilité** : liens soulignés, indicateur de focus de 3dp, cibles de 48dp, un seul H1 et aucun niveau de titre sauté, 40 à 60 caractères par ligne. Elles complètent les critères WCAG déjà appliqués.
+- **Les points de rupture** (compact, medium, expanded, large, extra-large) : ils remplacent un seuil unique hérité du thème, et décrivent ce qui change d'une classe à l'autre plutôt qu'un appareil.
+- **Le mouvement** limité aux retours d'état, avec les courbes et durées courtes de M3, et rien quand le visiteur demande moins d'animations.
+
+### Ce que l'on ne reprend pas
+
+- **La palette par défaut (violet) et la couleur dynamique.** L'identité Nord reste la source des couleurs (§ 5) ; M3 en fournit seulement la structure. Les rôles sont alimentés par des dérivés de même teinte, comme pour l'accessibilité.
+- **Roboto.** Inter garde l'identité typographique ; on reprend les tailles et interlignages M3, mais pas l'interlettrage du corps de texte, calibré pour Roboto.
+- **Les composants mobiles** (FAB, barres de navigation, sheets) : sans objet pour une vitrine statique.
+- **Les ressorts physiques de M3 Expressive** : ils supposent du JavaScript, exclu sans décision explicite. On garde les courbes de Bézier M3, toujours documentées pour les transitions.
+- **Les titres en graisse regular.** M3 Expressive introduit des styles « emphasized » ; on les retient pour les titres de page et de section, dont le gras structure le balayage (§ 3).
+
+### Ce que cela change concrètement
+
+Les boutons deviennent ronds (forme `full`) et à hauteur fixe de 40dp. Le bloc d'appel au contact prend le rôle `primary-container`, la citation `secondary-container`, les tuiles une surface plus soutenue. Les liens du contenu sont soulignés, l'anneau de focus est épaissi, et les textes courants ne dépassent plus 60 caractères par ligne. `mise run check` refuse désormais tout rayon, ombre, taille de texte ou durée écrits en dur, et vérifie la hiérarchie des titres.
+
 ## Limites et précautions de lecture
 
 - Ces travaux datent pour la plupart des années 2000. Les écrans, les usages mobiles et les conventions ont changé depuis, mais les mécanismes cognitifs décrits (jugement rapide, halo, balayage, coût des choix) restent largement admis.
@@ -186,11 +215,14 @@ Le visiteur visé arrive souvent d'un moteur de recherche ou d'un lien partagé 
 - W3C. *WCAG 2.2, Understanding SC 1.4.11 Non-text Contrast.* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
 - W3C. *WCAG 2.2, Understanding SC 1.4.1 Use of Color.* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - W3C. *WCAG 2.2, Understanding SC 1.4.3 Contrast (Minimum).* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+- Google. *Material Design 3* : [Color roles](https://m3.material.io/styles/color/roles), [Typography](https://m3.material.io/styles/typography/applying-type), [Shape](https://m3.material.io/styles/shape/corner-radius-scale), [Elevation](https://m3.material.io/styles/elevation/applying-elevation), [States](https://m3.material.io/foundations/interaction/states/state-layers), [Easing and duration](https://m3.material.io/styles/motion/easing-and-duration/tokens-specs), [Breakpoints](https://m3.material.io/foundations/layout/breakpoints/overview), [Buttons](https://m3.material.io/components/buttons/guidelines), [Cards](https://m3.material.io/components/cards/guidelines), [Accessibility designing](https://m3.material.io/foundations/designing/structure)
+- Google. *Material 3 Design Kit* (Figma, v1.25, mai 2026). [figma.com](https://www.figma.com/community/file/1035203688168086460/material-3-design-kit)
 - Google Search Central. *Influencing your title links in search results.* [developers.google.com](https://developers.google.com/search/docs/appearance/title-link)
 - Google Search Central. *Control your snippets in search results.* [developers.google.com](https://developers.google.com/search/docs/appearance/snippet)
 - Google Search Central. *Introduction to structured data markup.* [developers.google.com](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)
 - *The Open Graph protocol.* [ogp.me](https://ogp.me/) ; schema.org. *Person.* [schema.org/Person](https://schema.org/Person)
-- Material for MkDocs. *Built-in privacy plugin.* [squidfunk.github.io](https://squidfunk.github.io/mkdocs-material/plugins/privacy/)
+- Zensical. *Documentation* (configuration, plugins, personnalisation). [zensical.org](https://zensical.org/docs/) ; [dépôt GitHub zensical/zensical](https://github.com/zensical/zensical)
+- Material for MkDocs. *Built-in privacy plugin* (repris par Zensical). [squidfunk.github.io](https://squidfunk.github.io/mkdocs-material/plugins/privacy/)
 - Material for MkDocs. *Customization.* [squidfunk.github.io](https://squidfunk.github.io/mkdocs-material/customization/)
 - Procida, D. *Diátaxis, Explanation.* [diataxis.fr](https://diataxis.fr/explanation/)
 

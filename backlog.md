@@ -39,8 +39,9 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 | B-19 | Décision : logo et monogramme | P3 | oui | — | à faire |
 | B-20 | Décision : une page par service | P3 | oui | — | à faire |
 | B-21 | Vérification des liens dans `check` | P3 | oui | B-04 | à faire |
-| B-22 | Verrouiller les dépendances Python | P3 | non | — | à faire |
-| B-23 | Veille MkDocs 2.0 / Zensical | P3 | non | — | à faire |
+| B-22 | Verrouiller les dépendances Python | P3 | non | — | fait |
+| B-23 | Suivi des versions de Zensical | P3 | non | — | à faire |
+| B-24 | Tester les états M3 sur appareils réels | P3 | non | — | à faire |
 
 ---
 
@@ -80,12 +81,12 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Remplace `https://mondomaine.fr/` par le domaine canonique dans `mkdocs.yml` (`site_url`, retire le commentaire TODO) et l'adresse `contact@mondomaine.fr` partout où elle apparaît (`grep -rn mondomaine site mkdocs.yml`) : `extra.social` et `site/contact.md` (bouton principal et commentaire TODO). Lance `mise run check`, puis `mise run dns:check` et rapporte son résultat à l'opérateur sans modifier la configuration DNS toi-même.
+> Remplace `https://mondomaine.fr/` par le domaine canonique dans `zensical.toml` (`site_url`, retire le commentaire TODO) et l'adresse `contact@mondomaine.fr` partout où elle apparaît (`grep -rn mondomaine site zensical.toml`) : `[[project.extra.social]]` (lien `mailto:`) et `site/contact.md` (bouton principal et commentaire TODO). Lance `mise run check`, puis `mise run dns:check` et rapporte son résultat à l'opérateur sans modifier la configuration DNS toi-même.
 
-- **Fichiers** : `mkdocs.yml`, `site/contact.md`
+- **Fichiers** : `zensical.toml`, `site/contact.md`
 - **Critères d'acceptation**
-    - [ ] `grep -rn mondomaine site mkdocs.yml` ne renvoie rien.
-    - [ ] `build/robots.txt` et `build/sitemap.xml` contiennent le vrai domaine.
+    - [ ] `grep -rn mondomaine site zensical.toml` ne renvoie rien.
+    - [ ] `build/robots.txt` (généré par `site:build`) et `build/sitemap.xml` contiennent le vrai domaine.
     - [ ] `mise run check` passe ; résultat de `dns:check` consigné dans le journal.
 - **Journal** :
 
@@ -104,9 +105,9 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Crée `site/mentions-legales.md` avec `title`, `description` (70–160 caractères) et `hide: [navigation, toc]`, et un H1 « Mentions légales ». Sections H2 : Éditeur, Directeur de la publication, Hébergeur, Données personnelles et cookies, Propriété intellectuelle. N'utilise **que** les réponses de l'opérateur et l'hébergeur indiqué ci-dessus. Déclare la page dans `mkdocs.yml` via `not_in_nav: | /mentions-legales.md` (MkDocs ≥ 1.6), sans l'ajouter à `nav` : l'onglet resterait inutile et le budget N1 est de 6. Ajoute un lien dans `copyright` (`&copy; Jérôme Ornech — Expert DevOps freelance · <a href="/mentions-legales/">Mentions légales</a>`, chemin relatif à la racine du domaine). Dans `.mise/tasks/check`, exclus `mentions-legales.md` de la règle N6 (bloc `vt-cta`) au même titre qu'`index.md` et `contact.md`, et documente l'exception dans la règle N6 du skill `site-navigation`.
+> Crée `site/mentions-legales.md` avec `title`, `description` (70–160 caractères) et `hide: [navigation, toc]`, et un H1 « Mentions légales ». Sections H2 : Éditeur, Directeur de la publication, Hébergeur, Données personnelles et cookies, Propriété intellectuelle. N'utilise **que** les réponses de l'opérateur et l'hébergeur indiqué ci-dessus. Déclare la page dans `zensical.toml`, section `[project]`, via `not_in_nav = """\n/mentions-legales.md\n"""` (chaîne multiligne obligatoire), sans l'ajouter à `nav` : l'onglet resterait inutile et le budget N1 est de 6. La règle « page de premier niveau dans nav » de `check` lit `not_in_nav` et l'acceptera. Ajoute un lien dans `copyright` (`&copy; Jérôme Ornech — Expert DevOps freelance · <a href="/mentions-legales/">Mentions légales</a>`, chemin relatif à la racine du domaine). Dans `.mise/tasks/check`, exclus `mentions-legales.md` de la règle N6 (bloc `vt-cta`) au même titre qu'`index.md` et `contact.md`, et documente l'exception dans la règle N6 du skill `site-navigation`.
 
-- **Fichiers** : `site/mentions-legales.md`, `mkdocs.yml`, `.mise/tasks/check`, `docs/skills/site-navigation/SKILL.md`
+- **Fichiers** : `site/mentions-legales.md`, `zensical.toml`, `.mise/tasks/check`, `docs/skills/site-navigation/SKILL.md`
 - **Critères d'acceptation**
     - [ ] Toutes les mentions obligatoires sont présentes et fournies par l'opérateur.
     - [ ] Lien visible dans le pied de page de toutes les pages, en clair et en sombre.
@@ -136,11 +137,11 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 ### B-05 — Vérifier le premier build avec polices auto-hébergées
 
 - **Statut** : à faire · **Priorité** : P1
-- **Contexte** : le plugin `privacy` a été activé le 2026-11-02 pour servir Inter et JetBrains Mono depuis le site (RGPD). L'environnement de l'audit n'avait pas accès à Google Fonts : le téléchargement n'a pas pu être vérifié. Hors ligne, `VITRINE_PRIVACY=false` désactive le plugin.
+- **Contexte** : le plugin `privacy` (Zensical) sert Inter et JetBrains Mono depuis le site (RGPD). L'environnement de l'audit et de la migration n'avait pas accès à Google Fonts : le téléchargement n'a pas pu être vérifié. Hors ligne, `VITRINE_PRIVACY=false` fait générer par les tâches une config sans le plugin (`.zensical.offline.toml`). Les ressources `unpkg.com` (pyodide) sont exclues volontairement.
 
 **Prompt**
 
-> Sur une machine avec accès réseau, lance `mise run check`. Vérifie ensuite que `build/index.html` ne contient plus `fonts.googleapis.com`, que `build/assets/external/` contient les fichiers de police, et que le rendu (`mise run site:serve`) utilise bien Inter, en clair et en sombre. En cas d'échec, consigne l'erreur dans le journal sans désactiver le plugin.
+> Sur une machine avec accès réseau, lance `mise run check`. Vérifie ensuite que `build/index.html` ne contient plus `fonts.googleapis.com`, que `build/assets/external/` contient les fichiers de police (et aucun fichier pyodide), et que le rendu (`mise run site:serve`) utilise bien Inter, en clair et en sombre. En cas d'échec, consigne l'erreur dans le journal sans désactiver le plugin.
 
 - **Critères d'acceptation**
     - [ ] Aucune requête vers `fonts.googleapis.com` ou `fonts.gstatic.com` au chargement d'une page (onglet Réseau du navigateur).
@@ -290,7 +291,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Mets à jour `site/contact.md` avec les réponses : une phrase sur le délai de réponse après les boutons, le lien de rendez-vous en `.md-button` secondaire (2 boutons secondaires au plus : retire GitHub de la rangée s'il le faut, il reste dans le pied de page). Ajoute les nouveaux profils à `extra.social` dans `mkdocs.yml` (ils alimentent aussi le `sameAs` du JSON-LD). Supprime le commentaire TODO quand tout est traité.
+> Mets à jour `site/contact.md` avec les réponses : une phrase sur le délai de réponse après les boutons, le lien de rendez-vous en `.md-button` secondaire (2 boutons secondaires au plus : retire GitHub de la rangée s'il le faut, il reste dans le pied de page). Ajoute les nouveaux profils en `[[project.extra.social]]` dans `zensical.toml` (ils alimentent aussi le `sameAs` du JSON-LD). Supprime le commentaire TODO quand tout est traité.
 
 - **Critères d'acceptation**
     - [ ] Un seul bouton primaire ; `mise run check` passe.
@@ -326,7 +327,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 **Questions à l'opérateur**
 
 1. Contenu souhaité : portrait + nom + « Expert DevOps & Ansible freelance » sur le dégradé du hero ? Autre ?
-2. Une image unique pour tout le site suffit-elle, ou une image par article de blog (plugin `social` de Material, qui demande les bibliothèques Cairo en CI) ?
+2. Une image unique pour tout le site suffit-elle, ou une image par article de blog (plugin `social` de Zensical : vérifier ses prérequis de build dans sa documentation) ?
 
 **Prompt**
 
@@ -406,7 +407,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Si retrait : supprime le plugin `search` et la feature `search.highlight` dans `mkdocs.yml`, avec un commentaire indiquant quand la rétablir. Vérifie l'en-tête en clair et en sombre, desktop et mobile. Consigne la décision dans le skill `site-navigation` (nouvelle règle de navigation).
+> Si retrait : supprime la section `[project.plugins.search]` et la feature `search.highlight` dans `zensical.toml`, avec un commentaire indiquant quand la rétablir. Vérifie l'en-tête en clair et en sombre, desktop et mobile. Consigne la décision dans le skill `site-navigation` (nouvelle règle de navigation).
 
 - **Journal** :
 
@@ -422,7 +423,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Si monogramme : dessine `site/assets/images/logo.svg` (lettres en Inter 700, couleur `currentColor` pour suivre l'en-tête dans les deux thèmes), règle `theme.logo` dans `mkdocs.yml` à la place de `theme.icon.logo`, puis régénère `favicon.svg` et `apple-touch-icon.png` (180 × 180, fond nord0, motif nord8). Mets à jour le tableau « Sources de vérité » du skill `site-look-and-feel`.
+> Si monogramme : dessine `site/assets/images/logo.svg` (lettres en Inter 700, couleur `currentColor` pour suivre l'en-tête dans les deux thèmes), règle `theme.logo` dans `zensical.toml` à la place de `[project.theme.icon] logo`, puis régénère `favicon.svg` et `apple-touch-icon.png` (180 × 180, fond nord0, motif nord8). Mets à jour le tableau « Sources de vérité » du skill `site-look-and-feel`.
 
 - **Journal** :
 
@@ -460,23 +461,32 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 ### B-22 — Verrouiller les dépendances Python
 
-- **Statut** : à faire · **Priorité** : P3
-- **Contexte** : `requirements.txt` fixe des intervalles (`mkdocs>=1.6,<2`, `mkdocs-material>=9.6,<10`) : deux builds à des dates différentes peuvent utiliser des versions différentes.
+- **Statut** : fait · **Priorité** : P3
+- **Contexte** : `requirements.txt` fixait des intervalles : deux builds à des dates différentes pouvaient utiliser des versions différentes.
+- **Réalisé** : `requirements.in` (dépendance directe : `zensical==0.0.74`) → `requirements.txt` verrouillé et multi-plateforme par `mise run deps:lock` ; `mise run install` fait un `uv pip sync`, qui retire aussi du venv tout paquet absent du verrou.
+- **Journal** :
+    - 2026-11-02 — fait lors de la migration vers Zensical.
+
+### B-23 — Suivi des versions de Zensical
+
+- **Statut** : à faire · **Priorité** : P3 · tâche récurrente (mensuelle tant que Zensical est en 0.0.x)
+- **Contexte** : le site est construit avec Zensical depuis le 2026-11-02 (version épinglée dans `requirements.in`). En 0.0.x, une montée de version peut changer les options de `zensical.toml`, le rendu de la variante `classic` ou le moteur de templates (minijinja) utilisé par `overrides/main.html`.
 
 **Prompt**
 
-> Génère `requirements.lock` avec `uv pip compile requirements.txt -o requirements.lock`, fais-le utiliser par `.mise/tasks/install` (`uv pip install -r requirements.lock`, `sources` mis à jour) et documente la procédure de mise à jour dans `docs/architecture.md`. Vérifie `mise run check` et le workflow CI.
+> Consulte les notes de version de Zensical (https://github.com/zensical/zensical/releases) depuis la version épinglée. Sur une branche dédiée : `mise run deps:lock -U` (ou épingle la version visée dans `requirements.in` puis `mise run deps:lock`), `mise run check`, puis compare le rendu des 5 pages en clair et en sombre, desktop et mobile, avec la version précédente, ainsi que l'en-tête `<head>` (title, description, Open Graph, JSON-LD) et `build/robots.txt`. Consigne le constat dans le journal ; ne fusionne qu'avec l'accord de l'opérateur.
 
 - **Journal** :
+    - 2026-11-02 — migration MkDocs + Material → Zensical 0.0.74 (variante `classic`) : rendu identique vérifié en captures, `check` vert.
 
-### B-23 — Veille MkDocs 2.0 / Zensical
+### B-24 — Tester les états M3 sur appareils réels
 
-- **Statut** : à faire · **Priorité** : P3 · tâche récurrente (trimestrielle)
-- **Contexte** : l'équipe Material for MkDocs avertit au build que MkDocs 2.0 cassera plugins et surcharges de thème (voir son analyse, février 2026), et développe Zensical comme successeur. Le projet est protégé par `mkdocs<2` dans `requirements.txt`.
+- **Statut** : à faire · **Priorité** : P3 · **Skills** : site-look-and-feel
+- **Contexte** : depuis le 2026-11-03, boutons et liens suivent les états Material Design 3 (couche de survol 8 %, focus 10 % avec anneau `secondary` de 3dp, appui 10 % avec resserrement de la forme). Ils ont été vérifiés dans un navigateur automatisé (Chromium), pas sur un téléphone ni avec un lecteur d'écran.
 
 **Prompt**
 
-> Vérifie l'état de Zensical : compatibilité de `mkdocs.yml`, prise en charge du plugin blog, des plugins `privacy` et `search`, des `hooks` et de `custom_dir`. Consigne le constat dans le journal. Ne propose une migration que si toutes les fonctions utilisées sont couvertes, et dans ce cas crée une nouvelle tâche dédiée.
+> Avec `mise run site:serve`, vérifie sur au moins un téléphone (Safari iOS ou Chrome Android) et un navigateur de bureau autre que Chromium (Firefox, Safari) : survol et appui des boutons, anneau de focus au clavier (Tab) sur les liens, boutons, onglets et icônes du pied de page, dans les deux thèmes ; cibles tactiles de 48dp faciles à atteindre ; `prefers-reduced-motion` respecté. Passe un lecteur d'écran (VoiceOver ou NVDA) sur l'accueil : ordre de lecture, un seul H1, libellés des liens. Consigne chaque défaut dans le journal et corrige-le dans `extra.css` selon le skill `site-look-and-feel`.
 
 - **Journal** :
 
@@ -488,5 +498,20 @@ Pour mémoire, corrigé sans information nouvelle :
 
 - **Contenu** : TODO « Disponibilité » retiré de la page Services (→ B-01) ; article « Bienvenue » et page Blog complétés à partir des contenus existants ; tuiles « Compétences clés » alignées sur les services (6 tuiles) ; page Contact structurée ; « ma mission récente pour France Télévisions » daté (2023–2024).
 - **Design** : hero en flex (texte centré face au portrait) ; H1 en 700 ; graisses alignées sur les polices chargées ; grilles de 4 éléments en 2 × 2 et tuiles limitées à 3 colonnes ; liens Précédent/Suivant supprimés ; table des matières retirée du Parcours ; favicon SVG et apple-touch-icon.
-- **SEO** : `title` et `description` uniques sur chaque page ; Open Graph, Twitter Card, JSON-LD `Person` (`overrides/main.html`, `extra.seo`) ; `robots.txt` généré (`hooks/robots.py`) ; URL d'articles `/blog/<slug>/` ; polices auto-hébergées (plugin `privacy`, → B-05).
+- **SEO** : `title` et `description` uniques sur chaque page ; Open Graph, Twitter Card, JSON-LD `Person` (`overrides/main.html`, `extra.seo`) ; `robots.txt` généré ; URL d'articles `/blog/<slug>/` ; polices auto-hébergées (plugin `privacy`, → B-05).
 - **Outillage** : `mise run content:seo` et `content:todo-visible`, branchés dans `check` ; `blog:new` génère une `description` ; `.gitignore` complété ; skills, `architecture.md`, `AGENTS.md` et explication du design system (§ 6) mis à jour.
+
+## Fait le 2026-11-02 (migration vers Zensical)
+
+- **Générateur** : MkDocs + Material for MkDocs remplacés par Zensical 0.0.74, variante `classic` (rendu et classes `md-*` inchangés) ; `mkdocs.yml` → `zensical.toml`, `mkdocs.docs.yml` → `zensical.docs.toml` ; plus aucune dépendance `mkdocs*`.
+- **Fonctions portées** : plugin blog (mêmes options, URL `/blog/<slug>/`), plugin privacy (polices auto-hébergées, `unpkg.com` exclu), recherche, `overrides/main.html` (adapté à minijinja : `selectattr`/`startingwith`, page d'accueil détectée par `page.url == ""`), `robots.txt` (ex-hook MkDocs, désormais généré par `site:build`).
+- **Tâches mise** : toutes conservées et adaptées (`install` en `uv pip sync`, `site:*`, `docs:*`, `preview`, `check`, `blog:new`, `dns:check`, `todo`, `content:seo`) ; nouvelles : `deps:lock` ; fonctions communes dans `.mise/lib/zensical.sh` ; `check` vérifie en plus que chaque page de premier niveau figure dans `nav`.
+- **Docs** : `AGENTS.md`, `architecture.md` (Zensical, minijinja, mise à jour de Zensical), skills, explication du design system.
+
+## Fait le 2026-11-03 (design system Material Design 3)
+
+- **Source** : m3.material.io (rôles de couleur, typographie, formes, élévation, états, mouvement, points de rupture, boutons, cartes, accessibilité) ; kit Figma Material 3 v1.25 consulté pour la version (M3 Expressive) et ses fondations.
+- **Tokens** (`extra.css` § 1–2) : rôles de couleur M3 alimentés par la palette Nord (nouveaux dérivés de même teinte), échelles typographique, de formes (10 rayons) et d'élévation (6 niveaux), opacités d'état, anneau de focus, mouvement, grille de 4dp, points de rupture compact / medium / expanded.
+- **Composants** : bouton principal *filled* et secondaire *outlined* (ronds, 40dp, couches d'état, resserrement à l'appui), cartes *elevated* sans faux état de survol, tuiles *filled*, CTA `primary-container`, citation `secondary-container`, liens soulignés, cibles de 48dp dans le pied de page, 60 caractères par ligne.
+- **Vérifications** : `design:contrast` porte sur 66 paires de rôles par thème ; `check` refuse rayons, ombres, tailles de texte et durées écrits en dur, et vérifie la hiérarchie des titres (`content:headings`). Audit des styles calculés sur les 9 pages publiées × 2 thèmes × 3 classes de largeur : boutons ronds de 40px, tous les liens du contenu soulignés, cartes à 12px, cibles sociales de 48px, aucun débordement horizontal.
+- **Docs** : skill `site-look-and-feel` réécrit (rôles, échelles, équivalents M3), explication du design system § 7, `architecture.md`, `AGENTS.md`.

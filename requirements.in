@@ -1,0 +1,3 @@
+# Dépendance directe unique : Zensical (site public et doc projet).
+# Après modification : `mise run deps:lock` régénère requirements.txt (verrouillé, multi-plateforme).
+zensical==0.0.74

@@ -3,11 +3,15 @@
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
-python3 - site mkdocs.yml <<'PY'
+python3 - site zensical.toml <<'PY'
 import pathlib, re, sys
+try:
+    import tomllib
+except ImportError:  # Python < 3.11 : tomli est une dépendance de Zensical
+    import tomli as tomllib
 
-root, cfg = pathlib.Path(sys.argv[1]), open(sys.argv[2], encoding="utf-8").read()
-site_name = re.search(r"^site_name:\s*(.+?)\s*$", cfg, re.M).group(1)
+root = pathlib.Path(sys.argv[1])
+site_name = tomllib.load(open(sys.argv[2], "rb"))["project"]["site_name"]
 SUFFIX = len(" - " + site_name)
 TITLE_MAX, DESC_MIN, DESC_MAX = 60, 70, 160          # longueurs affichées par les moteurs de recherche
 PLACEHOLDER = "Résumé de l'article"                   # texte par défaut de `mise run blog:new`

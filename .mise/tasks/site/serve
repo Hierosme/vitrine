@@ -5,7 +5,9 @@
 #USAGE flag "-p --port <port>" default="8000" help="Port d'écoute"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
+source .mise/lib/zensical.sh
 
 port="${usage_port:-8000}"
+cfg="$(zensical_config zensical.toml)"
 echo "▶ Site : http://127.0.0.1:${port}"
-exec mkdocs serve -f mkdocs.yml -a "127.0.0.1:${port}"
+exec zensical serve -f "$cfg" -a "127.0.0.1:${port}"
