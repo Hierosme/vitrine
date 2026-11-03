@@ -42,6 +42,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 | B-22 | Verrouiller les dépendances Python | P3 | non | — | fait |
 | B-23 | Suivi des versions de Zensical | P3 | non | — | à faire |
 | B-24 | Tester les états M3 sur appareils réels | P3 | non | — | à faire |
+| B-25 | Étayer les services IA (cadre, preuves, LinkedIn) | P2 | oui | — | à faire |
 
 ---
 
@@ -380,6 +381,8 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
     - Embarquer une équipe réseau dans Git et la CI/CD — *automatisation réseau équipe*
     - Appliquer les recommandations de l'ANSSI avec Ansible — *conformité ANSSI ansible*
     - Un pipeline de livraison continue pour l'infrastructure — *continuous delivery infrastructure*
+    - Écrire un agent de code IA en Python avec un modèle local (Ollama, LM Studio) — *agent de code IA local*
+    - Modèle local ou API : comparer coûts et usages avant de choisir — *coût IA générative GPU tokens*
 
 **Questions à l'opérateur**
 
@@ -490,6 +493,31 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 - **Journal** :
 
+### B-25 — Étayer les services IA (cadre, preuves, LinkedIn)
+
+- **Statut** : à faire · **Priorité** : P2 · **Skills** : site-navigation
+- **Contexte** : le 2026-11-03, deux services ont été ajoutés sur indication de l'opérateur (famille « IA générative » de `site/services.md`, cartes de l'accueil, tuile « IA générative » du Parcours) :
+    - **Agents de code IA** : Jérôme a développé des agents de code IA en Python, assistés par des modèles locaux (LM Studio, Ollama) et par l'API OpenAI. Cadre et dates **volontairement non précisés** (choix de l'opérateur).
+    - **Maîtrise des coûts de l'IA** : planifier et déployer la consommation de GPU et de tokens d'une entreprise. **Compétence proposée**, sans mission de référence : formulée comme une offre, jamais comme une expérience.
+  `AGENTS.md` fait du profil LinkedIn la source de vérité : un recruteur qui recoupe ne trouvera pas encore ces éléments.
+
+**Questions à l'opérateur**
+
+1. Le profil LinkedIn mentionne-t-il (ou mentionnera-t-il) le développement d'agents de code IA et la maîtrise des coûts de l'IA ?
+2. Existe-t-il une trace publiable des agents : dépôt GitHub, démonstration, article ? Si oui, lien et autorisation de le citer.
+3. Peut-on désormais préciser le cadre (projet personnel, mission, poste) et la période, pour une entrée dans la frise du Parcours ?
+4. Une mission de maîtrise des coûts IA a-t-elle été réalisée depuis ? Si oui, contexte publiable (sans chiffre inventé).
+
+**Prompt**
+
+> Selon les réponses : ajoute le lien vers le dépôt ou la démonstration dans la section « Agents de code IA » de `site/services.md` ; si le cadre est précisé, ajoute une entrée datée à la frise de `site/parcours.md` et ancre le paragraphe de contexte du service dans cette expérience ; si une mission de maîtrise des coûts a eu lieu, reformule le contexte de la section « Maîtrise des coûts de l'IA » au passé, sinon laisse la formulation d'offre. Ne rien ajouter qui ne vienne de l'opérateur. Proposer un article (B-17) tiré de l'expérience des agents.
+
+- **Critères d'acceptation**
+    - [ ] Chaque affirmation sur l'IA est confirmée par l'opérateur ou par le profil LinkedIn.
+    - [ ] `mise run check` passe.
+- **Journal** :
+    - 2026-11-03 — services ajoutés ; réponses de l'opérateur : structure en deux familles de cartes, cadre des agents non précisé, maîtrise des coûts = compétence proposée, IA mise en avant sur l'accueil (hero + 2 cartes).
+
 ---
 
 ## Fait le 2026-11-02 (audit)
@@ -515,3 +543,10 @@ Pour mémoire, corrigé sans information nouvelle :
 - **Composants** : bouton principal *filled* et secondaire *outlined* (ronds, 40dp, couches d'état, resserrement à l'appui), cartes *elevated* sans faux état de survol, tuiles *filled*, CTA `primary-container`, citation `secondary-container`, liens soulignés, cibles de 48dp dans le pied de page, 60 caractères par ligne.
 - **Vérifications** : `design:contrast` porte sur 66 paires de rôles par thème ; `check` refuse rayons, ombres, tailles de texte et durées écrits en dur, et vérifie la hiérarchie des titres (`content:headings`). Audit des styles calculés sur les 9 pages publiées × 2 thèmes × 3 classes de largeur : boutons ronds de 40px, tous les liens du contenu soulignés, cartes à 12px, cibles sociales de 48px, aucun débordement horizontal.
 - **Docs** : skill `site-look-and-feel` réécrit (rôles, échelles, équivalents M3), explication du design system § 7, `architecture.md`, `AGENTS.md`.
+
+## Fait le 2026-11-03 (services IA)
+
+- **Services** : famille « IA générative » avec « Agents de code IA » (`#agents-ia`) et « Maîtrise des coûts de l'IA » (`#couts-ia`) ; sommaire en deux grilles nommées par un intitulé de groupe (`vt-group-label`, nouveau composant) ; `title` et `description` mis à jour.
+- **Accueil** : accroche du hero et 2 cartes IA (6 cartes, 3 + 3). **Parcours** : tuile « IA générative » (Infrastructure et Conformité fusionnées pour rester à 6 tuiles). **Contact** : « IA » dans les besoins.
+- **Config** : `site_description`, `extra.seo.knows_about` (JSON-LD), catégorie de blog « IA ».
+- **Docs** : skills (structure de la page Services, budget de cartes par grille, composant d'intitulé de groupe), `AGENTS.md`.

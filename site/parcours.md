@@ -68,8 +68,8 @@ Conception et développement d'une automatisation **Network as Code**.
 - **Automatisation** — Ansible (Collections, rôles, modules, plugins), Python.
 - **Réseau** — Software-Defined Networking, Network as Code, DNS, VPN, OPNsense.
 - **Livraison** — Continuous Delivery, CI/CD, Git, multi-environnements.
-- **Infrastructure** — datacenter, clusters HPC, production web, analyse de performance.
-- **Conformité** — conduite de projets de conformité ANSSI.
+- **Infrastructure & conformité** — datacenter, clusters HPC, production web, analyse de performance, conformité ANSSI.
+- **IA générative** — agents de code en Python, modèles locaux (LM Studio, Ollama), API OpenAI, maîtrise des coûts GPU et tokens.
 - **Transmission** — ateliers, onboarding, pair programming, dossiers d'architecture technique (DAT).
 
 </div>

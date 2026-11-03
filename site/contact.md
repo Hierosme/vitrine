@@ -21,7 +21,7 @@ Une mission d'automatisation, un besoin d'audit ou d'accompagnement ? Écrivez-m
 Quelques lignes suffisent. Précisez si possible :
 
 - **Le contexte** : votre équipe, votre infrastructure, les outils en place.
-- **Le besoin** : automatisation, Network as Code, livraison continue, conformité, formation…
+- **Le besoin** : automatisation, Network as Code, livraison continue, conformité, formation, IA…
 - **Le calendrier** : date de démarrage souhaitée et durée envisagée.
 - **Le mode de travail** : télétravail, part de présence sur site.
 

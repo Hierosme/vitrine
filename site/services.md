@@ -1,13 +1,16 @@
 ---
-title: "Services : Ansible, Network as Code, CI/CD"
-description: "Automatisation Ansible et Python, Network as Code, Continuous Delivery, infrastructures à grande échelle, conformité du SI et formation de vos équipes."
+title: "Services : Ansible, réseau, CI/CD et IA"
+description: "Automatisation Ansible et Python, Network as Code, Continuous Delivery, infrastructures, conformité, formation, agents de code IA et maîtrise des coûts de l'IA."
 hide:
   - navigation
 ---
 
 # Services
 
-J'interviens sur l'automatisation des systèmes et des réseaux, la livraison continue et la montée en compétence des équipes. Chaque carte renvoie au détail du service.
+J'interviens sur l'automatisation des systèmes et des réseaux, la livraison continue et la montée en compétence des équipes, et j'apporte l'IA générative à vos équipes techniques. Chaque carte renvoie au détail du service.
+
+Automatisation & infrastructure
+{ .vt-group-label }
 
 <div class="grid cards" markdown>
 
@@ -46,6 +49,25 @@ J'interviens sur l'automatisation des systèmes et des réseaux, la livraison co
     ---
 
     Ateliers, onboarding, pair programming, dossiers d'architecture technique (DAT).
+
+</div>
+
+IA générative
+{ .vt-group-label }
+
+<div class="grid cards" markdown>
+
+-   :material-robot-outline: **[Agents de code IA](#agents-ia)**
+
+    ---
+
+    Agents en Python sur modèles locaux (LM Studio, Ollama) ou sur l'API OpenAI.
+
+-   :material-chart-line: **[Maîtrise des coûts de l'IA](#couts-ia)**
+
+    ---
+
+    Planifier et déployer la consommation de GPU et de tokens pour garder le budget sous contrôle.
 
 </div>
 
@@ -114,6 +136,28 @@ La culture DevOps se diffuse par la pratique partagée. À chaque mission, je tr
 - **Formation** d'équipes à Ansible et Python, et des équipes de support de niveau 2.
 
 **Ce que vous y gagnez :** des équipes autonomes et une documentation à jour, qui survit à la fin de la mission.
+
+## Agents de code IA { #agents-ia }
+
+J'ai développé en Python des agents de code IA : des programmes qui s'appuient sur un modèle de langage pour assister le travail sur le code. Ils fonctionnent avec des modèles exécutés en local, servis par LM Studio ou Ollama, comme avec l'API d'OpenAI. Je mets cette expérience au service de vos équipes de développement et d'exploitation.
+
+- **Développement** d'agents de code IA en Python, adaptés à vos outils et à vos dépôts.
+- **Modèles locaux** avec LM Studio ou Ollama, pour garder le code et les données sur votre infrastructure.
+- **Modèles hébergés** via l'API OpenAI, quand le besoin justifie un modèle plus puissant.
+- **Intégration** à votre chaîne existante : Git, CI/CD, automatisation Ansible.
+
+**Ce que vous y gagnez :** un assistant de code adapté à votre contexte, avec le choix de garder vos données chez vous ou de recourir à un modèle hébergé.
+
+## Maîtrise des coûts de l'IA { #couts-ia }
+
+L'IA générative se paie à la consommation : des tokens facturés par un fournisseur d'API, ou des heures de GPU pour exécuter ses propres modèles. Sans plan, la facture suit l'usage plutôt que la valeur. Je vous aide à planifier cette consommation et à la déployer de façon maîtrisée, en m'appuyant sur ma pratique des modèles locaux comme des API.
+
+- **État des lieux** des usages de l'IA dans l'entreprise et de ce qu'ils consomment, en tokens comme en GPU.
+- **Planification** de la capacité : quels usages sur des modèles locaux, lesquels sur une API, et pour quel volume.
+- **Déploiement** de l'infrastructure retenue (GPU, modèles locaux, accès aux API), automatisé comme le reste du système d'information.
+- **Suivi** de la consommation et des coûts, pour ajuster les choix dans le temps.
+
+**Ce que vous y gagnez :** un budget IA prévisible, dimensionné sur vos usages réels plutôt que subi.
 
 ## Modalités
 

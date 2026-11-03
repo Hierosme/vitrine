@@ -1,6 +1,6 @@
 # AGENTS.md — vitrine DevOps freelance
 
-Site vitrine statique de **Jérôme Ornech**, Expert DevOps freelance (automatisation systèmes et réseaux, Ansible, Python, Network as Code, Continuous Delivery), généré avec **[Zensical](https://zensical.org)** (successeur de Material for MkDocs, variante `classic`, plugin blog), thèmes clair et sombre sur la palette **Nord**, design system structuré selon **Material Design 3** (rôles de couleur, échelles, états), hébergé sur **GitHub Pages** avec un domaine personnel (DNS chez DNSimple).
+Site vitrine statique de **Jérôme Ornech**, Expert DevOps freelance (automatisation systèmes et réseaux, Ansible, Python, Network as Code, Continuous Delivery, IA générative : agents de code et maîtrise des coûts), généré avec **[Zensical](https://zensical.org)** (successeur de Material for MkDocs, variante `classic`, plugin blog), thèmes clair et sombre sur la palette **Nord**, design system structuré selon **Material Design 3** (rôles de couleur, échelles, états), hébergé sur **GitHub Pages** avec un domaine personnel (DNS chez DNSimple).
 
 ## À charger au démarrage de chaque session
 
@@ -48,7 +48,7 @@ Nouvelle tâche : script bash exécutable dans `.mise/tasks/` (en-têtes `#MISE 
 ## Conventions
 
 - Contenu du site en **français**, ton professionnel et direct, à la première personne.
-- Source de vérité du parcours et des compétences : le profil de Jérôme (export LinkedIn). Ne mettre en avant **que** des compétences et expériences qui y figurent.
+- Source de vérité du parcours et des compétences : le profil de Jérôme (export LinkedIn), complété par les informations confirmées par l'opérateur dans `backlog.md` (journal des tâches). Ne mettre en avant **que** des compétences et expériences qui y figurent.
 - Ne jamais inventer de clients, références, chiffres ou certifications : laisser un `<!-- TODO: … -->` (commentaire HTML, jamais visible) et une tâche dans `backlog.md`. Une preuve fausse détruit la crédibilité, qui est l'objectif même du site.
 - Documentation projet rangée selon Diátaxis (voir `docs/README.md`).
 - Modifier un skill quand une règle de design ou de navigation change (le skill décrit l'état réel).

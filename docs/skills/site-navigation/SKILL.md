@@ -64,12 +64,14 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 ## Structure de la page Services
 
 1. H1 et une phrase d'introduction.
-2. **Grille de cartes = sommaire** : une carte par service, avec un titre **lien vers l'ancre** de la section (`**[Titre](#ancre)**`) et une phrase ≤ 20 mots.
-3. **Une section par service** : `## Titre { #ancre }`. L'identifiant explicite est obligatoire, c'est lui qui désigne la section comme un service. Elle contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
-    - un paragraphe de contexte (2 ou 3 phrases), ancré dans une mission réelle ;
+2. **Sommaire en grilles de cartes, regroupées par famille.** Chaque grille est précédée d'un intitulé de groupe (`Libellé` puis `{ .vt-group-label }` sur la ligne suivante) et contient **2 à 6 cartes**. Familles actuelles : « Automatisation & infrastructure » (6 services) et « IA générative » (2 services). Une carte par service, avec un titre **lien vers l'ancre** de la section (`**[Titre](#ancre)**`) et une phrase ≤ 20 mots.
+3. **Une section par service**, dans l'ordre des cartes : `## Titre { #ancre }`. L'identifiant explicite est obligatoire, c'est lui qui désigne la section comme un service. Elle contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
+    - un paragraphe de contexte (2 ou 3 phrases), ancré dans une expérience réelle ; une compétence proposée sans mission de référence se formule comme une offre (« je vous aide à… »), jamais comme une expérience passée ;
     - 4 puces « **Action** + détail » ;
     - une ligne « **Ce que vous y gagnez :** … » formulée du point de vue du client.
 4. `## Modalités` (tuiles `vt-tiles`, sans identifiant explicite) puis `vt-cta`.
+
+Un nouveau service rejoint une famille existante si elle a moins de 6 cartes ; sinon, créer une famille (au moins 2 services). Les familles ne sont pas des titres : elles ne s'affichent pas dans la table des matières, qui liste les services.
 
 La table des matières de droite est affichée, puisque la page a plus de 3 sections.
 

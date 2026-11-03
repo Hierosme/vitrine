@@ -118,6 +118,8 @@
   --vt-type-title-large-size:      1.375em;  --vt-type-title-large-line:      1.2727; /* 22/28 */
   --vt-type-title-medium-size:     1em;      --vt-type-title-medium-line:     1.5;    /* 16/24 */
   --vt-type-title-medium-tracking: 0.0094em;                                          /* 0.15px */
+  --vt-type-title-small-size:      0.875em;  --vt-type-title-small-line:      1.4286; /* 14/20 */
+  --vt-type-title-small-tracking:  0.0071em;                                          /* 0.1px */
   --vt-type-body-large-size:       1em;      --vt-type-body-large-line:       1.5;    /* 16/24 */
   --vt-type-body-medium-size:      0.875em;  --vt-type-body-medium-line:      1.4286; /* 14/20 */
   --vt-type-body-small-size:       0.75em;   --vt-type-body-small-line:       1.3333; /* 12/16 */
@@ -606,6 +608,18 @@
 }
 .md-typeset .grid.cards .twemoji { color: var(--vt-accent); }
 .md-typeset .grid.cards > ul > li > hr { border-bottom-color: color-mix(in srgb, var(--vt-accent) 35%, var(--vt-outline-variant)); }
+
+/* Intitulé de groupe de cartes : paragraphe `Libellé` + `{ .vt-group-label }` juste avant une grille.
+   Sépare une page de services en familles (M3 : title small, on-surface-variant). Pas un titre :
+   il ne crée ni entrée de table des matières ni niveau de titre. */
+.md-typeset .vt-group-label {
+  margin: var(--vt-space-4) 0 var(--vt-space-2);
+  color: var(--vt-on-surface-variant);
+  font-size: var(--vt-type-title-small-size);
+  line-height: var(--vt-type-title-small-line);
+  font-weight: var(--vt-font-weight-medium);
+  letter-spacing: var(--vt-type-title-small-tracking);
+}
 
 /* Intertitres de contenu : barre d'accent Frost sous chaque H2 (repère de balayage) */
 .md-typeset h2::after {

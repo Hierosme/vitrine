@@ -1,6 +1,6 @@
 ---
 title: Expert DevOps & Ansible freelance
-description: "Jérôme Ornech, expert DevOps freelance : automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery. 25 ans d'expérience."
+description: "Jérôme Ornech, expert DevOps freelance : automatisation (Ansible, Python), Network as Code, Continuous Delivery, agents de code IA, maîtrise des coûts de l'IA."
 hide:
   - navigation
   - toc
@@ -14,7 +14,7 @@ hide:
 
 # Expert DevOps & Ansible freelance
 
-Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise systèmes et réseaux avec Ansible et Python, et j'aide vos équipes à adopter la culture DevOps.
+Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise systèmes et réseaux avec Ansible et Python, développe des agents de code IA et maîtrise les coûts de l'IA.
 
 [Me contacter](contact.md){ .md-button .md-button--primary }
 [Voir mes services](services.md){ .md-button }
@@ -56,6 +56,18 @@ Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise
     ---
 
     Ateliers, onboarding et documentation pour rendre vos équipes autonomes.
+
+-   :material-robot-outline: **Agents de code IA**
+
+    ---
+
+    Agents Python sur modèles locaux (LM Studio, Ollama) ou OpenAI, intégrés à votre chaîne.
+
+-   :material-chart-line: **Maîtrise des coûts de l'IA**
+
+    ---
+
+    Consommation de GPU et de tokens planifiée et déployée, budget sous contrôle.
 
 </div>
 

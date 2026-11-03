@@ -5,7 +5,7 @@
 
 [project]
 site_name = "Jérôme Ornech"
-site_description = "Expert DevOps freelance — automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery"
+site_description = "Expert DevOps freelance — automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery, agents de code IA et maîtrise des coûts de l'IA"
 site_author = "Jérôme Ornech"
 site_url = "https://mondomaine.fr/"   # TODO: remplacer par le domaine réel (backlog.md, B-02)
 
@@ -83,6 +83,10 @@ knows_about = [
   "CI/CD",
   "Calcul haute performance (HPC)",
   "Conformité ANSSI",
+  "Agents de code IA",
+  "Modèles de langage locaux (LM Studio, Ollama)",
+  "API OpenAI",
+  "Maîtrise des coûts de l'IA (GPU, tokens)",
 ]
 
 [[project.extra.social]]
@@ -123,6 +127,7 @@ categories_allowed = [
   "Python",
   "Sécurité",
   "Culture DevOps",
+  "IA",
   "Freelance",
 ]
 
