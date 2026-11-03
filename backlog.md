@@ -1,6 +1,6 @@
 # Backlog — vitrine
 
-Tâches restantes après l'audit du 2026-11-02. Chacune contient ce qu'il faut à un agent IA pour la traiter seul : contexte, **questions à poser à l'opérateur avant de modifier quoi que ce soit**, prompt, fichiers, critères d'acceptation et journal.
+Tâches restantes après l'audit du 2026-11-02, revues le 2026-11-03 par rapport à l'état du dépôt (commit `f12a9df`). Chacune contient ce qu'il faut à un agent IA pour la traiter seul : contexte, **questions à poser à l'opérateur avant de modifier quoi que ce soit**, prompt, fichiers, critères d'acceptation et journal.
 
 ## Mode d'emploi (agent)
 
@@ -21,8 +21,8 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 | B-01 | Disponibilité dans les modalités | P1 | oui | — | à faire |
 | B-02 | Domaine et adresse email réels | P1 | oui | — | à faire |
 | B-03 | Page « Mentions légales » | P1 | oui | B-02 | à faire |
-| B-04 | Dépôt git et publication GitHub Pages | P1 | oui | B-02 | à faire |
-| B-05 | Vérifier le premier build avec polices auto-hébergées | P1 | non | — | à faire |
+| B-04 | Dépôt git et publication GitHub Pages | P1 | oui | B-02 | en cours |
+| B-05 | Vérifier le premier build avec polices auto-hébergées | P1 | non | B-04 | en cours |
 | B-06 | Vérifier les référentiels de conformité annoncés | P1 | oui | — | à faire |
 | B-07 | Compléter TheGreenBow et BDA dans le parcours | P2 | oui | — | à faire |
 | B-08 | Clarifier la chronologie Nova / Extia / TheGreenBow | P2 | oui | — | à faire |
@@ -117,8 +117,8 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 ### B-04 — Dépôt git et publication GitHub Pages
 
-- **Statut** : à faire · **Priorité** : P1 · **Dépend de** : B-02
-- **Contexte** : le dossier du projet n'est pas un dépôt git. Le workflow `.github/workflows/deploy.yml` publie sur GitHub Pages à chaque push sur `main`.
+- **Statut** : en cours · **Priorité** : P1 · **Dépend de** : B-02
+- **Contexte** : le dépôt git local existe (branche `main`, 4 commits, de `init` à `contenu`) mais **n'a pas de remote** : rien n'est publié. Le workflow `.github/workflows/deploy.yml` publie sur GitHub Pages à chaque push sur `main`. Le dossier `_to_delete/` est toujours présent (ignoré par git).
 
 **Questions à l'opérateur**
 
@@ -128,26 +128,29 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Initialise git (`git init -b main`), vérifie que `.gitignore` exclut `.venv/`, `build/`, `build-docs/`, `.cache/`, `.idea/`, `_to_delete/` et `Claude outputs/`, puis fais un premier commit en français à l'impératif. Ajoute le remote fourni par l'opérateur et pousse seulement après son accord explicite. Si l'opérateur le demande, configure Pages avec `gh api` (source GitHub Actions, domaine personnel). Vérifie que le workflow passe (`gh run watch`).
+> Le dépôt est déjà initialisé : vérifie seulement que `.gitignore` exclut `.venv/`, `build/`, `build-docs/`, `.cache/`, `.idea/`, `_to_delete/`, `Claude outputs/` et `.*.offline.toml`, et que `git status` est propre. Ajoute le remote fourni par l'opérateur et pousse seulement après son accord explicite. Si l'opérateur le demande, configure Pages avec `gh api` (source GitHub Actions, domaine personnel). Vérifie que le workflow passe (`gh run watch`).
 
 - **Critères d'acceptation**
     - [ ] Dépôt poussé, workflow « Deploy site » vert.
     - [ ] Site accessible en HTTPS sur le domaine (`mise run dns:check` passe).
 - **Journal** :
+    - 2026-11-03 — dépôt local initialisé par l'opérateur (commits `init`, `zensical migration`, `ia`, `contenu`) ; pas encore de remote ni de publication.
 
 ### B-05 — Vérifier le premier build avec polices auto-hébergées
 
-- **Statut** : à faire · **Priorité** : P1
-- **Contexte** : le plugin `privacy` (Zensical) sert Inter et JetBrains Mono depuis le site (RGPD). L'environnement de l'audit et de la migration n'avait pas accès à Google Fonts : le téléchargement n'a pas pu être vérifié. Hors ligne, `VITRINE_PRIVACY=false` fait générer par les tâches une config sans le plugin (`.zensical.offline.toml`). Les ressources `unpkg.com` (pyodide) sont exclues volontairement.
+- **Statut** : en cours · **Priorité** : P1 · **Dépend de** : B-04 (pour la vérification en CI)
+- **Contexte** : le plugin `privacy` (Zensical) sert Inter et JetBrains Mono depuis le site (RGPD). Hors ligne, `VITRINE_PRIVACY=false` fait générer par les tâches une config sans le plugin (`.zensical.offline.toml`). Les ressources `unpkg.com` (pyodide, ace, mermaid, polyfill, référencées par le JavaScript du thème) sont exclues volontairement (`assets_exclude`) : elles ne sont chargées que si la fonction correspondante est utilisée, ce qui n'est pas le cas. Le cache `.cache/plugin/privacy/` contient encore `unpkg.com/mermaid@11`, téléchargé avant l'exclusion : sans effet sur le site, il disparaît avec `mise run clean`.
 
 **Prompt**
 
 > Sur une machine avec accès réseau, lance `mise run check`. Vérifie ensuite que `build/index.html` ne contient plus `fonts.googleapis.com`, que `build/assets/external/` contient les fichiers de police (et aucun fichier pyodide), et que le rendu (`mise run site:serve`) utilise bien Inter, en clair et en sombre. En cas d'échec, consigne l'erreur dans le journal sans désactiver le plugin.
 
 - **Critères d'acceptation**
+    - [x] Le build local télécharge les polices : `build/assets/external/` contient `fonts.googleapis.com/` et `fonts.gstatic.com/` (Inter, JetBrains Mono), sans `unpkg.com`, et le HTML ne contient plus d'URL Google absolue.
     - [ ] Aucune requête vers `fonts.googleapis.com` ou `fonts.gstatic.com` au chargement d'une page (onglet Réseau du navigateur).
-    - [ ] Le workflow GitHub Actions réussit avec le plugin actif.
+    - [ ] Le workflow GitHub Actions réussit avec le plugin actif (après B-04).
 - **Journal** :
+    - 2026-11-03 — revue : un build local avec le plugin actif a bien auto-hébergé les polices (constaté dans `build/`) ; restent la vérification dans le navigateur et en CI.
 
 ### B-06 — Vérifier les référentiels de conformité annoncés
 
@@ -161,7 +164,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Selon la réponse : soit ajoute au parcours la mission qui atteste chaque référentiel conservé ; soit reformule la carte et la section « Conformité du SI » de `site/services.md` pour ne revendiquer que l'expérience ANSSI. La section doit garder au moins 500 caractères (`mise run content:services`) et la structure contexte / 4 puces / « Ce que vous y gagnez ». Mets à jour la `description` du front-matter si elle cite un référentiel retiré.
+> Selon la réponse : soit ajoute au parcours la mission qui atteste chaque référentiel conservé ; soit reformule la carte et la section « Conformité du SI » de `site/services.md` pour ne proposer que le référentiel ANSSI. Dans les deux cas, la section reste une **mission type**, sans citer d'expérience (règle N8, vérifiée par `content:services`). La section doit garder au moins 500 caractères (`mise run content:services`) et la structure contexte / 4 puces / « Ce que vous y gagnez ». Mets à jour la `description` du front-matter si elle cite un référentiel retiré.
 
 - **Critères d'acceptation**
     - [ ] Chaque référentiel cité est attesté par le parcours, ou n'est plus revendiqué.
@@ -351,7 +354,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Ajoute les profils confirmés à `extra.social` (icône `fontawesome/brands/…` ou `material/…`, `name` explicite). Propose à l'opérateur un texte court pour le README de profil GitHub et la section « Infos » de LinkedIn, reprenant le H1 et l'accroche du site avec le lien. Ne crée aucun compte toi-même.
+> Ajoute les profils confirmés en `[[project.extra.social]]` dans `zensical.toml` (icône `fontawesome/brands/…` ou `material/…`, `name` explicite). Propose à l'opérateur un texte court pour le README de profil GitHub et la section « Infos » de LinkedIn, reprenant le H1 et l'accroche du site avec le lien. Ne crée aucun compte toi-même.
 
 - **Critères d'acceptation**
     - [ ] `sameAs` du JSON-LD (accueil) liste tous les profils confirmés ; `mise run check` passe.
@@ -374,7 +377,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 ### B-17 — Plan éditorial et premiers articles
 
 - **Statut** : à faire · **Priorité** : P2 · **Skills** : site-navigation
-- **Contexte** : le blog est le principal levier de référencement sur des requêtes précises. Un seul article publié (« Bienvenue »). Sujets candidats tirés des missions réelles, avec la requête visée :
+- **Contexte** : le blog est le principal levier de référencement sur des requêtes précises. Un seul article publié (« Bienvenue »). Catégories autorisées (`zensical.toml`) : Ansible, Network as Code, CI/CD, Python, Sécurité, Culture DevOps, IA, Freelance. Sujets candidats tirés du parcours et des services, avec la requête visée :
     - Découper une base Ansible monolithique en rôles et Collections — *refactoring Ansible, collections Ansible*
     - Écrire un lookup plugin Ansible en Python — *lookup plugin ansible*
     - Network as Code : configurer ses équipements réseau depuis Git — *network as code ansible*
@@ -442,7 +445,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Si oui : crée `site/services/index.md` (cartes-sommaire, intro, Modalités, `vt-cta`) et une page par service (`site/services/<ancre>.md`, `title`, `description`, `vt-cta`), en déplaçant le texte existant sans le réécrire. Dans `nav`, transforme « Services » en section avec index (`navigation.indexes`), sans ajouter d'onglet. Mets à jour les liens internes (accueil, articles), `.mise/tasks/content/services` (qui lit aujourd'hui `site/services.md`) et la section « Structure de la page Services » du skill `site-navigation`. Les anciennes ancres `services/#…` cesseront de fonctionner : à faire avant la mise en ligne si possible.
+> Si oui : crée `site/services/index.md` (intro, les deux familles de cartes-sommaire avec leur intitulé `vt-group-label`, Modalités, `vt-cta`) et une page par service (`site/services/<ancre>.md`, `title`, `description`, `vt-cta`), en déplaçant le texte existant sans le réécrire. Dans `nav`, transforme « Services » en section avec index (`navigation.indexes`), sans ajouter d'onglet. Mets à jour les liens internes (accueil, articles), `.mise/tasks/content/services` (qui lit aujourd'hui `site/services.md` pour la longueur et la formulation en mission type, et `site/parcours.md` pour la liste des noms interdits) et la section « Structure de la page Services » du skill `site-navigation`. Les anciennes ancres `services/#…` cesseront de fonctionner : à faire avant la mise en ligne si possible.
 
 - **Journal** :
 
@@ -499,7 +502,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 - **Contexte** : le 2026-11-03, deux services ont été ajoutés sur indication de l'opérateur (famille « IA générative » de `site/services.md`, cartes de l'accueil, tuile « IA générative » du Parcours) :
     - **Agents de code IA** : Jérôme a développé des agents de code IA en Python, assistés par des modèles locaux (LM Studio, Ollama) et par l'API OpenAI. Cadre et dates **volontairement non précisés** (choix de l'opérateur).
     - **Maîtrise des coûts de l'IA** : planifier et déployer la consommation de GPU et de tokens d'une entreprise. **Compétence proposée**, sans mission de référence : formulée comme une offre, jamais comme une expérience.
-  `AGENTS.md` fait du profil LinkedIn la source de vérité : un recruteur qui recoupe ne trouvera pas encore ces éléments.
+  `AGENTS.md` admet comme source de vérité le profil LinkedIn **et** les informations confirmées par l'opérateur dans ce journal ; mais un recruteur qui recoupe avec LinkedIn ne trouvera pas encore ces éléments.
 
 **Questions à l'opérateur**
 
@@ -524,7 +527,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 Pour mémoire, corrigé sans information nouvelle :
 
-- **Contenu** : TODO « Disponibilité » retiré de la page Services (→ B-01) ; article « Bienvenue » et page Blog complétés à partir des contenus existants ; tuiles « Compétences clés » alignées sur les services (6 tuiles) ; page Contact structurée ; « ma mission récente pour France Télévisions » daté (2023–2024).
+- **Contenu** : TODO « Disponibilité » retiré de la page Services (→ B-01) ; article « Bienvenue » et page Blog complétés à partir des contenus existants ; tuiles « Compétences clés » alignées sur les services (6 tuiles) ; page Contact structurée ; « ma mission récente pour France Télévisions » daté (2023–2024) — mention supprimée le 2026-11-03 (services en missions types).
 - **Design** : hero en flex (texte centré face au portrait) ; H1 en 700 ; graisses alignées sur les polices chargées ; grilles de 4 éléments en 2 × 2 et tuiles limitées à 3 colonnes ; liens Précédent/Suivant supprimés ; table des matières retirée du Parcours ; favicon SVG et apple-touch-icon.
 - **SEO** : `title` et `description` uniques sur chaque page ; Open Graph, Twitter Card, JSON-LD `Person` (`overrides/main.html`, `extra.seo`) ; `robots.txt` généré ; URL d'articles `/blog/<slug>/` ; polices auto-hébergées (plugin `privacy`, → B-05).
 - **Outillage** : `mise run content:seo` et `content:todo-visible`, branchés dans `check` ; `blog:new` génère une `description` ; `.gitignore` complété ; skills, `architecture.md`, `AGENTS.md` et explication du design system (§ 6) mis à jour.
@@ -557,3 +560,13 @@ Pour mémoire, corrigé sans information nouvelle :
 - **Contenu** : contexte des 8 sections de `site/services.md` réécrit (situation du client, puis ce que fait la mission) ; plus aucune mention d'employeur, de client, d'année ni de « j'ai ».
 - **Contrôle** : `content:services` (lancé par `check`) refuse désormais dans un service les noms d'employeurs et de clients de `site/parcours.md`, les années et « j'ai ».
 - **Docs** : skill `site-navigation` (N8, structure de la page Services), prompts B-07, B-08, B-10 et B-25 alignés.
+
+## Revue du 2026-11-03
+
+Backlog comparé à l'état du dépôt, sans autre modification du projet :
+
+- **B-04** passe en cours : dépôt git local créé par l'opérateur (4 commits), pas de remote.
+- **B-05** passe en cours : polices auto-hébergées constatées dans un build local ; restent navigateur et CI (dépend désormais de B-04).
+- **B-06**, **B-20** : prompts alignés sur la règle des missions types et sur les deux familles de cartes.
+- **B-15** : emplacement des profils (`[[project.extra.social]]` de `zensical.toml`). **B-17** : catégories actuelles, dont « IA ». **B-25** : source de vérité selon `AGENTS.md`.
+- Inchangés et toujours d'actualité : les `TODO` du site renvoient bien à B-01 (disponibilité), B-02 (domaine, email), B-09 (preuves), B-12 (contact), B-09/B-10 (certifications, références) ; TheGreenBow et BDA toujours sans description (B-07) ; logo, recherche et image de partage inchangés (B-14, B-18, B-19).
