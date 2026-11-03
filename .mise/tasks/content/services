@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie que chaque service détaillé (## Titre { #ancre }) fait au moins N caractères"
+#MISE description="Vérifie chaque service détaillé (## Titre { #ancre }) : au moins N caractères, formulé en mission type (aucune expérience citée)"
 #USAGE flag "-m --min <min>" default="500" help="Nombre minimum de caractères visibles par service"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
@@ -22,14 +22,29 @@ def visible(md):
 sections = list(re.finditer(r"^## ([^\n{]+?) \{ *#[\w-]+ *\}\n(.*?)(?=^## |\Z)", text, re.S | re.M))
 if not sections:
     sys.exit(print("  ✘ aucun service détaillé trouvé dans site/services.md"))
+# Missions types : un service ne cite ni expérience (employeur, client, année) ni passé à la 1re personne.
+# Les noms viennent de site/parcours.md (titres « ### Poste — Entreprise, pour Client (années) »
+# et clients en gras « **Client** : … »), où les expériences ont leur place.
+parcours = open("site/parcours.md", encoding="utf-8").read()
+names = set()
+for h in re.findall(r"^### .+? — (.+?)(?: \(|$)", parcours, re.M):
+    names.update(x.strip() for x in re.split(r",\s*pour\s+", h))
+names.update(n.strip() for n in re.findall(r"^\*\*([^*]+)\*\* :", parcours, re.M))
+forbidden = [(n, re.compile(re.escape(n), re.I)) for n in names if n]
+forbidden += [("année", re.compile(r"\b(19|20)\d{2}\b")), ("« j'ai »", re.compile(r"\bj'ai\b", re.I))]
+
 bad = 0
 for m in sections:
-    n = len(visible(m.group(2)))
-    ok = n >= minimum
-    bad += not ok
-    if not ok:
-        print(f"  ✘ {m.group(1).strip()} : {n} caractères (min {minimum})")
+    title, body = m.group(1).strip(), visible(m.group(2))
+    n = len(body)
+    if n < minimum:
+        bad += 1
+        print(f"  ✘ {title} : {n} caractères (min {minimum})")
+    hits = sorted({label for label, rx in forbidden if rx.search(body)})
+    if hits:
+        bad += 1
+        print(f"  ✘ {title} : référence à une expérience ({', '.join(hits)}) — formuler en mission type")
 if not bad:
-    print(f"  ✔ OK ({len(sections)} services ≥ {minimum} caractères)")
+    print(f"  ✔ OK ({len(sections)} services ≥ {minimum} caractères, formulés en missions types)")
 sys.exit(1 if bad else 0)
 PY

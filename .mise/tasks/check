@@ -82,7 +82,7 @@ for f in $(find site -maxdepth 1 -name '*.md'); do
 done
 if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 
-echo "• Contenu : chaque service détaillé fait au moins 500 caractères (N8)"
+echo "• Contenu : chaque service fait au moins 500 caractères et se formule en mission type (N8)"
 "$(dirname "$0")/content/services" || fail=1
 
 echo "• Contenu : aucun TODO visible sur le site publié"

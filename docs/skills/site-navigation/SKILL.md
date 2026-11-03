@@ -36,7 +36,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 | N4 | **Écrire pour le balayage** | NN/g, F-pattern 2006 / 2017 | Structure de page ci-dessous. |
 | N5 | **L'essentiel sans défiler** | NN/g, *Scrolling and Attention* | Sur l'accueil, la proposition de valeur et le CTA sont dans le hero. Sur les autres pages, le H1 et la première phrase disent de quoi parle la page. |
 | N6 | **Toujours un chemin vers le contact** | Cyr 2008 (confiance → action) | Chaque page de contenu se termine par un `vt-cta`. |
-| N8 | **Du détail derrière chaque promesse** | Fogg 2003 (proéminence → interprétation) ; Cyr 2008 | Une carte attire l'œil, la section la justifie : au moins 500 caractères par service, appuyés sur des missions réelles. |
+| N8 | **Du détail derrière chaque promesse** | Fogg 2003 (proéminence → interprétation) ; Cyr 2008 | Une carte attire l'œil, la section la justifie : au moins 500 caractères par service, rédigés comme une **mission type**. Les preuves (employeurs, clients, années) vivent dans Parcours, jamais dans Services. |
 | N7 | **Pas de navigation redondante** | Sweller 1988 (charge extrinsèque) ; Nielsen (balayage) | Pas de menu latéral qui répète les onglets : la largeur va au contenu. |
 
 ## Règles de navigation
@@ -66,7 +66,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 1. H1 et une phrase d'introduction.
 2. **Sommaire en grilles de cartes, regroupées par famille.** Chaque grille est précédée d'un intitulé de groupe (`Libellé` puis `{ .vt-group-label }` sur la ligne suivante) et contient **2 à 6 cartes**. Familles actuelles : « Automatisation & infrastructure » (6 services) et « IA générative » (2 services). Une carte par service, avec un titre **lien vers l'ancre** de la section (`**[Titre](#ancre)**`) et une phrase ≤ 20 mots.
 3. **Une section par service**, dans l'ordre des cartes : `## Titre { #ancre }`. L'identifiant explicite est obligatoire, c'est lui qui désigne la section comme un service. Elle contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
-    - un paragraphe de contexte (2 ou 3 phrases), ancré dans une expérience réelle ; une compétence proposée sans mission de référence se formule comme une offre (« je vous aide à… »), jamais comme une expérience passée ;
+    - un paragraphe de contexte (2 ou 3 phrases) rédigé comme une **mission type** : la situation du client (« Vos déploiements reposent sur… »), puis ce que fait la mission (« La mission automatise… »). **Aucune référence aux expériences** : ni employeur, ni client, ni année, ni « j'ai ». `content:services` le vérifie à partir des noms présents dans `site/parcours.md` ;
     - 4 puces « **Action** + détail » ;
     - une ligne « **Ce que vous y gagnez :** … » formulée du point de vue du client.
 4. `## Modalités` (tuiles `vt-tiles`, sans identifiant explicite) puis `vt-cta`.
@@ -119,7 +119,7 @@ Corps…
 
 ## Checklist avant de terminer
 
-- [ ] `mise run check` passe : builds stricts, budget d'onglets, pages de premier niveau dans `nav`, un seul CTA principal par page, pas de menu latéral (N7), services d'au moins 500 caractères (N8), aucun TODO visible (S5), `title` et `description` conformes (S1, S2).
+- [ ] `mise run check` passe : builds stricts, budget d'onglets, pages de premier niveau dans `nav`, un seul CTA principal par page, pas de menu latéral (N7), services d'au moins 500 caractères et formulés en missions types (N8), aucun TODO visible (S5), `title` et `description` conformes (S1, S2).
 - [ ] Le menu est lisible sur desktop et sur mobile (`mise run site:serve`, fenêtre sous 76em).
 - [ ] Chaque page modifiée respecte la structure : H1 unique, première phrase utile, H2 réguliers, `vt-cta` final.
 - [ ] Aucun lien interne cassé, aucune page orpheline.

@@ -73,7 +73,7 @@ IA générative
 
 ## Ansible & Python { #ansible-python }
 
-Ansible est au cœur de mes missions : je l'utilise pour automatiser le déploiement et la configuration des systèmes, du poste de développement jusqu'à la production. Quand les modules existants ne suffisent pas, je développe en Python les briques qui manquent.
+Vos déploiements reposent sur des procédures manuelles, ou sur une base Ansible devenue difficile à faire évoluer. La mission automatise le déploiement et la configuration des systèmes, du poste de développement jusqu'à la production, et développe en Python les briques qui manquent quand les modules existants ne suffisent pas.
 
 - **Structuration** du code Ansible en rôles et Collections réutilisables et versionnés.
 - **Découpage** d'une base monolithique en rôles indépendants, chacun avec son dépôt Git et son cycle de release.
@@ -84,7 +84,7 @@ Ansible est au cœur de mes missions : je l'utilise pour automatiser le déploie
 
 ## Network as Code { #network-as-code }
 
-Le réseau reste souvent le dernier domaine configuré à la main. J'y applique les pratiques du développement logiciel : configuration décrite dans Git, relue avant application, puis déployée automatiquement. C'est le cœur de ma mission pour France Télévisions (2023–2024).
+Le réseau reste souvent le dernier domaine configuré à la main. La mission y applique les pratiques du développement logiciel : configuration décrite dans Git, relue avant application, puis déployée automatiquement, avec une équipe réseau accompagnée pour s'approprier ces outils.
 
 - **Forge logicielle** dédiée à la configuration des équipements réseau.
 - **Automatisation** des configurations réseau via des Collections Ansible.
@@ -95,7 +95,7 @@ Le réseau reste souvent le dernier domaine configuré à la main. J'y applique 
 
 ## Continuous Delivery { #continuous-delivery }
 
-Un pipeline de livraison continue transforme chaque changement validé en déploiement fiable et répétable. J'en ai conçu et déployé plusieurs, chez DigDeo comme en mission grand compte, pour des applications comme pour l'infrastructure elle-même.
+Un pipeline de livraison continue transforme chaque changement validé en déploiement fiable et répétable. La mission conçoit et met en place ce pipeline, pour vos applications comme pour l'infrastructure elle-même, puis le confie à votre équipe.
 
 - **Conception** du pipeline : étapes, environnements, critères de passage d'un environnement à l'autre.
 - **Déploiement et maintenance** de multiples environnements.
@@ -106,7 +106,7 @@ Un pipeline de livraison continue transforme chaque changement validé en déplo
 
 ## Infrastructures à grande échelle { #infrastructures }
 
-Pendant quatorze ans chez Ansys, j'ai automatisé et exploité un datacenter et des clusters de calcul haute performance. J'ai ensuite déployé et maintenu des systèmes de production pour des plateformes web, dont l'Order Management System de Maison Christian Louboutin.
+Nouveaux environnements à provisionner, datacenter à automatiser, clusters de calcul haute performance ou plateformes web de production à exploiter : la mission prend en charge l'infrastructure qui doit tenir la charge, de son déploiement à son exploitation au quotidien.
 
 - **Provisionnement** à grande échelle des machines de nouveaux environnements.
 - **Exploitation** de clusters HPC et automatisation du datacenter.
@@ -117,7 +117,7 @@ Pendant quatorze ans chez Ansys, j'ai automatisé et exploité un datacenter et 
 
 ## Conformité du SI { #conformite-si }
 
-Recommandations de l'ANSSI, PCI-DSS, directive NIS 2, mesures de l'ISO/IEC 27002 : quel que soit le référentiel, mettre un système d'information en conformité demande de la méthode et de la constance. Chez DigDeo, j'ai planifié et conduit des projets de conformité ANSSI en tant que Tech Leader infrastructure et développement. J'applique la même démarche aux autres référentiels, en m'appuyant sur l'automatisation pour que les mesures s'appliquent partout de la même façon.
+Recommandations de l'ANSSI, PCI-DSS, directive NIS 2, mesures de l'ISO/IEC 27002 : quel que soit le référentiel, mettre un système d'information en conformité demande de la méthode et de la constance. La mission planifie et conduit le projet de mise en conformité, en s'appuyant sur l'automatisation pour que les mesures s'appliquent partout de la même façon.
 
 - **Analyse** du référentiel applicable et des écarts avec l'existant.
 - **Planification** du projet de conformité et priorisation des chantiers.
@@ -128,7 +128,7 @@ Recommandations de l'ANSSI, PCI-DSS, directive NIS 2, mesures de l'ISO/IEC 27002
 
 ## Formation & documentation { #formation }
 
-La culture DevOps se diffuse par la pratique partagée. À chaque mission, je transmets ce que je construis pour que l'équipe reste autonome après mon départ : c'est le sens du « *make it manageable* » de ma devise.
+La culture DevOps se diffuse par la pratique partagée. Cette mission, seule ou intégrée aux autres, transmet à vos équipes ce qui a été construit pour qu'elles restent autonomes : c'est le sens du « *make it manageable* » de ma devise.
 
 - **Ateliers** de partage de connaissances : Ansible, Git, SSL, NFS, ClamAV, CI/CD, conteneurs.
 - **Onboarding** des nouveaux arrivants et **pair programming**.
@@ -139,7 +139,7 @@ La culture DevOps se diffuse par la pratique partagée. À chaque mission, je tr
 
 ## Agents de code IA { #agents-ia }
 
-J'ai développé en Python des agents de code IA : des programmes qui s'appuient sur un modèle de langage pour assister le travail sur le code. Ils fonctionnent avec des modèles exécutés en local, servis par LM Studio ou Ollama, comme avec l'API d'OpenAI. Je mets cette expérience au service de vos équipes de développement et d'exploitation.
+Vos équipes veulent un assistant de code adapté à leurs outils, sans forcément confier leur code à un fournisseur externe. La mission développe en Python des agents de code IA : des programmes qui s'appuient sur un modèle de langage, exécuté en local avec LM Studio ou Ollama, ou hébergé via l'API OpenAI.
 
 - **Développement** d'agents de code IA en Python, adaptés à vos outils et à vos dépôts.
 - **Modèles locaux** avec LM Studio ou Ollama, pour garder le code et les données sur votre infrastructure.
@@ -150,7 +150,7 @@ J'ai développé en Python des agents de code IA : des programmes qui s'appuient
 
 ## Maîtrise des coûts de l'IA { #couts-ia }
 
-L'IA générative se paie à la consommation : des tokens facturés par un fournisseur d'API, ou des heures de GPU pour exécuter ses propres modèles. Sans plan, la facture suit l'usage plutôt que la valeur. Je vous aide à planifier cette consommation et à la déployer de façon maîtrisée, en m'appuyant sur ma pratique des modèles locaux comme des API.
+L'IA générative se paie à la consommation : des tokens facturés par un fournisseur d'API, ou des heures de GPU pour exécuter ses propres modèles. Sans plan, la facture suit l'usage plutôt que la valeur. La mission planifie cette consommation et la déploie de façon maîtrisée, entre modèles locaux et API.
 
 - **État des lieux** des usages de l'IA dans l'entreprise et de ce qu'ils consomment, en tokens comme en GPU.
 - **Planification** de la capacité : quels usages sur des modèles locaux, lesquels sur une API, et pour quel volume.

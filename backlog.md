@@ -185,7 +185,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Dans `site/parcours.md`, complète les entrées TheGreenBow et BDA de la frise `vt-timeline` sur le modèle des autres : 2 à 3 puces « verbe d'action + détail », mot porteur en tête, uniquement à partir des réponses. Si TheGreenBow apporte une compétence absente des tuiles « Compétences clés », propose-la à l'opérateur avant de l'ajouter (6 tuiles maximum). Si la mission rejoint un service, propose de la citer dans le paragraphe de contexte de ce service dans `site/services.md`.
+> Dans `site/parcours.md`, complète les entrées TheGreenBow et BDA de la frise `vt-timeline` sur le modèle des autres : 2 à 3 puces « verbe d'action + détail », mot porteur en tête, uniquement à partir des réponses. Si TheGreenBow apporte une compétence absente des tuiles « Compétences clés », propose-la à l'opérateur avant de l'ajouter (6 tuiles maximum). Ne cite pas cette expérience dans `site/services.md` : les services restent des missions types (règle N8).
 
 - **Critères d'acceptation**
     - [ ] Aucune entrée de la frise sans contenu.
@@ -205,7 +205,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Reformule les titres H3 et les dates de la frise de `site/parcours.md` pour que la chronologie se lise sans ambiguïté (ex. « Expert DevOps — Nova Technology (2021–2025) » avec les missions comme sous-blocs, mission France Télévisions « via Extia »). N'ajoute que des faits confirmés par l'opérateur. Vérifie la cohérence avec la section « Network as Code » de `site/services.md`.
+> Reformule les titres H3 et les dates de la frise de `site/parcours.md` pour que la chronologie se lise sans ambiguïté (ex. « Expert DevOps — Nova Technology (2021–2025) » avec les missions comme sous-blocs, mission France Télévisions « via Extia »). N'ajoute que des faits confirmés par l'opérateur.
 
 - **Critères d'acceptation**
     - [ ] Aucun chevauchement de dates non expliqué.
@@ -249,7 +249,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Crée les études de cas selon l'emplacement choisi. Format de chaque cas : H2 « Client — sujet », puis Contexte (2–3 phrases), Intervention (3–4 puces « verbe + détail »), Résultat (puces ; chiffres seulement s'ils sont fournis), Technologies (une ligne), et un lien vers le service correspondant (`services.md#ancre`). Termine par un `vt-cta`. Si nouvelle page : `title`, `description`, `hide: [navigation]`, entrée dans `nav` entre Services et Parcours, mise à jour de la « Structure actuelle » du skill `site-navigation`. Depuis chaque section de `site/services.md`, ajoute un lien vers le cas correspondant.
+> Crée les études de cas selon l'emplacement choisi. Format de chaque cas : H2 « Client — sujet », puis Contexte (2–3 phrases), Intervention (3–4 puces « verbe + détail »), Résultat (puces ; chiffres seulement s'ils sont fournis), Technologies (une ligne), et un lien vers le service correspondant (`services.md#ancre`). Termine par un `vt-cta`. Si nouvelle page : `title`, `description`, `hide: [navigation]`, entrée dans `nav` entre Services et Parcours, mise à jour de la « Structure actuelle » du skill `site-navigation`. Les liens vont des cas vers les services, jamais l'inverse : `site/services.md` reste rédigé en missions types (règle N8).
 
 - **Critères d'acceptation**
     - [ ] Chaque fait est confirmé par l'opérateur ; aucun chiffre ni citation inventés.
@@ -510,7 +510,7 @@ Priorités : **P1** bloque la mise en ligne · **P2** crédibilité et conversio
 
 **Prompt**
 
-> Selon les réponses : ajoute le lien vers le dépôt ou la démonstration dans la section « Agents de code IA » de `site/services.md` ; si le cadre est précisé, ajoute une entrée datée à la frise de `site/parcours.md` et ancre le paragraphe de contexte du service dans cette expérience ; si une mission de maîtrise des coûts a eu lieu, reformule le contexte de la section « Maîtrise des coûts de l'IA » au passé, sinon laisse la formulation d'offre. Ne rien ajouter qui ne vienne de l'opérateur. Proposer un article (B-17) tiré de l'expérience des agents.
+> Selon les réponses : si le cadre est précisé, ajoute une entrée datée à la frise de `site/parcours.md`, avec le lien vers le dépôt ou la démonstration ; une mission de maîtrise des coûts réalisée va de même dans le Parcours (ou dans les études de cas, B-10). **Ne modifie pas** `site/services.md` : les services restent des missions types, sans référence aux expériences (règle N8). Ne rien ajouter qui ne vienne de l'opérateur. Proposer un article (B-17) tiré de l'expérience des agents.
 
 - **Critères d'acceptation**
     - [ ] Chaque affirmation sur l'IA est confirmée par l'opérateur ou par le profil LinkedIn.
@@ -550,3 +550,10 @@ Pour mémoire, corrigé sans information nouvelle :
 - **Accueil** : accroche du hero et 2 cartes IA (6 cartes, 3 + 3). **Parcours** : tuile « IA générative » (Infrastructure et Conformité fusionnées pour rester à 6 tuiles). **Contact** : « IA » dans les besoins.
 - **Config** : `site_description`, `extra.seo.knows_about` (JSON-LD), catégorie de blog « IA ».
 - **Docs** : skills (structure de la page Services, budget de cartes par grille, composant d'intitulé de groupe), `AGENTS.md`.
+
+## Fait le 2026-11-03 (services en missions types)
+
+- **Règle** (demande de l'opérateur) : les services ne font référence à aucune expérience et se formulent comme des missions types ; les preuves restent dans Parcours (et les futures études de cas).
+- **Contenu** : contexte des 8 sections de `site/services.md` réécrit (situation du client, puis ce que fait la mission) ; plus aucune mention d'employeur, de client, d'année ni de « j'ai ».
+- **Contrôle** : `content:services` (lancé par `check`) refuse désormais dans un service les noms d'employeurs et de clients de `site/parcours.md`, les années et « j'ai ».
+- **Docs** : skill `site-navigation` (N8, structure de la page Services), prompts B-07, B-08, B-10 et B-25 alignés.
