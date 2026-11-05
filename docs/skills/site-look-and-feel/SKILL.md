@@ -55,14 +55,14 @@ Le thème de base est **Zensical en variante `classic`** (`theme.variant`), qui 
 | Rôle | Clair (« bright to dark ») | Sombre (Polar Night) | Usage |
 |---|---|---|---|
 | `bg-default` | nord6 | nord0 | Fond de page (niveau 0) |
-| `bg-paper` | nord5 | nord1 | Niveau 1 : cartes, tuiles, citation, hero, en-tête, onglets, pied de page, CTA (dans sa portée sombre) |
+| `bg-paper` | nord5 | nord1 | Niveau 1 : cartes, tuiles, citation, en-tête, onglets, pied de page, CTA (dans sa portée sombre) |
 | `bg-raised` | nord4 | nord2 | Niveau 2 : menus, popovers (aucun texte d'accent dessus) |
 | `text-primary` / `text-secondary` | nord0 / nord3 | nord6 / nord4 | Texte courant / secondaire |
 | `divider` | nord4 | nord2 | Séparateurs, bordure de toute surface de niveau 1 |
 | `field-border` | nord3 | nord9 | Contour d'une cible (3:1) |
 | `action-hover` / `action-selected` | nord5 / nord4 | nord1 / nord2 | Survol / sélection, surlignage (`mark`), bouton de recherche |
 | `primary` / `primary-contrast` | nord10-strong / nord6 | nord8 / nord0 | Liens, bouton principal, bouton outlined |
-| `accent` | nord10 | nord8 | **Seul** accent des repères non textuels : liserés, pastilles, icônes de cartes, barre sous les H2, cadre du portrait |
+| `accent` | nord10 | nord8 | **Seul** accent des repères non textuels : barre sous les H2, pastilles de la frise, icônes de cartes (pas de liseré sur les cartes ni les tuiles) |
 | `focus` | nord10 | nord8 | Anneau de focus (2px) |
 | `error` / `error-text` | nord11 / nord11-strong | nord11 / nord11-soft | Icône, liseré / texte d'erreur |
 | `warning`, `success`, `info`, `highlight` | nord13, nord14, nord8, nord7 | idem | États (encadrés), jamais de texte en clair ; texte posé dessus : `on-state` (nord0) |
@@ -80,7 +80,7 @@ La racine du thème vaut 20 px (125 %) : **1px de la norme = 0.05rem**.
 
 | Échelle | Tokens | Valeurs | Affectation |
 |---|---|---|---|
-| **Forme** | `--vt-radius`, `--vt-border-width`, `--vt-accent-bar`, `--vt-callout-bar` | 8px, 1px, 3px, 4px | Rayon unique partout (boutons, cartes, tuiles, hero, CTA, portrait, code, pastilles) |
+| **Forme** | `--vt-radius`, `--vt-border-width`, `--vt-accent-bar`, `--vt-callout-bar` | 8px, 1px, 3px, 4px | Rayon unique partout (boutons, cartes, tuiles, hero, CTA, code, pastilles) |
 | **Ombres** | `--vt-shadow-none` | `none` | Aucune ombre, nulle part |
 | **États** | `--vt-opacity-hover/focus/pressed` | 8 %, 12 %, 12 % | `color-mix(in srgb, <libellé> X, <conteneur>)` sur les boutons uniquement |
 | **Teintes** | `--vt-opacity-tint`, `--vt-opacity-comment` | 15 %, 70 % | Titre d'encadré, commentaires de code |
@@ -88,7 +88,7 @@ La racine du thème vaut 20 px (125 %) : **1px de la norme = 0.05rem**.
 | **Typographie** | `--vt-type-<variante>-size/-line`, `--vt-font-weight-*` | h1 28 · h2 24 · h3 22 · h4 20 · h5 16 · h6 14/500 · subtitle1 18 · body1 14 · body2 13 · button 14/500 · caption 11 | Corps : body1 · titres H1–H4 : h1–h4 (graisse 400) · titre de carte : h5 · intitulé de groupe : h6 · accroche du hero et texte du CTA : subtitle1 · preuves : body2 · emphase sans cadre : graisse 500/600 |
 | **Mouvement** | `--vt-easing-standard`, `--vt-duration-shortest` | `cubic-bezier(0.4, 0, 0.2, 1)`, 150 ms | Transitions d'état des boutons seulement, coupées si `prefers-reduced-motion` |
 | **Espacement** | `--vt-spacing-0-5…8` | 4, 8, 16, 24, 32, 40, 48, 64px | Seule échelle autorisée (voir § Espacement de la norme) |
-| **Dimensions** | `--vt-size-button`, `--vt-size-target`, `--vt-measure`, `--vt-portrait-size(-compact)` | 40px, 48px, 60ch, 13rem / 8rem | Boutons, cibles tactiles, longueur de ligne, portrait |
+| **Dimensions** | `--vt-size-button`, `--vt-size-target`, `--vt-measure` | 40px, 48px, 60ch | Boutons, cibles tactiles, longueur de ligne |
 
 ### Points de rupture
 
@@ -96,25 +96,26 @@ Les variables CSS sont interdites dans `@media` : les valeurs sont écrites dans
 
 | Classe | Largeur | Comportement |
 |---|---|---|
-| xs | < 37.5em (600px) | Hero en colonne, portrait 8rem, une carte par ligne |
-| sm | ≥ 37.5em | Hero en ligne, grilles de 4 en 2 × 2 |
-| md et plus | ≥ 56.25em (900px) | Portrait 13rem |
+| xs | < 37.5em (600px) | Une carte par ligne |
+| sm et plus | ≥ 37.5em | Grilles de 4 en 2 × 2 |
 
 ## Composants disponibles
 
+> **Un service, pas un profil.** Le site présente des missions, pas une personne à embaucher : **aucun portrait ni avatar** (hero, blog, image de partage). L'image de partage est le logo en attendant une image dédiée (backlog B-14).
+
 | Composant | Markdown | Équivalent norme | Usage et budget |
 |---|---|---|---|
-| Hero | `<div class="vt-hero" markdown>` portrait, puis `<div class="vt-hero-text" markdown>` (H1, accroche, boutons) `</div></div>` | Surface de niveau 1 du thème + dégradé de marque (bande décorative) | Une fois, en haut de l'accueil. H1 ≤ 6 mots, accroche ≤ 30 mots, 2 boutons maximum. |
-| Portrait | `![Portrait de …](assets/images/….jpg){ .vt-portrait width="480" height="480" fetchpriority="high" }` | — | Dans le hero uniquement, en **premier** élément. Photo carrée réelle (480 px, JPEG ≤ 50 Ko), `alt` descriptif. |
-| Cartes | `<div class="grid cards" markdown>` + liste | `Card variant="outlined"` (niveau 1, liseré `accent`) | Unités autonomes et répétées : 2 à 6 cartes par grille, jamais une seule. Icône `:material-…:` + titre gras + `---` + **une phrase ≤ 20 mots**. Non cliquables en entier : aucun effet de survol. 4 cartes = 2 × 2. |
+| Hero | `<div class="vt-hero" markdown>` puis `<div class="vt-hero-text" markdown>` (H1, accroche, boutons) `</div></div>` | Zone ouverte (sans cadre ni fond), séparée par l'espace (64px dessous) + dégradé de marque (bande décorative) | Une fois, en haut de l'accueil. H1 ≤ 6 mots, accroche ≤ 30 mots, 2 boutons maximum. |
+| Cartes | `<div class="grid cards" markdown>` + liste | `Card variant="outlined"` (niveau 1, bordure `divider`, icône `accent`) | Unités autonomes et répétées : 2 à 6 cartes par grille, jamais une seule. Icône `:material-…:` + titre gras + `---` + **une phrase ≤ 20 mots**. Non cliquables en entier : aucun effet de survol. 4 cartes = 2 × 2. |
 | Intitulé de groupe | `Libellé` puis `{ .vt-group-label }` à la ligne, juste avant une grille | Typographie h6, texte secondaire | Nomme une famille de cartes (page Services). Pas un titre. |
 | Intertitre H2 | `## Titre` | h2 + liseré `accent` | Repère de balayage sous chaque H2. |
 | Frise | `<div class="vt-timeline" markdown>` autour de H3 successifs | — | Un H3 par étape, pastille `accent`, ligne `divider`. |
-| Tuiles | `<div class="vt-tiles" markdown>` autour d'une liste | `Card variant="outlined"` sans icône | 2 à 6 éléments `**Libellé** — détail`. 3 colonnes au plus ; 4 = 2 × 2. |
+| Tuiles | `<div class="vt-tiles" markdown>` autour d'une liste | `Card variant="outlined"` sans icône ni liseré | 2 à 6 éléments `**Libellé** — détail`. 3 colonnes au plus ; 4 = 2 × 2. |
 | Citation | `> **Phrase**` | Callout (niveau 1, bordure gauche `info`) | Devise ou citation : 1 par page, compte dans la limite des callouts. |
 | Bouton principal | `[Texte](page.md){ .md-button .md-button--primary }` | `Button contained primary` | **Un seul par page.** Libellé = verbe d'action, 1 à 3 mots. |
 | Bouton secondaire | `[Texte](page.md){ .md-button }` | `Button outlined` | Une ou deux actions secondaires maximum. |
-| CTA de fin | `<div class="vt-cta" data-md-color-scheme="slate" markdown>` … `</div>` | Section inversée (CTA final) | Fin de chaque page de contenu, une phrase et un bouton. |
+| CTA de fin | `<div class="vt-cta" data-md-color-scheme="slate" markdown>` … `</div>` | Section inversée (CTA final) | Fin de chaque page de contenu, accueil compris : une phrase et un bouton (secondaire sur l'accueil, dont le hero porte déjà le principal). Libellé orienté action et bénéfice (« Décrire mon projet »), jamais « Parlons-en » ou « Cliquez ici ». |
+| Lien d'action | `[Discuter de … :material-arrow-right:](contact.md){ .vt-next }` | Lien (graisse 500) | En fin de chaque section de service : un chemin vers le contact sans attendre le bas de page. Jamais un bouton. |
 | Preuves | `<div class="vt-proof" markdown>` + images ou texte court | — | Logos clients, certifications : **uniquement réels et autorisés**. |
 | Encadrés | `!!! note`, `!!! tip`, `!!! warning`, `!!! danger`, `??? question`, `!!! example` | `Alert` standard (info, succès, avertissement, erreur ; `highlight` pour exemple) | Articles de blog uniquement. 1 visible à l'écran, 3 par page. Sévérité = sens réel. |
 

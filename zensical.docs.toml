@@ -15,6 +15,7 @@ nav = [
     { "Norme de design (Oxygen UI × Nord)" = "skills/oxygen-ui-design-guidelines/SKILL.md" },
     { "Navigation" = "skills/site-navigation/SKILL.md" },
     { "Look & feel" = "skills/site-look-and-feel/SKILL.md" },
+    { "Rédaction d'article" = "skills/redaction-article-reference-it/SKILL.md" },
   ] },
 ]
 

@@ -2,12 +2,14 @@
 #MISE description="Aperçu du site public avec rechargement à chaud"
 #MISE alias="serve"
 #MISE depends=["install"]
+#USAGE flag "-i --interface <port>" default="127.0.0.1" help="Interface d'écoute"
 #USAGE flag "-p --port <port>" default="8000" help="Port d'écoute"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 source .mise/lib/zensical.sh
 
+interface="${usage_interface:-127.0.0.1}"
 port="${usage_port:-8000}"
 cfg="$(zensical_config zensical.toml)"
-echo "▶ Site : http://127.0.0.1:${port}"
-exec zensical serve -f "$cfg" -a "127.0.0.1:${port}"
+echo "▶ Site : http://${interface}:${port}"
+exec zensical serve -f "$cfg" -a "${interface}:${port}"

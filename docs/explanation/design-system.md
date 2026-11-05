@@ -166,7 +166,7 @@ La norme [`oxygen-ui-design-guidelines`](../skills/oxygen-ui-design-guidelines/S
 
 ### Ce que cela change concrètement
 
-Les boutons, cartes, tuiles et le portrait ont tous un rayon de 8px et aucune ombre. L'en-tête, le hero et le pied de page suivent le thème. Le CTA de fin de page devient une section inversée, déclarée dans le Markdown (`data-md-color-scheme="slate"`) plutôt que recolorée à la main. Les blocs de code restent sombres dans les deux thèmes, selon la coloration officielle de Nord. `mise run check` refuse toute couleur hors des 19 autorisées et toute ombre portée.
+Les boutons, cartes et tuiles ont tous un rayon de 8px et aucune ombre. L'en-tête, le hero et le pied de page suivent le thème. Le CTA de fin de page devient une section inversée, déclarée dans le Markdown (`data-md-color-scheme="slate"`) plutôt que recolorée à la main. Les blocs de code restent sombres dans les deux thèmes, selon la coloration officielle de Nord. `mise run check` refuse toute couleur hors des 19 autorisées et toute ombre portée.
 
 ## Limites et précautions de lecture
 

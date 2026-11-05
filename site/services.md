@@ -82,6 +82,8 @@ Vos déploiements reposent sur des procédures manuelles, ou sur une base Ansibl
 
 **Ce que vous y gagnez :** des déploiements reproductibles et un code d'infrastructure lisible, que vos équipes font évoluer sans dépendre de moi.
 
+[Discuter d'une mission Ansible :material-arrow-right:](contact.md){ .vt-next }
+
 ## Network as Code { #network-as-code }
 
 Le réseau reste souvent le dernier domaine configuré à la main. La mission y applique les pratiques du développement logiciel : configuration décrite dans Git, relue avant application, puis déployée automatiquement, avec une équipe réseau accompagnée pour s'approprier ces outils.
@@ -92,6 +94,8 @@ Le réseau reste souvent le dernier domaine configuré à la main. La mission y 
 - **Accompagnement** de l'équipe réseau : plan d'action, ateliers (IDE, Git, DNS, OPNsense, CI/CD, Proxmox, conteneurs).
 
 **Ce que vous y gagnez :** des configurations traçables, des changements relus avant d'être appliqués et moins d'erreurs manuelles.
+
+[Discuter d'un projet Network as Code :material-arrow-right:](contact.md){ .vt-next }
 
 ## Continuous Delivery { #continuous-delivery }
 
@@ -104,6 +108,8 @@ Un pipeline de livraison continue transforme chaque changement validé en déplo
 
 **Ce que vous y gagnez :** des livraisons plus fréquentes et moins risquées, avec le même processus pour chaque environnement.
 
+[Discuter de votre chaîne de livraison :material-arrow-right:](contact.md){ .vt-next }
+
 ## Infrastructures à grande échelle { #infrastructures }
 
 Nouveaux environnements à provisionner, datacenter à automatiser, clusters de calcul haute performance ou plateformes web de production à exploiter : la mission prend en charge l'infrastructure qui doit tenir la charge, de son déploiement à son exploitation au quotidien.
@@ -114,6 +120,8 @@ Nouveaux environnements à provisionner, datacenter à automatiser, clusters de 
 - **Support de niveau 3**, validation et intégration d'outils et de procédures.
 
 **Ce que vous y gagnez :** une infrastructure qui tient la charge, exploitée avec des procédures claires et éprouvées.
+
+[Discuter de votre infrastructure :material-arrow-right:](contact.md){ .vt-next }
 
 ## Conformité du SI { #conformite-si }
 
@@ -126,6 +134,8 @@ Recommandations de l'ANSSI, PCI-DSS, directive NIS 2, mesures de l'ISO/IEC 27002
 
 **Ce que vous y gagnez :** une conformité appliquée de façon cohérente et maintenue dans le temps, plutôt qu'un état figé au jour de l'audit.
 
+[Discuter de votre mise en conformité :material-arrow-right:](contact.md){ .vt-next }
+
 ## Formation & documentation { #formation }
 
 La culture DevOps se diffuse par la pratique partagée. Cette mission, seule ou intégrée aux autres, transmet à vos équipes ce qui a été construit pour qu'elles restent autonomes : c'est le sens du « *make it manageable* » de ma devise.
@@ -136,6 +146,8 @@ La culture DevOps se diffuse par la pratique partagée. Cette mission, seule ou 
 - **Formation** d'équipes à Ansible et Python, et des équipes de support de niveau 2.
 
 **Ce que vous y gagnez :** des équipes autonomes et une documentation à jour, qui survit à la fin de la mission.
+
+[Discuter d'une formation :material-arrow-right:](contact.md){ .vt-next }
 
 ## Agents de code IA { #agents-ia }
 
@@ -148,6 +160,8 @@ Vos équipes veulent un assistant de code adapté à leurs outils, sans forcéme
 
 **Ce que vous y gagnez :** un assistant de code adapté à votre contexte, avec le choix de garder vos données chez vous ou de recourir à un modèle hébergé.
 
+[Discuter d'un agent de code IA :material-arrow-right:](contact.md){ .vt-next }
+
 ## Maîtrise des coûts de l'IA { #couts-ia }
 
 L'IA générative se paie à la consommation : des tokens facturés par un fournisseur d'API, ou des heures de GPU pour exécuter ses propres modèles. Sans plan, la facture suit l'usage plutôt que la valeur. La mission planifie cette consommation et la déploie de façon maîtrisée, entre modèles locaux et API.
@@ -158,6 +172,8 @@ L'IA générative se paie à la consommation : des tokens facturés par un fourn
 - **Suivi** de la consommation et des coûts, pour ajuster les choix dans le temps.
 
 **Ce que vous y gagnez :** un budget IA prévisible, dimensionné sur vos usages réels plutôt que subi.
+
+[Discuter de votre budget IA :material-arrow-right:](contact.md){ .vt-next }
 
 ## Modalités
 
@@ -171,5 +187,5 @@ L'IA générative se paie à la consommation : des tokens facturés par un fourn
 </div>
 
 <div class="vt-cta" data-md-color-scheme="slate" markdown>
-**Un projet d'automatisation ?** [Parlons-en](contact.md){ .md-button .md-button--primary }
+**Un projet d'automatisation ?** [Décrire mon projet](contact.md){ .md-button .md-button--primary }
 </div>

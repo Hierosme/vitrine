@@ -45,7 +45,7 @@
   --vt-radius:        0.4rem;   /* 8px */
   --vt-radius-none:   0;
   --vt-border-width:  1px;
-  --vt-accent-bar:    3px;      /* liseré de repère (carte, tuile, intertitre) */
+  --vt-accent-bar:    3px;      /* liseré de repère (intertitre) */
   --vt-callout-bar:   4px;      /* bordure gauche d'un encadré de mise en valeur */
   --vt-gradient-band: 4px;      /* bande décorative du dégradé de marque (hero) */
 
@@ -96,8 +96,6 @@
   /* 1.i Dimensions */
   --vt-size-button: 2rem;              /* 40px : hauteur d'un bouton */
   --vt-size-target: 2.4rem;            /* 48px : cible tactile minimale */
-  --vt-portrait-size:        13rem;
-  --vt-portrait-size-compact: 8rem;
   --vt-measure: 60ch;                  /* texte courant : ≤ ~70 caractères par ligne */
 
   /* 1.j Points de rupture (MUI) — rappel, les variables CSS sont interdites dans @media :
@@ -383,31 +381,21 @@
   background-color: color-mix(in srgb, var(--vt-primary-contrast) var(--vt-opacity-pressed), var(--vt-primary));
 }
 
-/* Hero et CTA : surface de niveau 1 du thème + bordure divider.
-   Le hero suit le thème clair ou sombre. Le CTA de fin de page est une section inversée : son
-   Markdown porte data-md-color-scheme="slate" et il hérite des rôles du thème sombre (texte nord6,
-   accent nord8, bouton nord8 + nord0). 2 sections inversées par page au maximum. */
-.vt-hero,
-.vt-cta {
-  border: var(--vt-border-width) solid var(--vt-divider);
-  border-radius: var(--vt-radius);
-  background-color: var(--vt-bg-paper);
-  color: var(--vt-text-primary);
-}
-
-/* Hero de page d'accueil : <div class="vt-hero" markdown>, portrait puis <div class="vt-hero-text" markdown>.
-   Suit le thème (nord5 en clair, nord1 en sombre). Mobile d'abord : colonne, ligne dès sm.
-   Bande supérieure au dégradé de marque : décorative, aucun texte posé dessus. */
+/* Hero de page d'accueil : <div class="vt-hero" markdown> puis <div class="vt-hero-text" markdown> (titre, accroche, boutons).
+   Pas de portrait : le site met en avant un service, pas une personne.
+   Ouvert (sans cadre ni fond) : il suit le thème et se détache par l'espace qui l'entoure, pas par un cadre.
+   Bande supérieure au dégradé de marque : décorative, aucun texte posé dessus. Mobile d'abord : colonne. */
 .vt-hero {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--vt-spacing-3);
-  margin: 0 0 var(--vt-spacing-6);
-  padding: var(--vt-spacing-5) var(--vt-spacing-3) var(--vt-spacing-4);
+  margin: 0 0 var(--vt-spacing-8);
+  padding: var(--vt-spacing-5) 0 0;
   background-image: var(--vt-gradient-primary);
   background-repeat: no-repeat;
   background-size: 100% var(--vt-gradient-band);
+  color: var(--vt-text-primary);
 }
 .vt-hero-text { flex: 1 1 auto; min-width: 0; }
 .md-typeset .vt-hero h1 { margin: 0 0 var(--vt-spacing-2); }
@@ -419,23 +407,14 @@
 }
 .vt-hero .md-button { margin-right: var(--vt-spacing-1); }
 
-/* Portrait : ![Nom](assets/images/….jpg){ .vt-portrait }, premier élément du hero */
-.vt-hero > p:has(> .vt-portrait) {
-  flex: none;
-  max-width: none;
-  margin: 0;
-}
-.md-typeset .vt-portrait {
-  display: block;
-  width: var(--vt-portrait-size-compact);
-  height: var(--vt-portrait-size-compact);
-  border: var(--vt-accent-bar) solid var(--vt-accent);
-  border-radius: var(--vt-radius);
-  object-fit: cover;
-}
-
-/* CTA de fin de page : <div class="vt-cta" data-md-color-scheme="slate" markdown> */
+/* CTA de fin de page : <div class="vt-cta" data-md-color-scheme="slate" markdown>.
+   Section inversée : rôles du thème sombre (texte nord6, accent nord8, bouton nord8 + nord0),
+   surface de niveau 1 (nord1) + bordure divider pour rester distincte d'une page déjà sombre. */
 .vt-cta {
+  border: var(--vt-border-width) solid var(--vt-divider);
+  border-radius: var(--vt-radius);
+  background-color: var(--vt-bg-paper);
+  color: var(--vt-text-primary);
   margin-top: var(--vt-spacing-6);
   padding: var(--vt-spacing-3);
 }
@@ -450,7 +429,7 @@
 }
 
 /* Grille de cartes : <div class="grid cards" markdown> — unités autonomes et répétées.
-   Card outlined : surface de niveau 1, bordure divider, liseré supérieur à l'accent, rayon 8px.
+   Card outlined : surface de niveau 1, bordure divider, rayon 8px (l'accent reste sur l'icône).
    Les cartes ne sont pas cliquables en entier : aucun effet de survol. */
 .md-typeset .grid { gap: var(--vt-spacing-2); }
 .md-typeset .grid.cards > ul > li,
@@ -458,7 +437,6 @@
 .md-typeset .grid.cards > ul > li:focus-within {
   padding: var(--vt-spacing-2);
   border: var(--vt-border-width) solid var(--vt-divider);
-  border-top: var(--vt-accent-bar) solid var(--vt-accent);
   border-radius: var(--vt-radius);
   background-color: var(--vt-bg-paper);
   box-shadow: var(--vt-shadow-none);
@@ -471,6 +449,12 @@
 }
 .md-typeset .grid.cards .twemoji { color: var(--vt-accent); }
 .md-typeset .grid.cards > ul > li > hr { border-bottom-color: var(--vt-divider); }
+
+/* Lien d'action en fin de section : [Discuter de … :material-arrow-right:](contact.md){ .vt-next }
+   Un lien (pas un bouton) : le seul bouton principal de la page reste celui du CTA de fin. */
+.md-typeset .vt-next {
+  font-weight: var(--vt-font-weight-medium);
+}
 
 /* Intitulé de groupe de cartes : paragraphe `Libellé` + `{ .vt-group-label }` juste avant une grille.
    Typographie h6 (14px / 500), texte secondaire. Pas un titre : ni table des matières, ni niveau. */
@@ -524,7 +508,7 @@
 }
 
 /* Tuiles : <div class="vt-tiles" markdown> autour d'une liste courte (compétences, modalités).
-   Même traitement qu'une carte outlined (unités répétées), sans icône. */
+   Même traitement qu'une carte outlined (unités répétées), sans icône ni liseré. */
 [dir] .md-typeset .vt-tiles ul {
   display: grid;
   /* 3 colonnes au plus (6 tuiles = 3 + 3, jamais 4 + 2) ; 1 colonne sous ~14rem */
@@ -540,7 +524,6 @@
   margin-left: 0;
   padding: var(--vt-spacing-2);
   border: var(--vt-border-width) solid var(--vt-divider);
-  border-top: var(--vt-accent-bar) solid var(--vt-accent);
   border-radius: var(--vt-radius);
   background: var(--vt-bg-paper);
   color: var(--vt-text-primary);
@@ -604,25 +587,11 @@
 
 /* ---------- 4. MISE EN PAGE ADAPTATIVE (points de rupture MUI) ---------- */
 
-/* sm et plus (≥ 600px) : hero en ligne, grilles de 4 éléments en 2 × 2 (jamais 3 + 1 orphelin) */
+/* sm et plus (≥ 600px) : grilles de 4 éléments en 2 × 2 (jamais 3 + 1 orphelin) */
 @media screen and (min-width: 37.5em) {
-  .vt-hero {
-    flex-direction: row-reverse;   /* portrait premier dans le source, affiché à droite */
-    align-items: center;
-    gap: var(--vt-spacing-5);
-    padding: var(--vt-spacing-5) var(--vt-spacing-5) var(--vt-spacing-4);
-  }
   .md-typeset .grid.cards:has(> ul > li:nth-child(4):last-child),
   [dir] .md-typeset .vt-tiles ul:has(> li:nth-child(4):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* md et plus (≥ 900px) : portrait pleine taille */
-@media screen and (min-width: 56.25em) {
-  .md-typeset .vt-portrait {
-    width: var(--vt-portrait-size);
-    height: var(--vt-portrait-size);
   }
 }
 

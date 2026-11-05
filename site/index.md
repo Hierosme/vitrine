@@ -1,6 +1,6 @@
 ---
-title: Expert DevOps & Ansible freelance
-description: "Jérôme Ornech, expert DevOps freelance : automatisation (Ansible, Python), Network as Code, Continuous Delivery, agents de code IA, maîtrise des coûts de l'IA."
+title: "DevOps, Ansible et IA : missions freelance"
+description: "Missions DevOps en freelance : automatisation Ansible et Python, Network as Code, livraison continue, agents de code IA et maîtrise des coûts de l'IA."
 hide:
   - navigation
   - toc
@@ -8,22 +8,20 @@ hide:
 
 <div class="vt-hero" markdown>
 
-![Portrait de Jérôme Ornech](assets/images/jerome-ornech.jpg){ .vt-portrait width="480" height="480" fetchpriority="high" }
-
 <div class="vt-hero-text" markdown>
 
-# Expert DevOps & Ansible freelance
+# Infrastructures automatisées, livraisons fiables, IA maîtrisée
 
-Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise systèmes et réseaux avec Ansible et Python, développe des agents de code IA et maîtrise les coûts de l'IA.
+Automatisation Ansible et Python, Network as Code, livraison continue, agents de code IA et maîtrise des coûts de l'IA : des missions DevOps portées par plus de 25 ans d'expérience.
 
-[Me contacter](contact.md){ .md-button .md-button--primary }
-[Voir mes services](services.md){ .md-button }
-
-</div>
+[Décrire mon projet](contact.md){ .md-button .md-button--primary }
+[Voir les services](services.md){ .md-button }
 
 </div>
 
-## Ce que je fais
+</div>
+
+## Domaines d'intervention
 
 <div class="grid cards" markdown>
 
@@ -67,8 +65,12 @@ Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise
 
 [Tous les services :material-arrow-right:](services.md)
 
-## Ma devise
+## Approche
 
 > **Make it work, make it simple, make it manageable.**
 >
 > Faire fonctionner, simplifier, puis rendre maintenable par vos équipes.
+
+<div class="vt-cta" data-md-color-scheme="slate" markdown>
+**Un projet d'automatisation ou d'IA ?** [Décrire mon projet](contact.md){ .md-button }
+</div>

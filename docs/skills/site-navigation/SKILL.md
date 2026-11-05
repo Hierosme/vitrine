@@ -14,7 +14,7 @@ description: Maintenir la navigation, l'architecture de l'information et la stru
 | Menu principal (onglets) | `zensical.toml` → clé `nav` |
 | Comportement de navigation | `zensical.toml` → `theme.features` |
 | Catégories de blog autorisées | `zensical.toml` → `plugins.blog.categories_allowed` |
-| Auteurs du blog | `site/blog/.authors.yml` (avatar : `site/assets/images/`) |
+| Auteurs du blog | affichage désactivé (`authors = false` dans `plugins.blog`) ; `site/blog/.authors.yml` garde le nom pour mémoire, **sans avatar** |
 | Articles | `site/blog/posts/AAAA-MM-JJ-slug.md` (URL publiée : `/blog/<slug>/`) |
 | Titre `<title>` et meta description | front-matter `title` / `description` de chaque page |
 | Open Graph, JSON-LD, apple-touch-icon | `overrides/main.html` ; données de la personne : `zensical.toml` → `extra.seo` |
@@ -37,7 +37,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 | N3 | **Libellés signifiants** | Bastien & Scapin (signifiance des codes) | Un mot clair et concret, sans jargon ni néologisme marketing. |
 | N4 | **Écrire pour le balayage** | NN/g, F-pattern 2006 / 2017 | Structure de page ci-dessous. |
 | N5 | **L'essentiel sans défiler** | NN/g, *Scrolling and Attention* | Sur l'accueil, la proposition de valeur et le CTA sont dans le hero. Sur les autres pages, le H1 et la première phrase disent de quoi parle la page. |
-| N6 | **Toujours un chemin vers le contact** | Cyr 2008 (confiance → action) | Chaque page de contenu se termine par un `vt-cta` (sauf Accueil, Contact et Mentions légales, exclues dans `check`). |
+| N6 | **Toujours un chemin vers le contact** | Cyr 2008 (confiance → action) | Chaque page de contenu, **accueil compris**, se termine par un `vt-cta` (sauf Contact et Mentions légales, exclues dans `check`). Sur l'accueil, son bouton est secondaire (`.md-button`) : le bouton principal est déjà dans le hero. |
 | N8 | **Du détail derrière chaque promesse** | Fogg 2003 (proéminence → interprétation) ; Cyr 2008 | Une carte attire l'œil, la section la justifie : au moins 500 caractères par service, rédigés comme une **mission type**. Les preuves (employeurs, clients, années) vivent dans Parcours, jamais dans Services. |
 | N7 | **Pas de navigation redondante** | Sweller 1988 (charge extrinsèque) ; Nielsen (balayage) | Pas de menu latéral qui répète les onglets : la largeur va au contenu. |
 
@@ -70,7 +70,8 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 3. **Une section par service**, dans l'ordre des cartes : `## Titre { #ancre }`. L'identifiant explicite est obligatoire, c'est lui qui désigne la section comme un service. Elle contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
     - un paragraphe de contexte (2 ou 3 phrases) rédigé comme une **mission type** : la situation du client (« Vos déploiements reposent sur… »), puis ce que fait la mission (« La mission automatise… »). **Aucune référence aux expériences** : ni employeur, ni client, ni année, ni « j'ai ». `content:services` le vérifie à partir des noms présents dans `site/parcours.md` ;
     - 4 puces « **Action** + détail » ;
-    - une ligne « **Ce que vous y gagnez :** … » formulée du point de vue du client.
+    - une ligne « **Ce que vous y gagnez :** … » formulée du point de vue du client ;
+    - un lien d'action vers Contact, propre au service : `[Discuter de … :material-arrow-right:](contact.md){ .vt-next }`. C'est un lien, pas un bouton : le seul bouton principal reste celui du `vt-cta`.
 4. `## Modalités` (tuiles `vt-tiles`, sans identifiant explicite) puis `vt-cta`.
 
 Un nouveau service rejoint une famille existante si elle a moins de 6 cartes ; sinon, créer une famille (au moins 2 services). Les familles ne sont pas des titres : elles ne s'affichent pas dans la table des matières, qui liste les services.

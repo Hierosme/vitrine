@@ -27,7 +27,7 @@
   <meta property="og:url" content="{{ page.canonical_url }}">
   {%- endif %}
   <meta property="og:image" content="{{ seo_image }}">
-  <meta property="og:image:alt" content="Portrait de {{ config.site_author }}">
+  <meta property="og:image:alt" content="{{ seo.image_alt }}">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ seo_title }}">
   <meta name="twitter:description" content="{{ seo_description }}">
@@ -44,7 +44,6 @@
       "jobTitle": seo.job_title,
       "description": config.site_description,
       "url": config.site_url,
-      "image": seo_image,
       "knowsAbout": seo.knows_about,
       "knowsLanguage": seo.languages,
       "homeLocation": {

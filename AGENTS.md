@@ -20,10 +20,11 @@ Avant de modifier quoi que ce soit, identifie les skills concernés et **lis leu
 | `oxygen-ui-design-guidelines` | `docs/skills/oxygen-ui-design-guidelines/SKILL.md` | **Toujours**, à chaque session et pour toute tâche : c'est la norme de design (quand encadrer, mettre en valeur, contraster, espacer ; palette Nord ; thèmes clair et sombre). |
 | `site-look-and-feel` | `docs/skills/site-look-and-feel/SKILL.md` | Si la tâche touche `site/stylesheets/`, `zensical.toml` (`theme`), `overrides/`, une couleur, une police, un composant ou la mise en page : c'est la **traduction** de la norme pour Zensical (tokens `--vt-*`, classes `vt-`, variables `--md-*`). |
 | `site-navigation` | `docs/skills/site-navigation/SKILL.md` | Si la tâche touche `zensical.toml` (`nav`, `features`, `plugins.blog`), l'ajout, le renommage ou la suppression d'une page dans `site/`, un article de blog, les liens internes. |
+| `redaction-article-reference-it` | `docs/skills/redaction-article-reference-it/SKILL.md` | Pour rédiger un article de blog (nouvel article, épisode de série) : questionnaire de cadrage, structure en 10 sections, exactitude. S'ajoute aux trois skills ci-dessus. |
 
-Une nouvelle page de contenu les concerne toujours tous les trois.
+Une nouvelle page de contenu les concerne toujours tous les trois. Un nouvel article de blog demande en plus `redaction-article-reference-it`.
 
-**Ordre de priorité en cas de conflit :** `oxygen-ui-design-guidelines` > `site-look-and-feel` > `site-navigation` > le reste de la documentation. `site-look-and-feel` ne fait qu'implémenter la norme dans Zensical : ses exemples MUI/React (`Card`, `sx`, `extendTheme`) ne s'appliquent pas tels quels ici, ce sont leurs règles qui s'appliquent. Une règle de la documentation qui contredit la norme est une erreur : corrige la documentation, pas le site.
+**Ordre de priorité en cas de conflit :** `oxygen-ui-design-guidelines` > `site-look-and-feel` > `site-navigation` > `redaction-article-reference-it` > le reste de la documentation. `site-look-and-feel` ne fait qu'implémenter la norme dans Zensical : ses exemples MUI/React (`Card`, `sx`, `extendTheme`) ne s'appliquent pas tels quels ici, ce sont leurs règles qui s'appliquent. Une règle de la documentation qui contredit la norme est une erreur : corrige la documentation, pas le site.
 
 **Décision de design non couverte par un skill**, ou demande de « pourquoi » : lis `docs/explanation/design-system.md`. Il décrit les fondements (première impression, crédibilité, ergonomie cognitive) et leurs sources. Toute nouvelle règle doit pouvoir s'y rattacher et rester compatible avec la norme. Sinon, propose de compléter l'explication avant de coder.
 
@@ -51,7 +52,7 @@ Nouvelle tâche : script bash exécutable dans `.mise/tasks/` (en-têtes `#MISE 
 
 ## Conventions
 
-- Contenu du site en **français**, ton professionnel et direct, à la première personne.
+- Contenu du site en **français**, ton professionnel et direct. Le site met en avant **un service professionnel, pas une personne à embaucher** : titres et accroches parlent des missions et de ce que le client y gagne ; la première personne reste possible dans le corps du texte, sobrement. Aucun portrait ni avatar.
 - Source de vérité du parcours et des compétences : le profil de Jérôme (export LinkedIn), complété par les informations confirmées par l'opérateur dans `private/backlog.md` (journal des tâches). Ne mettre en avant **que** des compétences et expériences qui y figurent.
 - Ne jamais inventer de clients, références, chiffres ou certifications : ne rien écrire et ouvrir une tâche dans `private/backlog.md`. **Aucun `TODO` dans les sources du site**, pas même en commentaire HTML : les commentaires sont recopiés dans le HTML publié (`check` le refuse). Une preuve fausse détruit la crédibilité, qui est l'objectif même du site.
 - Documentation projet rangée selon Diátaxis (voir `docs/README.md`).

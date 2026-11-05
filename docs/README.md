@@ -9,6 +9,7 @@ Documentation **du projet** (pas du site public : celui-ci vit dans `site/`). Ap
 | [skills/oxygen-ui-design-guidelines](skills/oxygen-ui-design-guidelines/SKILL.md) | Skill : **norme de design** (Oxygen UI × Nord), chargée à chaque session ; prévaut sur tout le reste |
 | [skills/site-look-and-feel](skills/site-look-and-feel/SKILL.md) | Skill : implémentation de la norme dans Zensical (tokens, composants, contrôles) |
 | [skills/site-navigation](skills/site-navigation/SKILL.md) | Skill : maintenir la navigation et l'arborescence |
+| [skills/redaction-article-reference-it](skills/redaction-article-reference-it/SKILL.md) | Skill : rédiger un article de blog de référence (questionnaire de cadrage, structure, exactitude) |
 
 ## Ajouter un skill
 
