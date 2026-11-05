@@ -8,7 +8,7 @@ Lis ces fichiers **avant toute action** :
 
 1. `docs/README.md` — index de la documentation projet
 2. `docs/architecture.md` — arborescence, commandes, déploiement
-3. `backlog.md` — travail en attente : si la demande correspond à une tâche, suivre son prompt et poser ses questions à l'opérateur **avant** de modifier quoi que ce soit, puis mettre à jour son statut
+3. `private/backlog.md` — travail en attente (dépôt privé annexe : peut être absent d'un clone public) : si la demande correspond à une tâche, suivre son prompt et poser ses questions à l'opérateur **avant** de modifier quoi que ce soit, puis mettre à jour son statut
 
 ## Skills — chargement obligatoire selon la tâche
 
@@ -29,7 +29,7 @@ En cas de doute, charge les deux. Une nouvelle page de contenu les concerne touj
 - `docs/` — documentation **du projet** et skills. Jamais publiée.
 - `zensical.toml` (site), `zensical.docs.toml` (doc projet) : configuration Zensical. Le projet n'utilise **plus MkDocs** : ne pas réintroduire `mkdocs.yml` ni de dépendance `mkdocs*`.
 - `overrides/` (métadonnées SEO) : surcharge de template, rendue par minijinja — voir `docs/architecture.md`.
-- `backlog.md` — tâches en attente, avec prompts, questions à l'opérateur et suivi.
+- `private/` — **notes privées, jamais publiées** (ignoré par git ; versionné à part dans un dépôt privé) : `backlog.md` (tâches, prompts, questions à l'opérateur, suivi) et toute note de travail. Le dépôt du site est public : rien de confidentiel hors de `private/`.
 - `build/`, `build-docs/` — sorties générées, ne pas éditer, ne pas committer.
 
 ## Commandes
@@ -48,8 +48,8 @@ Nouvelle tâche : script bash exécutable dans `.mise/tasks/` (en-têtes `#MISE 
 ## Conventions
 
 - Contenu du site en **français**, ton professionnel et direct, à la première personne.
-- Source de vérité du parcours et des compétences : le profil de Jérôme (export LinkedIn), complété par les informations confirmées par l'opérateur dans `backlog.md` (journal des tâches). Ne mettre en avant **que** des compétences et expériences qui y figurent.
-- Ne jamais inventer de clients, références, chiffres ou certifications : laisser un `<!-- TODO: … -->` (commentaire HTML, jamais visible) et une tâche dans `backlog.md`. Une preuve fausse détruit la crédibilité, qui est l'objectif même du site.
+- Source de vérité du parcours et des compétences : le profil de Jérôme (export LinkedIn), complété par les informations confirmées par l'opérateur dans `private/backlog.md` (journal des tâches). Ne mettre en avant **que** des compétences et expériences qui y figurent.
+- Ne jamais inventer de clients, références, chiffres ou certifications : ne rien écrire et ouvrir une tâche dans `private/backlog.md`. **Aucun `TODO` dans les sources du site**, pas même en commentaire HTML : les commentaires sont recopiés dans le HTML publié (`check` le refuse). Une preuve fausse détruit la crédibilité, qui est l'objectif même du site.
 - Documentation projet rangée selon Diátaxis (voir `docs/README.md`).
 - Modifier un skill quand une règle de design ou de navigation change (le skill décrit l'état réel).
 - Commits courts en français, à l'impératif (`Ajoute l'article sur les Collections Ansible`).

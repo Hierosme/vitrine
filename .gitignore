@@ -8,3 +8,5 @@ __pycache__/
 _to_delete/
 Claude outputs/
 .*.offline.toml
+# Notes privées (dépôt annexe)
+private/

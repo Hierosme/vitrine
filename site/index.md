@@ -23,12 +23,6 @@ Plus de 25 ans d'infrastructure, du réseau au Continuous Delivery. J'automatise
 
 </div>
 
-<!-- TODO: bandeau de preuves — uniquement des références réelles et autorisées
-<div class="vt-proof" markdown>
-![Client A](assets/logos/client-a.svg)
-</div>
--->
-
 ## Ce que je fais
 
 <div class="grid cards" markdown>

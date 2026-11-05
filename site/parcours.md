@@ -76,8 +76,6 @@ Conception et développement d'une automatisation **Network as Code**.
 
 Langues de travail : français et anglais.
 
-<!-- TODO: certifications et références clients (avec accord) -->
-
 <div class="vt-cta" markdown>
 **Un contexte similaire ?** [Parlons-en](contact.md){ .md-button .md-button--primary }
 </div>

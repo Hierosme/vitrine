@@ -7,12 +7,19 @@
 site_name = "Jérôme Ornech"
 site_description = "Expert DevOps freelance — automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery, agents de code IA et maîtrise des coûts de l'IA"
 site_author = "Jérôme Ornech"
-site_url = "https://mondomaine.fr/"   # TODO: remplacer par le domaine réel (backlog.md, B-02)
+# Domaine de production. Sans effet sur l'aperçu local : les liens sont relatifs, seuls canonical,
+# sitemap, robots.txt, Open Graph et JSON-LD utilisent cette URL.
+site_url = "https://galaxie.eu.org/"
 
 docs_dir = "site"    # sources du site
 site_dir = "build"   # sortie du build (≠ « site », déjà pris par les sources)
 
-copyright = "&copy; Jérôme Ornech — Expert DevOps freelance"
+copyright = "&copy; Jérôme Ornech — Expert DevOps freelance · <a href=\"/mentions-legales/\">Mentions légales</a>"
+
+# Pages publiées hors du menu (chaîne multiligne, un chemin par ligne)
+not_in_nav = """
+/mentions-legales.md
+"""
 
 extra_css = ["stylesheets/extra.css"]
 
@@ -101,7 +108,7 @@ name = "GitHub"
 
 [[project.extra.social]]
 icon = "material/email"
-link = "mailto:contact@mondomaine.fr"   # TODO: adresse réelle (backlog.md, B-02)
+link = "mailto:contact@galaxie.eu.org"
 name = "Email"
 
 [project.plugins.search]

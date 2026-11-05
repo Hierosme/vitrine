@@ -143,7 +143,7 @@ Le visiteur visé arrive souvent d'un moteur de recherche ou d'un lien partagé 
 - **Une description unique par page.** La meta description sert souvent d'extrait sous le lien. Identique sur toutes les pages, elle n'aide ni le moteur ni le lecteur à les distinguer.
 - **Des aperçus de partage maîtrisés.** Le protocole Open Graph fixe le titre, le texte et l'image affichés par LinkedIn, Slack ou une messagerie. Sans lui, la plateforme improvise.
 - **Des données structurées vraies.** Le JSON-LD `Person` (schema.org) décrit la personne, son métier et ses profils. Il obéit à la même règle que les preuves visibles (§ 2) : uniquement des faits déjà publiés sur le site.
-- **Aucun TODO visible.** Un texte provisoire affiché est un défaut de finition (§ 1) et un contenu pauvre pour les moteurs. Il reste en commentaire HTML et dans `backlog.md`.
+- **Aucun TODO visible.** Un texte provisoire affiché est un défaut de finition (§ 1) et un contenu pauvre pour les moteurs. Il reste dans le backlog privé : pas même en commentaire HTML, que le générateur recopie dans la page publiée.
 - **Des URL stables.** Une URL courte et sans date (`/blog/<slug>/`) ne vieillit pas ; une URL modifiée perd les liens et l'historique acquis.
 - **Polices hébergées sur le site.** Charger les polices depuis Google transmet l'adresse IP du visiteur à un tiers ; le plugin `privacy` les embarque au build. C'est aussi une requête vers un domaine externe en moins au chargement.
 

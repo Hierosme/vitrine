@@ -24,6 +24,8 @@ description: Maintenir la navigation, l'architecture de l'information et la stru
 
 Accueil · Services · Parcours · Blog · Contact.
 
+Hors menu (`not_in_nav` dans `zensical.toml`) : **Mentions légales** (`site/mentions-legales.md`), accessible depuis le lien du pied de page (`copyright`).
+
 L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant : **découvrir → évaluer l'offre → vérifier la crédibilité → lire → contacter**. Contact reste toujours le dernier onglet.
 
 ## Principes
@@ -35,7 +37,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 | N3 | **Libellés signifiants** | Bastien & Scapin (signifiance des codes) | Un mot clair et concret, sans jargon ni néologisme marketing. |
 | N4 | **Écrire pour le balayage** | NN/g, F-pattern 2006 / 2017 | Structure de page ci-dessous. |
 | N5 | **L'essentiel sans défiler** | NN/g, *Scrolling and Attention* | Sur l'accueil, la proposition de valeur et le CTA sont dans le hero. Sur les autres pages, le H1 et la première phrase disent de quoi parle la page. |
-| N6 | **Toujours un chemin vers le contact** | Cyr 2008 (confiance → action) | Chaque page de contenu se termine par un `vt-cta`. |
+| N6 | **Toujours un chemin vers le contact** | Cyr 2008 (confiance → action) | Chaque page de contenu se termine par un `vt-cta` (sauf Accueil, Contact et Mentions légales, exclues dans `check`). |
 | N8 | **Du détail derrière chaque promesse** | Fogg 2003 (proéminence → interprétation) ; Cyr 2008 | Une carte attire l'œil, la section la justifie : au moins 500 caractères par service, rédigés comme une **mission type**. Les preuves (employeurs, clients, années) vivent dans Parcours, jamais dans Services. |
 | N7 | **Pas de navigation redondante** | Sweller 1988 (charge extrinsèque) ; Nielsen (balayage) | Pas de menu latéral qui répète les onglets : la largeur va au contenu. |
 
@@ -113,7 +115,7 @@ Corps…
 | S2 | Chaque page et chaque article publié porte une **`description`** de 70 à 160 caractères, **unique** : ce que le visiteur trouvera, avec les mots-clés de la page. | `mise run content:seo` |
 | S3 | Le H1 reste court et lisible (budget du hero) ; il peut différer du `title`. | relecture |
 | S4 | Les aperçus de partage (Open Graph, Twitter Card) et le JSON-LD `Person` (accueil) sont **générés** par `overrides/main.html` : on ne les écrit jamais à la main dans une page. Les faits du JSON-LD viennent de `extra.seo` et de `extra.social` : uniquement des informations déjà publiées sur le site. | build |
-| S5 | **Aucun TODO visible** : un manque d'information se note en commentaire HTML `<!-- TODO: … -->` et dans `backlog.md`. | `mise run content:todo-visible` |
+| S5 | **Aucun TODO dans les sources publiées**, même en commentaire HTML (recopié dans le HTML) : un manque d'information se note uniquement dans `private/backlog.md`. | `mise run content:todo-visible` |
 | S6 | URL d'article `/blog/<slug>/` (`post_url_format: "{slug}"`) : courte, sans date, pérenne. Ne plus changer le slug d'un article publié. | relecture |
 | S7 | Le domaine n'est écrit qu'à un endroit : `site_url`. Canonical, sitemap, `robots.txt`, Open Graph et JSON-LD en découlent. | build |
 

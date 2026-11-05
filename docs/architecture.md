@@ -11,7 +11,7 @@ requirements.txt        # verrou complet généré par `mise run deps:lock` (ne 
 zensical.toml           # config du site : thème, plugins, NAVIGATION
 zensical.docs.toml      # config de l'aperçu de la doc projet (non publiée)
 overrides/main.html     # surcharge du thème : métadonnées SEO (Open Graph, JSON-LD, apple-touch-icon)
-backlog.md              # tâches en attente (prompts pour agent, questions à l'opérateur, suivi)
+private/                # NON PUBLIÉ (ignoré par git, dépôt privé annexe) : backlog.md, notes de travail
 site/                   # SOURCES du site public (docs_dir)
   index.md, services.md, parcours.md, contact.md
   blog/index.md, blog/.authors.yml, blog/posts/*.md
@@ -46,12 +46,12 @@ Première fois : `mise trust && mise install`.
 | `mise run preview` | | Aperçu simultané site (:8000) + doc (:8001) |
 | `mise run blog:new "Titre" [-c Catégorie] [--publish]` | | Crée un article daté (brouillon par défaut) |
 | `mise run blog:list` | | Liste des articles : date, statut, catégories |
-| `mise run todo` | | `TODO` restants dans le site et la config |
+| `mise run todo` | | `TODO` égarés dans le site et la config (le travail en attente vit dans `private/backlog.md`) |
 | `mise run design:contrast [-v]` | | Contrastes WCAG AA des paires de rôles M3, thèmes clair et sombre, calculés depuis `extra.css` |
 | `mise run content:services [-m 500]` | | Longueur minimale de chaque service détaillé de `services.md` |
 | `mise run content:seo` | | `title` et `description` en front-matter : présence, longueurs, unicité |
 | `mise run content:headings` | | Accessibilité (M3) : un seul H1 par page, aucun niveau de titre sauté |
-| `mise run content:todo-visible` | | Aucun `TODO` visible sur le site publié (seuls les commentaires HTML sont tolérés) |
+| `mise run content:todo-visible` | | Aucun `TODO` dans les sources publiées, commentaires HTML compris (ils sont recopiés dans le HTML) |
 | `mise run check` | `lint` | Design system (couleurs, rayons, ombres, typographie et durées via tokens, palette via rôles M3, contrastes des paires de rôles, préfixes `vt-`, 1 CTA principal par page), accessibilité (hiérarchie des titres), navigation (≤ 6 onglets, `vt-cta` en fin de page, pas de menu latéral, services ≥ 500 caractères), contenu (aucun TODO visible), référencement (`title`, `description`), builds stricts |
 | `mise run dns:check [domaine]` | | Vérifie DNS (A, AAAA, CNAME www, CAA) et HTTPS |
 | `mise run clean` | | Supprime `build/`, `build-docs/` |
@@ -70,7 +70,9 @@ Les ressources de `unpkg.com` (pyodide, référencé par le JavaScript du thème
 - Push sur `main` → workflow `deploy.yml` → `mise run site:build` → GitHub Pages.
 - Réglage dépôt : **Settings → Pages → Source : GitHub Actions**.
 - Domaine personnel : **Settings → Pages → Custom domain** (avec un déploiement par Actions, un fichier `CNAME` dans le dépôt est ignoré).
-- DNS chez DNSimple : `ALIAS @ → <user>.github.io`, `CNAME www → <user>.github.io`, TXT de vérification du domaine sur le compte GitHub.
+- Domaine : **`galaxie.eu.org`** (`site_url` dans `zensical.toml`). C'est un sous-domaine gratuit d'[eu.org](https://nic.eu.org/) : la zone se crée chez DNSimple, puis on déclare ses serveurs de noms (NS DNSimple) dans l'interface de nic.eu.org, qui vérifie qu'ils répondent avant d'activer la délégation (compter quelques jours).
+- DNS chez DNSimple : `ALIAS @ → <user>.github.io`, `CNAME www → <user>.github.io`, TXT de vérification du domaine sur le compte GitHub. `mise run dns:check` lit le domaine dans `site_url`.
+- Aperçu local : `mise run serve` (ou `preview`) sert le site sur `http://127.0.0.1:8000` quel que soit `site_url` ; les liens sont relatifs, seule la balise canonique pointe vers la production. `serve` et `site:build` écrivent tous deux dans `build/` : ne pas lancer `check` pendant un aperçu.
 
 ## Mettre à jour Zensical
 

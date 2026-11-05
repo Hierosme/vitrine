@@ -166,10 +166,9 @@ L'IA générative se paie à la consommation : des tokens facturés par un fourn
 - **Télétravail** — missions à distance, depuis Propriano (Corse).
 - **Sur site** — déplacements ponctuels possibles, planifiés à l'avance, lorsque la mission le demande.
 - **Bilingue** — interventions en français et en anglais.
+- **Démarrage** — date fixée ensemble dès le premier échange, selon votre calendrier et mes engagements en cours.
 
 </div>
-
-<!-- TODO: tuile « **Disponibilité** — … » à rétablir quand l'information est connue (voir backlog.md, B-01) -->
 
 <div class="vt-cta" markdown>
 **Un projet d'automatisation ?** [Parlons-en](contact.md){ .md-button .md-button--primary }

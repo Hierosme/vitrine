@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie qu'aucun TODO n'est visible sur le site publié (seuls les commentaires HTML sont tolérés)"
+#MISE description="Vérifie qu'aucun TODO ne figure dans les sources publiées, commentaires HTML compris (ils sont recopiés dans le HTML)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
@@ -10,8 +10,9 @@ for f in sorted(pathlib.Path(sys.argv[1]).rglob("*.md")):
     text = f.read_text(encoding="utf-8")
     if re.search(r"^draft:\s*true", text, re.M):
         continue                                        # brouillon : non publié
-    visible = re.sub(r"<!--.*?-->", lambda m: "\n" * m.group(0).count("\n"), text, flags=re.S)
-    for n, line in enumerate(visible.splitlines(), 1):
+    # Les commentaires HTML du Markdown sont recopiés tels quels dans le HTML publié :
+    # un TODO n'a donc sa place que dans le backlog privé (private/backlog.md).
+    for n, line in enumerate(text.splitlines(), 1):
         if "TODO" in line:
             print(f"  ✘ {f}:{n} : {line.strip()}"); bad += 1
 if not bad:

@@ -69,7 +69,7 @@ if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 
 echo "• Contenu : chaque page de contenu se termine par un appel au contact (N6)"
 bad=""
-for f in $(find site -maxdepth 1 -name '*.md' -not -name index.md -not -name contact.md); do
+for f in $(find site -maxdepth 1 -name '*.md' -not -name index.md -not -name contact.md -not -name mentions-legales.md); do
   if ! grep -q 'class="vt-cta"' "$f"; then bad="${bad}  ✘ $f : pas de bloc vt-cta\n"; fi
 done
 if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
@@ -85,7 +85,7 @@ if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 echo "• Contenu : chaque service fait au moins 500 caractères et se formule en mission type (N8)"
 "$(dirname "$0")/content/services" || fail=1
 
-echo "• Contenu : aucun TODO visible sur le site publié"
+echo "• Contenu : aucun TODO dans les sources publiées (commentaires compris)"
 "$(dirname "$0")/content/todo-visible" || fail=1
 
 echo "• Accessibilité : un seul H1 par page, aucun niveau de titre sauté (M3)"
