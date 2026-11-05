@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie la hiérarchie des titres (accessibilité M3) : un seul H1, aucun niveau sauté"
+#MISE description="Vérifie la hiérarchie des titres (accessibilité) : un seul H1, aucun niveau sauté"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 

@@ -1,7 +1,7 @@
 # Le design system de la vitrine et ses fondements
 
 !!! abstract "Type de document"
-    **Explication** au sens [Diátaxis](https://diataxis.fr/explanation/) : ce document dit *pourquoi* le design system est ainsi fait. Le *comment* est dans les skills [`site-look-and-feel`](../skills/site-look-and-feel/SKILL.md) et [`site-navigation`](../skills/site-navigation/SKILL.md). Les valeurs exactes sont dans `site/stylesheets/extra.css` et `zensical.toml`.
+    **Explication** au sens [Diátaxis](https://diataxis.fr/explanation/) : ce document dit *pourquoi* le design system est ainsi fait. Les règles de décision visuelle sont dans la norme [`oxygen-ui-design-guidelines`](../skills/oxygen-ui-design-guidelines/SKILL.md), qui prévaut ; leur traduction pour Zensical est dans [`site-look-and-feel`](../skills/site-look-and-feel/SKILL.md), la navigation dans [`site-navigation`](../skills/site-navigation/SKILL.md). Les valeurs exactes sont dans `site/stylesheets/extra.css` et `zensical.toml`.
 
 ## Le problème à résoudre
 
@@ -29,7 +29,7 @@ La recherche en interaction homme-machine (IHM), en ergonomie cognitive et en ma
 ### Ce que cela implique ici
 
 - **L'esthétique classique est le socle.** La structure est sobre, les espaces sont généreux et réguliers (échelle `--vt-space-*`), l'alignement reste stable et il n'y a que deux polices. Pour un consultant, le site doit d'abord rassurer.
-- **Un seul geste expressif, maîtrisé.** Le dégradé Polar Night → Frost du hero (`--vt-hero-gradient`) donne une signature sans coûter en clarté. Tout autre effet (animation, parallaxe, illustration chargée) doit être justifié au regard de ce compromis.
+- **Un seul geste expressif, maîtrisé.** La bande au dégradé Frost (nord9 → nord10, `--vt-gradient-primary`) en tête du hero donne une signature sans coûter en clarté : elle est décorative et aucun texte n'y est posé. Tout autre effet (animation, parallaxe, illustration chargée) doit être justifié au regard de ce compromis.
 - **Le hero est l'écran des 50 ms.** Il porte un titre, une proposition de valeur courte et au plus deux boutons. Il est conçu pour être compris d'un coup d'œil.
 - **Les finitions comptent.** Un défaut visuel (contraste, alignement, mode sombre cassé) dégrade le jugement global, pas seulement l'élément en cause. C'est pourquoi tout changement est vérifié en clair, en sombre, sur desktop et sur mobile.
 
@@ -51,9 +51,9 @@ Ses résultats relient ces composantes à la confiance (*online trust*), à la s
 
 ### Ce que cela implique ici
 
-- **La crédibilité se joue en surface d'abord.** Une typographie soignée (Inter, JetBrains Mono), une palette restreinte et des composants homogènes ne sont pas cosmétiques : c'est ce que l'internaute remarque, donc ce qu'il interprète.
+- **La crédibilité se joue en surface d'abord.** Une typographie soignée (Inter, Fira Code), une palette restreinte et des composants homogènes ne sont pas cosmétiques : c'est ce que l'internaute remarque, donc ce qu'il interprète.
 - **Les trois composantes de Cyr sont réparties dans les skills.** Le design de l'information et le design de navigation relèvent du skill `site-navigation`, le design visuel du skill `site-look-and-feel`.
-- **Les preuves doivent être visibles et vraies.** Références, certifications et logos clients passent par le composant `vt-proof`, placé là où l'œil passe. Un élément proéminent mais douteux (faux témoignage, logo non autorisé) est interprété négativement. D'où la règle : **aucune référence inventée**, un `TODO` plutôt qu'un faux.
+- **Les preuves doivent être visibles et vraies.** Références, certifications et logos clients passent par le composant `vt-proof`, placé là où l'œil passe. Un élément proéminent mais douteux (faux témoignage, logo non autorisé) est interprété négativement. D'où la règle : **aucune référence inventée**, une tâche dans le backlog privé plutôt qu'un faux.
 - **Le contact est visible partout.** Il occupe le dernier onglet, l'icône email dans le pied de page et un bloc `vt-cta` en fin de page de contenu. Une personne joignable est plus crédible.
 
 ## 3. Ergonomie cognitive et guidage
@@ -94,10 +94,11 @@ L'actualisation de 2017 précise que le motif en F est surtout le symptôme d'un
 
 Les règles ci-dessus ne tiennent dans le temps que si elles sont **écrites, centralisées et vérifiées** :
 
+- une **norme** unique (`oxygen-ui-design-guidelines`) fixe les règles de décision : quand encadrer, mettre en valeur, contraster, espacer (§ 7) ;
 - les **tokens** (`--vt-*`) donnent l'homogénéité : une couleur ou un espacement n'existe qu'à un endroit, et les couleurs passent par des rôles définis pour chaque thème (§ 5) ;
 - les **composants** (`vt-hero`, `vt-cta`, `vt-proof`, cartes Material) répondent aux besoins récurrents sans improvisation ;
 - les **skills** traduisent ces principes en règles opérationnelles pour les humains et les agents IA ;
-- la tâche **`mise run check`** automatise ce qui peut l'être : couleurs en dur, usage de la palette via les rôles, contrastes WCAG des deux thèmes, préfixes de classes, nombre de CTA principaux, budget de navigation, builds stricts.
+- la tâche **`mise run check`** automatise ce qui peut l'être : palette fermée, couleurs en dur, absence d'ombre, usage de la palette via les rôles, contrastes WCAG des deux thèmes, sections inversées, préfixes de classes, nombre de CTA principaux, budget de navigation, builds stricts.
 
 Le choix de Zensical (successeur de Material for MkDocs, par la même équipe) relève de la même logique. Le thème apporte une base accessible, responsive et conforme aux conventions. Le design system se contente de l'**habiller**, ce qui limite la dette de maintenance.
 
@@ -115,7 +116,7 @@ Ce choix découle des principes précédents :
 
 ### Deux thèmes, mêmes rôles
 
-Le thème clair (fonds Snow Storm, texte Polar Night) et le thème sombre (fonds Polar Night, texte Snow Storm) reprennent les deux « ambiances » prévues par Nord. Le thème affiché suit par défaut la préférence du système (`prefers-color-scheme`) et le visiteur peut basculer à tout moment. C'est le critère d'**adaptabilité** de Bastien & Scapin.
+Le thème clair (fonds Snow Storm, texte Polar Night) et le thème sombre (fonds Polar Night, texte Snow Storm) reprennent les deux « ambiances » prévues par Nord. L'en-tête, le hero et le pied de page suivent le thème ; seul le bloc d'appel au contact est une **section inversée** (sombre dans les deux thèmes), pour que l'inversion reste un signal réservé à l'action. Le thème affiché suit par défaut la préférence du système (`prefers-color-scheme`) et le visiteur peut basculer à tout moment. C'est le critère d'**adaptabilité** de Bastien & Scapin.
 
 Pour que les deux thèmes restent équivalents, le design system sépare trois couches : la **palette** (les valeurs), les **rôles** (fond, texte, lien, CTA…), définis une fois par thème, et les **composants**, qui ne connaissent que les rôles. Un composant ne peut donc pas être soigné dans un thème et oublié dans l'autre.
 
@@ -123,13 +124,13 @@ Pour que les deux thèmes restent équivalents, le design system sépare trois c
 
 Nord est conçu pour des éditeurs de code sur fond sombre. Plusieurs de ses couleurs, utilisées comme texte sur Snow Storm, ne passent pas le seuil WCAG AA de 4.5:1. Par exemple, `nord10` sur `nord6` donne 3.5:1, et les teintes Frost et Aurora sur fond clair sont souvent sous 2.5:1.
 
-La priorité va à l'accessibilité, parce qu'un défaut de lisibilité dégrade directement la crédibilité (§ 1 et 2). Mais la fidélité à Nord est préservée par la méthode : plutôt que d'introduire d'autres couleurs, on **dérive des variantes de même teinte**, assombries ou éclaircies par un facteur documenté (`--vt-nord10-aa` = nord10 × 0.80, par exemple). Les ratios sont calculés et vérifiés automatiquement par `mise run design:contrast`, pour chaque couple texte/fond de chaque thème.
+La priorité va à l'accessibilité, parce qu'un défaut de lisibilité dégrade directement la crédibilité (§ 1 et 2). Mais la fidélité à Nord est préservée par la méthode : la palette est **fermée**, et seules **trois variantes de même teinte** sont dérivées, uniquement pour le texte : `nord10-strong` (liens et bouton principal en clair), `nord11-strong` et `nord11-soft` (texte d'erreur en clair et en sombre). Partout ailleurs, les couleurs pastel servent de fond, de liseré ou d'icône, jamais de texte sur fond clair. Les ratios sont calculés et vérifiés automatiquement par `mise run design:contrast`, pour chaque couple texte/fond de chaque thème.
 
 ### La couleur comme repère, pas comme décor
 
-Une première version du thème n'utilisait qu'un accent (Frost). Elle était sobre, mais les éléments répétés (cartes, étapes du parcours, compétences) se distinguaient mal les uns des autres. Le critère de **groupement et distinction par le format** de Bastien & Scapin invite à rendre ces unités visuellement séparables. La lecture par balayage décrite par Nielsen profite elle aussi de repères stables, comme une barre sous chaque intertitre.
+Les éléments répétés (cartes, étapes du parcours, compétences) ont besoin d'être séparables : c'est le critère de **groupement et distinction par le format** de Bastien & Scapin, et la lecture par balayage décrite par Nielsen profite de repères stables, comme un liseré sous chaque intertitre.
 
-Le design system ajoute donc un **cycle de six accents** tirés de Frost et d'Aurora. Il est appliqué de façon systématique selon le rang de l'élément, jamais au cas par cas. Ces couleurs restent dans le registre de l'esthétique classique : désaturées, réservées aux repères non textuels (liserés, pastilles, icônes), et toujours redondantes avec un texte ou une forme. La couleur n'est jamais le seul porteur d'information ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)), et chaque accent atteint 3:1 sur son fond ([WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)). En thème clair, cela demande à nouveau des dérivés de même teinte (`-ui`).
+Ces repères utilisent un **accent unique**, tiré de Frost (nord10 en clair, nord8 en sombre). Une version antérieure faisait tourner six accents, dont quatre couleurs Aurora : elle détournait des couleurs qui signifient un état (erreur, avertissement, succès) et exigeait une dizaine de dérivés pour atteindre 3:1 en clair. La distinction vient désormais de la forme (carte, liseré, pastille) et de l'espacement, ce qui laisse à Aurora son seul rôle sémantique. La couleur n'est jamais le seul porteur d'information ([WCAG 1.4.1](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)), et l'accent atteint 3:1 sur la page et sur les surfaces ([WCAG 1.4.11](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)).
 
 ## 6. Pourquoi des règles de référencement
 
@@ -147,34 +148,25 @@ Le visiteur visé arrive souvent d'un moteur de recherche ou d'un lien partagé 
 - **Des URL stables.** Une URL courte et sans date (`/blog/<slug>/`) ne vieillit pas ; une URL modifiée perd les liens et l'historique acquis.
 - **Polices hébergées sur le site.** Charger les polices depuis Google transmet l'adresse IP du visiteur à un tiers ; le plugin `privacy` les embarque au build. C'est aussi une requête vers un domaine externe en moins au chargement.
 
-## 7. Pourquoi structurer le design system selon Material Design 3
+## 7. Pourquoi une norme de décision : Oxygen UI × Nord
 
 ### Le constat
 
-Les sections précédentes fixent des **principes** (sobriété, crédibilité, guidage) et une **identité** (Nord). Il manquait une **grammaire** commune pour les décliner : jusqu'ici, chaque besoin créait son jeton ad hoc (`--vt-color-surface`, `--vt-radius-lg`, `--vt-shadow`…), sans échelle explicite pour la typographie, les formes, l'élévation ou les états. [Material Design 3](https://m3.material.io) fournit cette grammaire, documentée, outillée (kit Figma, tokens) et éprouvée à grande échelle.
+Les sections précédentes fixent des **principes** (sobriété, crédibilité, guidage) et une **identité** (Nord). Un design system décrit d'habitude ses composants ; il dit rarement **quand** ne pas s'en servir. Sans cette règle, chaque contenu attire son cadre, sa couleur, son encadré, et la hiérarchie se dilue : c'est la *banner blindness*. Pour un agent IA qui modifie le site, c'est encore plus vrai : il applique ce qui est écrit.
 
-### Ce que l'on reprend, et pourquoi
+### Ce que la norme apporte
 
-- **Les rôles de couleur et leurs paires** (`primary` / `on-primary`, `surface-container-*`, `outline` / `outline-variant`…). M3 construit ses rôles sur des appariements accessibles : un texte posé sur `X` prend `on-X`. Le contraste devient une propriété du système, vérifiable paire par paire (`design:contrast`), plutôt qu'un contrôle au cas par cas (critère d'**homogénéité** de Bastien & Scapin).
-- **Les échelles** : typographie (5 rôles × 3 tailles), formes (10 rayons), élévation (6 niveaux), espacement sur une grille de 4dp. Des échelles fermées produisent l'ordre et la régularité de l'**esthétique classique** (Lavie & Tractinsky, § 1) et réduisent les décisions arbitraires.
-- **Les couches d'état** (survol 8 %, focus 10 %, appui 10 %). Un état se lit comme une modulation de l'élément, pas comme un autre élément : c'est le **feedback** du critère de guidage, sans changer de teinte. M3 réserve les états aux éléments interactifs : les cartes de la vitrine, non cliquables, n'en ont plus.
-- **L'élévation par la teinte d'abord**, l'ombre ensuite. M3 sépare les surfaces par des différences de ton et réserve les ombres aux éléments qui doivent ressortir ; « moins il y a de niveaux, plus chacun a de poids ». C'est cohérent avec le principe d'un seul geste expressif.
-- **Les composants de référence** : bouton *filled* pour l'action principale (« idéalement une seule par page », ce que la règle P6 imposait déjà), bouton *outlined* pour les actions secondaires, cartes *elevated* et *filled*.
-- **Les règles d'accessibilité** : liens soulignés, indicateur de focus de 3dp, cibles de 48dp, un seul H1 et aucun niveau de titre sauté, 40 à 60 caractères par ligne. Elles complètent les critères WCAG déjà appliqués.
-- **Les points de rupture** (compact, medium, expanded, large, extra-large) : ils remplacent un seuil unique hérité du thème, et décrivent ce qui change d'une classe à l'autre plutôt qu'un appareil.
-- **Le mouvement** limité aux retours d'état, avec les courbes et durées courtes de M3, et rien quand le visiteur demande moins d'animations.
+La norme [`oxygen-ui-design-guidelines`](../skills/oxygen-ui-design-guidelines/SKILL.md) reprend les fondations d'[Oxygen UI](https://github.com/wso2/oxygen-ui), le design system de WSO2 bâti sur MUI, avec la palette Nord comme norme de couleur. Elle est écrite sous forme de **règles de décision** (« encadrer QUAND… / NE PAS encadrer QUAND… »), lisibles par un humain comme par un agent :
 
-### Ce que l'on ne reprend pas
-
-- **La palette par défaut (violet) et la couleur dynamique.** L'identité Nord reste la source des couleurs (§ 5) ; M3 en fournit seulement la structure. Les rôles sont alimentés par des dérivés de même teinte, comme pour l'accessibilité.
-- **Roboto.** Inter garde l'identité typographique ; on reprend les tailles et interlignages M3, mais pas l'interlettrage du corps de texte, calibré pour Roboto.
-- **Les composants mobiles** (FAB, barres de navigation, sheets) : sans objet pour une vitrine statique.
-- **Les ressorts physiques de M3 Expressive** : ils supposent du JavaScript, exclu sans décision explicite. On garde les courbes de Bézier M3, toujours documentées pour les transitions.
-- **Les titres en graisse regular.** M3 Expressive introduit des styles « emphasized » ; on les retient pour les titres de page et de section, dont le gras structure le balayage (§ 3).
+- **Un ordre de préférence** : espacement, puis typographie, puis fond, puis bordure, puis couleur, puis effet. On s'arrête au premier moyen qui suffit. C'est l'**esthétique classique** de Lavie & Tractinsky (§ 1) rendue opératoire, et la charge extrinsèque minimale de Sweller (§ 3).
+- **Un design plat** : aucune ombre. La hiérarchie des surfaces passe par trois niveaux de fond (Snow Storm ou Polar Night) et une bordure, ce que Nord prévoit lui-même pour des designs « minimal and flat ».
+- **Une forme et une typographie uniques** : un seul rayon (8px), l'échelle typographique d'Oxygen UI (Inter, Fira Code pour le code), un espacement sur une base de 8px. Des échelles fermées réduisent les décisions arbitraires (homogénéité de Bastien & Scapin).
+- **Des limites chiffrées** : un H1, un bouton principal, un dégradé, un encadré visible à l'écran, un niveau d'imbrication de cadres, deux sections inversées par page. Elles traduisent Hick-Hyman (§ 3) et la proéminence de Fogg (§ 2) : ce qui ressort doit rester rare pour être remarqué.
+- **Des contrastes mesurés** sur les couples réels de la palette, et la règle qui en découle : en clair, les couleurs pastel ne portent jamais de texte.
 
 ### Ce que cela change concrètement
 
-Les boutons deviennent ronds (forme `full`) et à hauteur fixe de 40dp. Le bloc d'appel au contact prend le rôle `primary-container`, la citation `secondary-container`, les tuiles une surface plus soutenue. Les liens du contenu sont soulignés, l'anneau de focus est épaissi, et les textes courants ne dépassent plus 60 caractères par ligne. `mise run check` refuse désormais tout rayon, ombre, taille de texte ou durée écrits en dur, et vérifie la hiérarchie des titres.
+Les boutons, cartes, tuiles et le portrait ont tous un rayon de 8px et aucune ombre. L'en-tête, le hero et le pied de page suivent le thème. Le CTA de fin de page devient une section inversée, déclarée dans le Markdown (`data-md-color-scheme="slate"`) plutôt que recolorée à la main. Les blocs de code restent sombres dans les deux thèmes, selon la coloration officielle de Nord. `mise run check` refuse toute couleur hors des 19 autorisées et toute ombre portée.
 
 ## Limites et précautions de lecture
 
@@ -215,8 +207,8 @@ Les boutons deviennent ronds (forme `full`) et à hauteur fixe de 40dp. Le bloc 
 - W3C. *WCAG 2.2, Understanding SC 1.4.11 Non-text Contrast.* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
 - W3C. *WCAG 2.2, Understanding SC 1.4.1 Use of Color.* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
 - W3C. *WCAG 2.2, Understanding SC 1.4.3 Contrast (Minimum).* [w3.org](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
-- Google. *Material Design 3* : [Color roles](https://m3.material.io/styles/color/roles), [Typography](https://m3.material.io/styles/typography/applying-type), [Shape](https://m3.material.io/styles/shape/corner-radius-scale), [Elevation](https://m3.material.io/styles/elevation/applying-elevation), [States](https://m3.material.io/foundations/interaction/states/state-layers), [Easing and duration](https://m3.material.io/styles/motion/easing-and-duration/tokens-specs), [Breakpoints](https://m3.material.io/foundations/layout/breakpoints/overview), [Buttons](https://m3.material.io/components/buttons/guidelines), [Cards](https://m3.material.io/components/cards/guidelines), [Accessibility designing](https://m3.material.io/foundations/designing/structure)
-- Google. *Material 3 Design Kit* (Figma, v1.25, mai 2026). [figma.com](https://www.figma.com/community/file/1035203688168086460/material-3-design-kit)
+- WSO2. *Oxygen UI* (design system, basé sur MUI). [github.com/wso2/oxygen-ui](https://github.com/wso2/oxygen-ui)
+- MUI. *Material UI* : [Palette](https://mui.com/material-ui/customization/palette/), [Spacing](https://mui.com/material-ui/customization/spacing/), [Breakpoints](https://mui.com/material-ui/customization/breakpoints/), [Card](https://mui.com/material-ui/react-card/), [Alert](https://mui.com/material-ui/react-alert/), [Button](https://mui.com/material-ui/react-button/)
 - Google Search Central. *Influencing your title links in search results.* [developers.google.com](https://developers.google.com/search/docs/appearance/title-link)
 - Google Search Central. *Control your snippets in search results.* [developers.google.com](https://developers.google.com/search/docs/appearance/snippet)
 - Google Search Central. *Introduction to structured data markup.* [developers.google.com](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)

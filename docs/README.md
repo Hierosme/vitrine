@@ -6,8 +6,9 @@ Documentation **du projet** (pas du site public : celui-ci vit dans `site/`). Ap
 |---|---|
 | [architecture.md](architecture.md) | Organisation du dépôt, build, déploiement, domaine |
 | [explanation/design-system.md](explanation/design-system.md) | *Explication* : pourquoi le design system est ainsi fait, et ses sources (IHM, ergonomie, crédibilité) |
+| [skills/oxygen-ui-design-guidelines](skills/oxygen-ui-design-guidelines/SKILL.md) | Skill : **norme de design** (Oxygen UI × Nord), chargée à chaque session ; prévaut sur tout le reste |
+| [skills/site-look-and-feel](skills/site-look-and-feel/SKILL.md) | Skill : implémentation de la norme dans Zensical (tokens, composants, contrôles) |
 | [skills/site-navigation](skills/site-navigation/SKILL.md) | Skill : maintenir la navigation et l'arborescence |
-| [skills/site-look-and-feel](skills/site-look-and-feel/SKILL.md) | Skill : maintenir le design system visuel |
 
 ## Ajouter un skill
 

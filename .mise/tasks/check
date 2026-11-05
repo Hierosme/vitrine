@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie le projet : design system, navigation, builds stricts site et doc"
+#MISE description="Vérifie le projet : conformité à la norme de design (Oxygen UI × Nord), navigation, builds stricts site et doc"
 #MISE alias="lint"
 #MISE depends=["install"]
 set -euo pipefail
@@ -9,6 +9,15 @@ source .mise/lib/zensical.sh
 fail=0
 css=site/stylesheets/extra.css
 
+echo "• Design system : palette fermée (16 couleurs Nord + 3 dérivés autorisés)"
+# Norme § 1 : aucune autre couleur que nord0…nord15, nord10-strong, nord11-strong, nord11-soft
+allowed='^(#2e3440|#3b4252|#434c5e|#4c566a|#d8dee9|#e5e9f0|#eceff4|#8fbcbb|#88c0d0|#81a1c1|#5e81ac|#bf616a|#d08770|#ebcb8b|#a3be8c|#b48ead|#476993|#a64a54|#f7939b)$'
+if out="$(awk '/---------- 2\./{exit} 1' "$css" | sed -E 's#/\*.*\*/##g' | grep -oE '#[0-9a-fA-F]{3,8}\b' | tr 'A-F' 'a-f' | sort -u | grep -vE "$allowed")"; then
+  echo "$out" | sed 's/^/  ✘ couleur hors norme : /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
 echo "• Design system : aucune couleur en dur hors section TOKENS"
 # Ignore la section TOKENS (jusqu'au marqueur « ---------- 2. ») et les commentaires
 if out="$(awk '/---------- 2\./{f=1} f' "$css" | grep -nE '#[0-9a-fA-F]{3,8}([^0-9a-zA-Z]|$)|rgba?\(' | grep -v '^\s*/\*')"; then
@@ -17,12 +26,20 @@ else
   echo "  ✔ OK"
 fi
 
-echo "• Design system : rayons, ombres, typographie et durées passent par les tokens (M3)"
+echo "• Design system : rayons, ombres, typographie et durées passent par les tokens"
 # Hors section TOKENS, ces propriétés n'acceptent que des var(--vt-…), 0, none, inherit, transparent
 if out="$(awk '/---------- 2\./{f=1} f{print NR": "$0}' "$css" \
   | grep -E '^[0-9]+: +(border-radius|box-shadow|font-size|line-height|font-weight|letter-spacing|transition|transition-duration|transition-timing-function|animation)[[:space:]]*:' \
   | sed -E -e 's#/\*.*\*/##g' -e 's/var\(--vt-[a-z0-9-]+\)//g' \
   | grep -E ':[^:]*[0-9]' | grep -vE ':[[:space:]]*0;')"; then
+  echo "$out" | sed 's/^/  ✘ ligne /'; fail=1
+else
+  echo "  ✔ OK"
+fi
+
+echo "• Design system : design plat, aucune ombre portée"
+if out="$(awk '/---------- 2\./{f=1} f{print NR": "$0}' "$css" | sed -E 's#/\*.*\*/##g' \
+  | grep -E '(box-shadow|--md-shadow-z[0-9]+)[[:space:]]*:' | grep -vE ':[[:space:]]*(none|var\(--vt-shadow-none\))[[:space:]]*;')"; then
   echo "$out" | sed 's/^/  ✘ ligne /'; fail=1
 else
   echo "  ✔ OK"
@@ -45,7 +62,21 @@ fi
 echo "• Design system : contrastes WCAG AA (clair + sombre)"
 "$(dirname "$0")/design/contrast" | sed 's/^/  /' || fail=1
 
-echo "• Hiérarchie des actions : au plus 1 bouton primaire par page (P6)"
+echo "• Sections inversées : CTA en data-md-color-scheme=\"slate\", hero dans le thème, 2 par page au maximum"
+bad=""
+for f in $(find site -name '*.md'); do
+  if grep -E 'class="vt-cta"' "$f" | grep -vq 'data-md-color-scheme="slate"'; then
+    bad="${bad}  ✘ $f : vt-cta sans data-md-color-scheme=\"slate\"\n"
+  fi
+  if grep -E 'class="vt-hero"' "$f" | grep -q 'data-md-color-scheme='; then
+    bad="${bad}  ✘ $f : le hero suit le thème (retirer data-md-color-scheme)\n"
+  fi
+  n="$(grep -c 'data-md-color-scheme=' "$f" || true)"
+  if (( n > 2 )); then bad="${bad}  ✘ $f : $n sections inversées\n"; fi
+done
+if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
+
+echo "• Hiérarchie des actions : au plus 1 bouton primaire par page"
 bad=""
 for f in $(find site -name '*.md' -not -path 'site/blog/*'); do
   n="$(grep -c 'md-button--primary' "$f" || true)"
@@ -88,7 +119,7 @@ echo "• Contenu : chaque service fait au moins 500 caractères et se formule e
 echo "• Contenu : aucun TODO dans les sources publiées (commentaires compris)"
 "$(dirname "$0")/content/todo-visible" || fail=1
 
-echo "• Accessibilité : un seul H1 par page, aucun niveau de titre sauté (M3)"
+echo "• Accessibilité : un seul H1 par page, aucun niveau de titre sauté"
 "$(dirname "$0")/content/headings" || fail=1
 
 echo "• Référencement : title et description uniques par page, longueurs"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie les contrastes WCAG AA des rôles de couleur M3, thèmes clair et sombre (texte 4.5:1, UI 3:1)"
+#MISE description="Vérifie les contrastes WCAG AA des rôles de couleur (norme Oxygen UI × Nord), thèmes clair et sombre (texte 4.5:1, UI 3:1)"
 #USAGE flag "-v --verbose" help="Affiche toutes les paires, pas seulement les échecs"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
@@ -28,17 +28,35 @@ themes = {
 }
 
 def resolve(tokens, name, depth=0):
+    """Couleur hexadécimale d'un token, ou (hex, alpha) pour color-mix(… X %, transparent)."""
     v = tokens.get(name)
     if v is None or depth > 10:
         return None
-    v = v.strip()
+    v = " ".join(v.split())
     m = re.fullmatch(r"var\((--vt-[\w-]+)\)", v)
     if m:
         return resolve(tokens, m.group(1), depth + 1)
+    m = re.fullmatch(r"color-mix\(in srgb, var\((--vt-[\w-]+)\) (?:var\((--vt-[\w-]+)\)|(\d+)%), transparent\)", v)
+    if m:
+        base = resolve(tokens, m.group(1), depth + 1)
+        pct = tokens.get(m.group(2), "").strip() if m.group(2) else m.group(3) + "%"
+        if isinstance(base, str) and pct.endswith("%"):
+            return (base, float(pct[:-1]) / 100)
+        return None
     return v if re.fullmatch(r"#[0-9a-fA-F]{6}", v) else None
 
+def rgb(h):
+    return [int(h[i:i + 2], 16) for i in (1, 3, 5)]
+
+def flatten(fg, bg):
+    """Couleur translucide posée sur son fond."""
+    if isinstance(fg, tuple):
+        (h, a), b = fg, rgb(bg)
+        return "#" + "".join(f"{round(a * x + (1 - a) * y):02x}" for x, y in zip(rgb(h), b))
+    return fg
+
 def lum(h):
-    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [x / 255 for x in rgb(h)]
     c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
     return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
 
@@ -46,34 +64,28 @@ def ratio(a, b):
     la, lb = sorted((lum(a), lum(b)), reverse=True)
     return (la + 0.05) / (lb + 0.05)
 
-TEXT, LARGE = 4.5, 3.0   # WCAG 2.2 SC 1.4.3 (texte) / 1.4.11 & gros texte — M3 : paires de rôles accessibles
-SURFACES = ["surface", "surface-container-lowest", "surface-container-low", "surface-container",
-            "surface-container-high", "surface-container-highest"]
+TEXT, UI = 4.5, 3.0     # WCAG 2.2 : 1.4.3 (texte courant) / 1.4.11 (composants, icônes, focus)
+SYNTAX_TOLERATED = 4.3  # norme § 2 : nord15 et nord12 (4.4:1) tolérés en coloration syntaxique
+SURFACES = ["bg-default", "bg-paper", "bg-raised"]
 pairs = (
-    # Texte courant et texte secondaire sur toutes les surfaces (M3 : on-surface / on-surface-variant)
-    [("on-surface", s, TEXT) for s in SURFACES]
-  + [("on-surface-variant", s, TEXT) for s in SURFACES]
-    # Liens (primary) sur les surfaces où il y a du texte : page, cartes, conteneur par défaut
-  + [("primary", s, TEXT) for s in ("surface", "surface-container-low", "surface-container")]
-  + [("error", "surface", TEXT)]
-    # Paires « on-X / X » des rôles d'accent et de leurs conteneurs
-  + [(f"on-{r}", r, TEXT) for r in ("primary", "primary-container", "secondary", "secondary-container",
-                                    "tertiary", "tertiary-container", "error", "error-container")]
-    # Rôles inverses
-  + [("inverse-on-surface", "inverse-surface", TEXT), ("inverse-primary", "inverse-surface", TEXT)]
-    # Contours : outline délimite des cibles (3:1) ; anneau de focus (secondary) visible sur la page
-  + [("outline", s, LARGE) for s in ("surface", "surface-container-low")]
-  + [("secondary", "surface", LARGE)]
-    # Couleurs personnalisées : marque (en-tête, pied), hero
-  + [("on-brand", "brand", TEXT), ("on-brand", "brand-variant", TEXT), ("brand-focus", "brand", LARGE)]
-  + [("hero-text", "hero-from", TEXT), ("hero-text", "hero-via", TEXT), ("hero-text", "hero-to", LARGE),
-     ("hero-on-cta", "hero-cta", TEXT), ("hero-focus", "hero-from", LARGE), ("hero-focus", "hero-via", LARGE)]
-    # Accents catégoriels (non textuels) : sur la page, les cartes et les tuiles
-  + [(f"accent-{i}", bg, LARGE) for i in range(1, 7)
-     for bg in ("surface", "surface-container-low", "surface-container-high")]
-    # Code
+    # Texte courant et secondaire sur les trois niveaux de surface
+    [("text-primary", s, TEXT) for s in SURFACES]
+  + [("text-secondary", s, TEXT) for s in SURFACES]
+  + [("text-primary", "action-selected", TEXT)]                     # texte surligné (mark)
+    # Accent textuel : liens et boutons outlined sur la page et les surfaces de niveau 1
+  + [("primary", s, TEXT) for s in ("bg-default", "bg-paper")]
+  + [("primary-contrast", "primary", TEXT)]                         # bouton principal
+  + [("error-text", s, TEXT) for s in ("bg-default", "bg-paper")]
+    # Repères, focus et contours de cible (non textuels)
+  + [(r, s, UI) for r in ("accent", "focus") for s in ("bg-default", "bg-paper")]
+  + [("field-border", "bg-default", UI)]
+    # Texte posé sur une couleur d'état pleine
+  + [("on-state", s, TEXT) for s in ("warning", "success", "info", "highlight")]
+    # Code en ligne et blocs de code (toujours sombres)
+  + [("code-inline-fg", "code-inline-bg", TEXT)]
   + [(f"code-{k}", "code-bg", TEXT) for k in
-     ("fg", "keyword", "function", "constant", "string", "number", "special", "comment", "generic", "punctuation")]
+     ("fg", "keyword", "function", "constant", "string", "comment", "generic", "punctuation")]
+  + [(f"code-{k}", "code-bg", SYNTAX_TOLERATED) for k in ("number", "special")]
 )
 
 fail = 0
@@ -82,12 +94,12 @@ for theme, tokens in themes.items():
     bad = 0
     for fg, bg, minimum in pairs:
         a, b = resolve(tokens, f"--vt-{fg}"), resolve(tokens, f"--vt-{bg}")
-        if not a or not b:
+        if not a or not isinstance(b, str):
             print(f"  ✘ {fg} / {bg} : token introuvable ou non résolu"); bad += 1; continue
-        r = ratio(a, b)
+        r = ratio(flatten(a, b), b)
         ok = r >= minimum
         if not ok or verbose:
-            print(f"  {'✔' if ok else '✘'} {fg:<20} sur {bg:<18} {r:5.2f}:1 (min {minimum})")
+            print(f"  {'✔' if ok else '✘'} {fg:<18} sur {bg:<16} {r:5.2f}:1 (min {minimum})")
         bad += not ok
     if not bad:
         print(f"  ✔ OK ({len(pairs)} paires)")

@@ -18,6 +18,7 @@ site/                   # SOURCES du site public (docs_dir)
   stylesheets/extra.css # DESIGN SYSTEM : palette Nord, rôles clair/sombre, composants
 build/, build-docs/     # sorties de build (ignorées par git)
 docs/                   # documentation projet (Diátaxis) + skills agents
+  skills/oxygen-ui-design-guidelines/  # NORME de design (Oxygen UI × Nord), chargée à chaque session
   explanation/          # le « pourquoi » (design system et ses sources)
 AGENTS.md               # point d'entrée des agents IA
 .github/workflows/deploy.yml
@@ -47,12 +48,12 @@ Première fois : `mise trust && mise install`.
 | `mise run blog:new "Titre" [-c Catégorie] [--publish]` | | Crée un article daté (brouillon par défaut) |
 | `mise run blog:list` | | Liste des articles : date, statut, catégories |
 | `mise run todo` | | `TODO` égarés dans le site et la config (le travail en attente vit dans `private/backlog.md`) |
-| `mise run design:contrast [-v]` | | Contrastes WCAG AA des paires de rôles M3, thèmes clair et sombre, calculés depuis `extra.css` |
+| `mise run design:contrast [-v]` | | Contrastes WCAG AA des paires de rôles de la norme, thèmes clair et sombre, calculés depuis `extra.css` |
 | `mise run content:services [-m 500]` | | Longueur minimale de chaque service détaillé de `services.md` |
 | `mise run content:seo` | | `title` et `description` en front-matter : présence, longueurs, unicité |
-| `mise run content:headings` | | Accessibilité (M3) : un seul H1 par page, aucun niveau de titre sauté |
+| `mise run content:headings` | | Accessibilité : un seul H1 par page, aucun niveau de titre sauté |
 | `mise run content:todo-visible` | | Aucun `TODO` dans les sources publiées, commentaires HTML compris (ils sont recopiés dans le HTML) |
-| `mise run check` | `lint` | Design system (couleurs, rayons, ombres, typographie et durées via tokens, palette via rôles M3, contrastes des paires de rôles, préfixes `vt-`, 1 CTA principal par page), accessibilité (hiérarchie des titres), navigation (≤ 6 onglets, `vt-cta` en fin de page, pas de menu latéral, services ≥ 500 caractères), contenu (aucun TODO visible), référencement (`title`, `description`), builds stricts |
+| `mise run check` | `lint` | Norme de design (palette fermée Nord, couleurs, rayons, typographie et durées via tokens, aucune ombre, palette via les rôles, contrastes des paires de rôles, sections inversées, préfixes `vt-`, 1 CTA principal par page), accessibilité (hiérarchie des titres), navigation (≤ 6 onglets, `vt-cta` en fin de page, pas de menu latéral, services ≥ 500 caractères), contenu (aucun TODO visible), référencement (`title`, `description`), builds stricts |
 | `mise run dns:check [domaine]` | | Vérifie DNS (A, AAAA, CNAME www, CAA) et HTTPS |
 | `mise run clean` | | Supprime `build/`, `build-docs/` |
 

@@ -170,6 +170,6 @@ L'IA générative se paie à la consommation : des tokens facturés par un fourn
 
 </div>
 
-<div class="vt-cta" markdown>
+<div class="vt-cta" data-md-color-scheme="slate" markdown>
 **Un projet d'automatisation ?** [Parlons-en](contact.md){ .md-button .md-button--primary }
 </div>

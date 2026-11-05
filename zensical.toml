@@ -1,6 +1,6 @@
 # Configuration du site public — Zensical (https://zensical.org), successeur de Material for MkDocs.
 # Navigation : voir docs/skills/site-navigation/SKILL.md
-# Look & feel : voir docs/skills/site-look-and-feel/SKILL.md
+# Look & feel : norme docs/skills/oxygen-ui-design-guidelines/SKILL.md, implémentation docs/skills/site-look-and-feel/SKILL.md
 # Ne pas lancer `zensical` directement : passer par les tâches mise (`mise tasks`).
 
 [project]
@@ -49,12 +49,13 @@ features = [
 
 [project.theme.font]
 text = "Inter"
-code = "JetBrains Mono"
+code = "Fira Code"   # typographie Oxygen UI (norme : docs/skills/oxygen-ui-design-guidelines)
 
 [project.theme.icon]
 logo = "material/infinity"
 
-# Thèmes Nord clair (default) / sombre (slate) : couleurs définies dans site/stylesheets/extra.css
+# Thèmes Nord clair (default) / sombre (slate) : rôles de couleur définis dans site/stylesheets/extra.css
+# (une section inversée porte data-md-color-scheme="slate" dans le Markdown)
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"

@@ -76,6 +76,6 @@ Conception et développement d'une automatisation **Network as Code**.
 
 Langues de travail : français et anglais.
 
-<div class="vt-cta" markdown>
+<div class="vt-cta" data-md-color-scheme="slate" markdown>
 **Un contexte similaire ?** [Parlons-en](contact.md){ .md-button .md-button--primary }
 </div>
