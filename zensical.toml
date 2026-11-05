@@ -22,6 +22,7 @@ not_in_nav = """
 """
 
 extra_css = ["stylesheets/extra.css"]
+extra_javascript = ["javascripts/expertises.js"]   # expertises : pas de saut de défilement au clic (le composant marche aussi sans)
 
 # Source de vérité unique de la navigation principale (6 onglets maximum, vérifié par `mise run check`)
 nav = [

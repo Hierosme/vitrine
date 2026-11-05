@@ -29,7 +29,7 @@ Automatisation Ansible et Python, Network as Code, livraison continue, agents de
 
 <a class="vt-exp-item" href="#exp-conformite-si"><span class="vt-exp-index" aria-hidden="true">01</span><span class="vt-exp-icon" aria-hidden="true" markdown="span">:material-shield-check-outline:</span><span class="vt-exp-text"><span class="vt-exp-title">Conformité du SI</span><span class="vt-exp-pitch">Une conformité qui tient dans la durée</span></span></a>
 
-<a class="vt-exp-item" href="#exp-infrastructure-as-code"><span class="vt-exp-index" aria-hidden="true">02</span><span class="vt-exp-icon" aria-hidden="true" markdown="span">:material-ansible:</span><span class="vt-exp-text"><span class="vt-exp-title">Infrastructure as Code</span><span class="vt-exp-pitch">Des déploiements reproductibles et relus</span></span></a>
+<a class="vt-exp-item" href="#exp-infrastructure-as-code"><span class="vt-exp-index" aria-hidden="true">02</span><span class="vt-exp-icon" aria-hidden="true" markdown="span">:material-ansible:</span><span class="vt-exp-text"><span class="vt-exp-title">Infrastructure as Code</span><span class="vt-exp-pitch">Des déploiements testés et reproductibles</span></span></a>
 
 <a class="vt-exp-item" href="#exp-python"><span class="vt-exp-index" aria-hidden="true">03</span><span class="vt-exp-icon" aria-hidden="true" markdown="span">:material-language-python:</span><span class="vt-exp-text"><span class="vt-exp-title">Développement Python</span><span class="vt-exp-pitch">Vos cas particuliers enfin automatisés</span></span></a>
 

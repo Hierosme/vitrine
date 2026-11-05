@@ -458,7 +458,7 @@
   font-weight: var(--vt-font-weight-medium);
 }
 
-/* Expertises : liste numérotée + panneau de détail, en CSS seul (sans JavaScript).
+/* Expertises : liste numérotée + panneau de détail, en CSS seul ; expertises.js évite le saut de défilement.
    <div class="vt-expertises" markdown> : <nav class="vt-exp-list"> (intitulés de groupe et entrées
    <a class="vt-exp-item" href="#ancre">) puis <div class="vt-exp-panels"> (un <section class="vt-exp-panel">
    par expertise, dont le titre porte l'ancre). Structure : skills site-look-and-feel et site-navigation.
@@ -717,18 +717,22 @@
   }
   .vt-exp-panel { display: none; }
   .vt-exp-panel + .vt-exp-panel { margin-top: 0; }
-  .vt-exp-panels:not(:has(:target)) > .vt-exp-panel:first-of-type,
-  .vt-exp-panel:has(:target) { display: block; }
+  /* Sans JavaScript : panneau cible de l'URL (:target), le premier par défaut.
+     Avec expertises.js (.vt-js) : panneau .is-current, choisi sans défilement. */
+  .vt-expertises:not(.vt-js) .vt-exp-panels:not(:has(:target)) > .vt-exp-panel:first-of-type,
+  .vt-expertises:not(.vt-js) .vt-exp-panel:has(:target),
+  .vt-expertises.vt-js .vt-exp-panel.is-current { display: block; }
   /* Entrée sélectionnée (8 expertises au plus) : liseré d'accent et surface de niveau 1 */
-  .vt-expertises:not(:has(.vt-exp-panel :target)) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(1) :target) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(2) :target) .vt-exp-list > p:nth-child(2 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(3) :target) .vt-exp-list > p:nth-child(3 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(4) :target) .vt-exp-list > p:nth-child(4 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(5) :target) .vt-exp-list > p:nth-child(5 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(6) :target) .vt-exp-list > p:nth-child(6 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(7) :target) .vt-exp-list > p:nth-child(7 of :has(> .vt-exp-item)) > .vt-exp-item,
-  .vt-expertises:has(.vt-exp-panel:nth-of-type(8) :target) .vt-exp-list > p:nth-child(8 of :has(> .vt-exp-item)) > .vt-exp-item {
+  .vt-expertises.vt-js .vt-exp-list a.vt-exp-item[aria-current],
+  .vt-expertises:not(.vt-js):not(:has(.vt-exp-panel :target)) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(1) :target) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(2) :target) .vt-exp-list > p:nth-child(2 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(3) :target) .vt-exp-list > p:nth-child(3 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(4) :target) .vt-exp-list > p:nth-child(4 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(5) :target) .vt-exp-list > p:nth-child(5 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(6) :target) .vt-exp-list > p:nth-child(6 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(7) :target) .vt-exp-list > p:nth-child(7 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:not(.vt-js):has(.vt-exp-panel:nth-of-type(8) :target) .vt-exp-list > p:nth-child(8 of :has(> .vt-exp-item)) > .vt-exp-item {
     border-color: var(--vt-accent);
     background-color: var(--vt-bg-paper);
   }
