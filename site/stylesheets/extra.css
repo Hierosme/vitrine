@@ -78,6 +78,7 @@
   --vt-type-button-size:    0.7rem;    --vt-type-button-line:    1.75;   /* 14px / 500 */
   --vt-type-caption-size:   0.55rem;   --vt-type-caption-line:   1.66;   /* 11px */
   --vt-type-tracking-none:  0;
+  --vt-type-overline-tracking: 0.08em;   /* surtitre en capitales (caption + uppercase) */
 
   /* 1.g Mouvement — retours d'état uniquement (courbe standard MUI), aucune animation décorative */
   --vt-easing-standard:    cubic-bezier(0.4, 0, 0.2, 1);
@@ -95,7 +96,8 @@
 
   /* 1.i Dimensions */
   --vt-size-button: 2rem;              /* 40px : hauteur d'un bouton */
-  --vt-size-target: 2.4rem;            /* 48px : cible tactile minimale */
+  --vt-size-target: 2.4rem;            /* 48px : cible tactile minimale, pastille d'icône */
+  --vt-size-icon:   1.2rem;            /* 24px : icône d'une pastille */
   --vt-measure: 60ch;                  /* texte courant : ≤ ~70 caractères par ligne */
 
   /* 1.j Points de rupture (MUI) — rappel, les variables CSS sont interdites dans @media :
@@ -286,12 +288,12 @@
 .md-typeset .vt-timeline > :is(p, ul, ol) { max-width: var(--vt-measure); }
 
 /* Liens soulignés : le sens n'est jamais porté par la seule couleur */
-.md-typeset a:not(.md-button):not(.headerlink) {
+.md-typeset a:not(.md-button):not(.headerlink):not(.vt-exp-item) {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
-.md-typeset a:not(.md-button):not(.headerlink):hover { text-decoration-thickness: 2px; }
+.md-typeset a:not(.md-button):not(.headerlink):not(.vt-exp-item):hover { text-decoration-thickness: 2px; }
 
 /* Focus clavier toujours visible : anneau de 2px, nord10 (clair) / nord8 (sombre) */
 :focus-visible,
@@ -456,6 +458,106 @@
   font-weight: var(--vt-font-weight-medium);
 }
 
+/* Expertises : liste numérotée + panneau de détail, en CSS seul (sans JavaScript).
+   <div class="vt-expertises" markdown> : <nav class="vt-exp-list"> (intitulés de groupe et entrées
+   <a class="vt-exp-item" href="#ancre">) puis <div class="vt-exp-panels"> (un <section class="vt-exp-panel">
+   par expertise, dont le titre porte l'ancre). Structure : skills site-look-and-feel et site-navigation.
+   Mobile d'abord : panneaux empilés, liste masquée. À partir de md : liste à gauche, un seul panneau à
+   droite, celui dont le titre est la cible de l'URL (:target), le premier par défaut.
+   Entrée = carte cliquable (outlined, niveau 0) ; panneau = surface de niveau 1 ; pastille d'icône =
+   fond seul (pas de cadre imbriqué). */
+.vt-expertises { margin: var(--vt-spacing-3) 0 var(--vt-spacing-4); }
+.vt-exp-list { display: none; }
+.md-typeset .vt-exp-list > p { margin: 0 0 var(--vt-spacing-1); }
+.md-typeset .vt-exp-list > .vt-group-label { margin: var(--vt-spacing-3) 0 var(--vt-spacing-1); }
+.md-typeset .vt-exp-list > .vt-group-label:first-child { margin-top: 0; }
+.md-typeset a.vt-exp-item {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vt-spacing-2);
+  padding: var(--vt-spacing-2);
+  border: var(--vt-border-width) solid var(--vt-divider);
+  border-radius: var(--vt-radius);
+  background-color: var(--vt-bg-default);
+  color: var(--vt-text-primary);
+  text-decoration: none;
+  transition: var(--vt-transition-state);
+}
+.md-typeset a.vt-exp-item:hover { background-color: var(--vt-action-hover); }
+.vt-exp-index {
+  color: var(--vt-text-secondary);
+  font-family: var(--md-code-font-family);
+  font-size: var(--vt-type-caption-size);
+  line-height: var(--vt-type-caption-line);
+}
+.vt-exp-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vt-size-target);
+  height: var(--vt-size-target);
+  border-radius: var(--vt-radius);
+  background-color: var(--vt-action-selected);
+  color: var(--vt-accent);
+}
+.md-typeset .vt-exp-icon .twemoji { height: var(--vt-size-icon); }
+.md-typeset .vt-exp-icon .twemoji svg { width: var(--vt-size-icon); max-height: none; }
+.vt-exp-text { display: flex; flex-direction: column; gap: var(--vt-spacing-0-5); min-width: 0; }
+.vt-exp-title {
+  font-size: var(--vt-type-h5-size);
+  line-height: var(--vt-type-h5-line);
+  font-weight: var(--vt-font-weight-medium);
+}
+.vt-exp-pitch {
+  color: var(--vt-text-secondary);
+  font-size: var(--vt-type-body2-size);
+  line-height: var(--vt-type-body2-line);
+}
+.vt-exp-panel {
+  padding: var(--vt-spacing-3);
+  border: var(--vt-border-width) solid var(--vt-divider);
+  border-radius: var(--vt-radius);
+  background-color: var(--vt-bg-paper);
+}
+.vt-exp-panel + .vt-exp-panel { margin-top: var(--vt-spacing-3); }
+.md-typeset .vt-exp-panel > p:first-child { margin: 0 0 var(--vt-spacing-2); }
+.md-typeset .vt-exp-panel :is(h2, h3) { margin-top: 0; }
+.md-typeset .vt-exp-lead {
+  color: var(--vt-text-primary);
+  font-weight: var(--vt-font-weight-semibold);
+}
+.md-typeset .vt-exp-label {          /* surtitre « La mission couvre » : caption en capitales + divider */
+  margin: var(--vt-spacing-3) 0 var(--vt-spacing-1);
+  padding-bottom: var(--vt-spacing-1);
+  border-bottom: var(--vt-border-width) solid var(--vt-divider);
+  color: var(--vt-text-secondary);
+  font-size: var(--vt-type-caption-size);
+  line-height: var(--vt-type-caption-line);
+  font-weight: var(--vt-font-weight-medium);
+  letter-spacing: var(--vt-type-overline-tracking);
+  text-transform: uppercase;
+}
+[dir] .md-typeset .vt-exp-checks ul {
+  display: grid;
+  gap: var(--vt-spacing-1) var(--vt-spacing-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[dir] .md-typeset .vt-exp-checks li {
+  position: relative;
+  margin: 0;
+  padding-left: var(--vt-spacing-3);
+}
+.md-typeset .vt-exp-checks li::before {   /* coche décorative : le libellé porte le sens */
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--vt-accent);
+  font-weight: var(--vt-font-weight-semibold);
+}
+
 /* Intitulé de groupe de cartes : paragraphe `Libellé` + `{ .vt-group-label }` juste avant une grille.
    Typographie h6 (14px / 500), texte secondaire. Pas un titre : ni table des matières, ni niveau. */
 .md-typeset .vt-group-label {
@@ -595,7 +697,40 @@
   }
 }
 
+/* md et plus (≥ 900px) : expertises en deux colonnes, un seul panneau visible */
+@media screen and (min-width: 56.25em) {
+  .vt-expertises {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: var(--vt-spacing-3);
+  }
+  .vt-exp-list { display: block; }
+  /* Le panneau reste visible sous l'en-tête (barre + onglets) pendant le parcours de la liste */
+  .vt-exp-panels {
+    position: sticky;
+    top: calc(var(--vt-spacing-8) + var(--vt-spacing-6));
+  }
+  .vt-exp-panel { display: none; }
+  .vt-exp-panel + .vt-exp-panel { margin-top: 0; }
+  .vt-exp-panels:not(:has(:target)) > .vt-exp-panel:first-of-type,
+  .vt-exp-panel:has(:target) { display: block; }
+  /* Entrée sélectionnée (8 expertises au plus) : liseré d'accent et surface de niveau 1 */
+  .vt-expertises:not(:has(.vt-exp-panel :target)) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(1) :target) .vt-exp-list > p:nth-child(1 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(2) :target) .vt-exp-list > p:nth-child(2 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(3) :target) .vt-exp-list > p:nth-child(3 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(4) :target) .vt-exp-list > p:nth-child(4 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(5) :target) .vt-exp-list > p:nth-child(5 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(6) :target) .vt-exp-list > p:nth-child(6 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(7) :target) .vt-exp-list > p:nth-child(7 of :has(> .vt-exp-item)) > .vt-exp-item,
+  .vt-expertises:has(.vt-exp-panel:nth-of-type(8) :target) .vt-exp-list > p:nth-child(8 of :has(> .vt-exp-item)) > .vt-exp-item {
+    border-color: var(--vt-accent);
+    background-color: var(--vt-bg-paper);
+  }
+}
+
 /* Mouvement réduit : aucune transition */
 @media (prefers-reduced-motion: reduce) {
-  .md-typeset .md-button { transition: none; }
+  .md-typeset :is(.md-button, a.vt-exp-item) { transition: none; }
 }

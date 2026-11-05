@@ -49,7 +49,7 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 4. Noms de fichiers : `kebab-case`, sans accent, extension `.md`. L'URL en découle : renommer casse des liens externes, donc à éviter après la mise en ligne.
 5. Liens internes **relatifs vers le `.md`** (`[Contact](contact.md)`), jamais vers l'URL publiée. Texte de lien explicite : jamais « cliquez ici ».
 6. **Pas de menu latéral sur les pages de premier niveau.** Les onglets suffisent, et le menu de gauche ne montrerait que la page courante. Toute page `site/*.md` porte `hide: [navigation]` dans son front-matter (vérifié par `check`, règle N7).
-7. **Table des matières (à droite)** : on la garde seulement si la page a au moins 3 sections H2 utiles (Services). Sinon on ajoute `toc` à `hide` (Accueil, Parcours, Contact). Sur Parcours, la table répétait chaque poste de la frise et prenait de la largeur à la frise.
+7. **Table des matières (à droite)** : on la garde seulement si la page a au moins 3 sections H2 utiles et aucun autre sommaire. Sinon on ajoute `toc` à `hide` (Accueil, Services, dont la liste des expertises sert de sommaire, Parcours, Contact). Sur Parcours, la table répétait chaque poste de la frise et prenait de la largeur à la frise.
 9. **Pas de liens « Précédent / Suivant »** en bas de page (`navigation.footer` désactivé) : c'est une convention de documentation, pas de vitrine, et le plugin blog y glissait ses pages d'archives.
 8. Le blog garde sa colonne de gauche, qui y sert : archives, catégories, métadonnées de l'article.
 
@@ -65,18 +65,20 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 
 ## Structure de la page Services
 
-1. H1 et une phrase d'introduction.
-2. **Sommaire en grilles de cartes, regroupées par famille.** Chaque grille est précédée d'un intitulé de groupe (`Libellé` puis `{ .vt-group-label }` sur la ligne suivante) et contient **2 à 6 cartes**. Familles actuelles : « Automatisation & infrastructure » (6 services) et « IA générative » (2 services). Une carte par service, avec un titre **lien vers l'ancre** de la section (`**[Titre](#ancre)**`) et une phrase ≤ 20 mots.
-3. **Une section par service**, dans l'ordre des cartes : `## Titre { #ancre }`. L'identifiant explicite est obligatoire, c'est lui qui désigne la section comme un service. Elle contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
+La page est construite sur le composant **Expertises** (voir le skill `site-look-and-feel`) : une liste numérotée à gauche, le détail de l'expertise choisie à droite, en CSS seul. Sous 900px, la liste disparaît et les panneaux s'empilent.
+
+1. H1 seul, sans paragraphe d'introduction : la liste des expertises suit directement.
+2. **Liste des expertises** (`<nav class="vt-exp-list">`) : une entrée `<a class="vt-exp-item" href="#ancre">` par service (numéro, pictogramme, titre, phrase ≤ 20 mots), **sans intitulé de famille**. **8 services exactement** : le marquage de l'entrée sélectionnée est écrit pour 8 rangs dans `extra.css`. Pour en ajouter un, en fusionner deux autres sous une nouvelle étiquette.
+3. **Un panneau par service** (`<section class="vt-exp-panel">`), dans l'ordre de la liste : pictogramme, `## Titre { #ancre }`. L'identifiant explicite est obligatoire : il désigne la section comme un service et sert de cible (`:target`) à la liste. Le panneau contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
+    - la phrase de gain, du point de vue du client, avec `{ .vt-exp-lead }` ;
     - un paragraphe de contexte (2 ou 3 phrases) rédigé comme une **mission type** : la situation du client (« Vos déploiements reposent sur… »), puis ce que fait la mission (« La mission automatise… »). **Aucune référence aux expériences** : ni employeur, ni client, ni année, ni « j'ai ». `content:services` le vérifie à partir des noms présents dans `site/parcours.md` ;
-    - 4 puces « **Action** + détail » ;
-    - une ligne « **Ce que vous y gagnez :** … » formulée du point de vue du client ;
+    - « La mission couvre » avec `{ .vt-exp-label }`, puis les 4 puces « **Action** + détail » dans `<div class="vt-exp-checks" markdown>` ;
     - un lien d'action vers Contact, propre au service : `[Discuter de … :material-arrow-right:](contact.md){ .vt-next }`. C'est un lien, pas un bouton : le seul bouton principal reste celui du `vt-cta`.
 4. `## Modalités` (tuiles `vt-tiles`, sans identifiant explicite) puis `vt-cta`.
 
-Un nouveau service rejoint une famille existante si elle a moins de 6 cartes ; sinon, créer une famille (au moins 2 services). Les familles ne sont pas des titres : elles ne s'affichent pas dans la table des matières, qui liste les services.
+La liste tient lieu de sommaire : la table des matières de droite est masquée (`toc` dans `hide`).
 
-La table des matières de droite est affichée, puisque la page a plus de 3 sections.
+L'accueil reprend le même composant sous « Domaines d'intervention », en version courte : panneaux en `### Titre { #exp-<ancre> }`, phrase de gain, contexte, puis `[Détail du service :material-arrow-right:](services.md#<ancre>){ .vt-next }`. Ajouter, retirer ou renommer un service se fait donc **sur les deux pages**, dans le même ordre.
 
 ## Ajouter un article de blog
 
