@@ -68,17 +68,17 @@ L'ordre suit le parcours d'un visiteur qui ne connaît pas encore le consultant 
 La page est construite sur le composant **Expertises** (voir le skill `site-look-and-feel`) : une liste numérotée à gauche, le détail de l'expertise choisie à droite, en CSS seul. Sous 900px, la liste disparaît et les panneaux s'empilent.
 
 1. H1 seul, sans paragraphe d'introduction : la liste des expertises suit directement.
-2. **Liste des expertises** (`<nav class="vt-exp-list">`) : une entrée `<a class="vt-exp-item" href="#ancre">` par service (numéro, pictogramme, titre, phrase ≤ 20 mots), **sans intitulé de famille**. **8 services exactement** : le marquage de l'entrée sélectionnée est écrit pour 8 rangs dans `extra.css`. Pour en ajouter un, en fusionner deux autres sous une nouvelle étiquette.
+2. **Liste des expertises** (`<nav class="vt-exp-list">`) : une entrée `<a class="vt-exp-item" href="#ancre">` par service (numéro, pictogramme, titre, **cartouche d'une ligne**, 45 caractères au plus, formulé en gain client : « Des livraisons fréquentes et sans stress »), **sans intitulé de famille**. **8 services exactement** : le marquage de l'entrée sélectionnée est écrit pour 8 rangs dans `extra.css`. Pour en ajouter un, en fusionner deux autres sous une nouvelle étiquette.
 3. **Un panneau par service** (`<section class="vt-exp-panel">`), dans l'ordre de la liste : pictogramme, `## Titre { #ancre }`. L'identifiant explicite est obligatoire : il désigne la section comme un service et sert de cible (`:target`) à la liste. Le panneau contient **au moins 500 caractères** de texte visible (règle N8, `mise run content:services`) :
     - la phrase de gain, du point de vue du client, avec `{ .vt-exp-lead }` ;
     - un paragraphe de contexte (2 ou 3 phrases) rédigé comme une **mission type** : la situation du client (« Vos déploiements reposent sur… »), puis ce que fait la mission (« La mission automatise… »). **Aucune référence aux expériences** : ni employeur, ni client, ni année, ni « j'ai ». `content:services` le vérifie à partir des noms présents dans `site/parcours.md` ;
-    - « La mission couvre » avec `{ .vt-exp-label }`, puis les 4 puces « **Action** + détail » dans `<div class="vt-exp-checks" markdown>` ;
+    - « Exemples de périmètre de mission » avec `{ .vt-exp-label }`, puis **6 puces** « **Action** + détail » dans `<div class="vt-exp-checks" markdown>` ;
     - un lien d'action vers Contact, propre au service : `[Discuter de … :material-arrow-right:](contact.md){ .vt-next }`. C'est un lien, pas un bouton : le seul bouton principal reste celui du `vt-cta`.
 4. `## Modalités` (tuiles `vt-tiles`, sans identifiant explicite) puis `vt-cta`.
 
 La liste tient lieu de sommaire : la table des matières de droite est masquée (`toc` dans `hide`).
 
-L'accueil reprend le même composant sous « Domaines d'intervention », en version courte : panneaux en `### Titre { #exp-<ancre> }`, phrase de gain, contexte, puis `[Détail du service :material-arrow-right:](services.md#<ancre>){ .vt-next }`. Ajouter, retirer ou renommer un service se fait donc **sur les deux pages**, dans le même ordre.
+L'accueil reprend le même composant sous « Domaines d'intervention », en version courte : panneaux en `### Titre { #exp-<ancre> }`, puis **deux paragraphes** : le résultat final pour le client, en gras (`{ .vt-exp-lead }`, la même phrase que sur Services), et sous l'intitulé « C'est le bon moment si… » (`{ .vt-exp-label }`) les situations qui doivent faire penser au service ; enfin `[Détail du service :material-arrow-right:](services.md#<ancre>){ .vt-next }`. Ajouter, retirer ou renommer un service se fait donc **sur les deux pages**, dans le même ordre (ordre du cycle de vie logiciel : exigences → code → livraison → exploitation → transmission).
 
 ## Ajouter un article de blog
 

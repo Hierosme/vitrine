@@ -513,6 +513,10 @@
   color: var(--vt-text-secondary);
   font-size: var(--vt-type-body2-size);
   line-height: var(--vt-type-body2-line);
+  /* Une ligne : gain client en 45 caractères au plus ; coupure de sécurité si la colonne rétrécit */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .vt-exp-panel {
   padding: var(--vt-spacing-3);
