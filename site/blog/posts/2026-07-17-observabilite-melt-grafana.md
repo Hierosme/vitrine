@@ -29,7 +29,7 @@ Métriques, événements, journaux et traces répondent chacun à une question d
 - **corréler** les signaux entre eux : d'une alerte à la trace, puis au journal ;
 - **choisir** quoi instrumenter en premier selon votre contexte.
 
-L'essentiel, pour qui ne lirait que ces lignes :
+Pour aller vite :
 
 1. Les métriques disent **que** quelque chose ne va pas, les traces **où**, les journaux **pourquoi** ; les événements disent **ce qui a changé**.
 2. La valeur vient de la corrélation : un même `trace_id` et un même `service.name` dans tous les signaux.
@@ -37,11 +37,9 @@ L'essentiel, pour qui ne lirait que ces lignes :
 
 ## Contexte
 
-Une alerte de SLO se déclenche : le budget d'erreur du service de paiement fond. L'équipe ouvre un tableau de bord de métriques, qui confirme la hausse des erreurs. Puis elle cherche dans les journaux, sans savoir quel service fautif interroger. Puis elle ouvre l'outil de traces, mais aucun identifiant ne relie une requête en erreur à ses journaux. Trois outils, trois requêtes à écrire, trois vocabulaires : le diagnostic prend une heure, quand la cause tenait en une ligne de journal.
+Une alerte de SLO se déclenche sur le service de paiement. L'équipe confirme la hausse des erreurs dans les métriques, cherche dans les journaux sans savoir quel service interroger, puis ouvre l'outil de traces, où rien ne relie une requête en erreur à ses journaux. Trois outils, trois requêtes, une heure de diagnostic, pour une cause qui tenait en une ligne de journal.
 
-Ce n'est pas un manque de données, c'est un manque de **liens** entre les données. L'acronyme MELT (*Metrics, Events, Logs, Traces*) nomme les quatre signaux qu'une observabilité complète collecte. Leur intérêt tient moins à chacun d'eux qu'à la possibilité de passer de l'un à l'autre sans perdre le fil.
-
-En 2026, OpenTelemetry fournit le format commun de collecte, et la stack open source de Grafana Labs offre un stockage par signal (Mimir, Loki, Tempo, Pyroscope pour les profils) avec une interface unique pour les corréler. C'est elle qui illustre cet article ; les concepts valent pour d'autres outils.
+Ce n'est pas un manque de données, c'est un manque de **liens**. MELT (*Metrics, Events, Logs, Traces*) nomme les quatre signaux d'une observabilité complète ; leur intérêt tient surtout à la possibilité de passer de l'un à l'autre. OpenTelemetry fournit le format commun de collecte, et la stack open source de Grafana Labs un stockage par signal avec une interface unique pour les corréler. C'est elle qui illustre cet article ; les concepts valent pour d'autres outils.
 
 ## Concepts clés
 
@@ -50,87 +48,33 @@ En 2026, OpenTelemetry fournit le format commun de collecte, et la stack open so
 
 ### Métriques
 
-**Définition.** Des valeurs numériques agrégées dans le temps : compteurs, jauges, histogrammes, identifiés par un nom et des étiquettes. Dans la stack Grafana, Prometheus ou Mimir les stockent, PromQL les interroge.
-
-**À ne pas confondre avec** un journal comptabilisé : une métrique est agrégée dès la source, elle ne garde pas le détail de chaque requête.
-
-**Exemple.** Le taux d'erreurs du service de paiement sur cinq minutes, base du SLI de l'article sur les objectifs de service.
-
-**En pratique.** C'est le signal le moins coûteux et le plus rapide à interroger : il porte les SLO, les alertes et les tableaux de bord.
+Des valeurs agrégées dans le temps (compteurs, jauges, histogrammes), identifiées par un nom et des étiquettes ; Prometheus ou Mimir les stockent, PromQL les interroge. Agrégées dès la source, elles ne gardent pas le détail de chaque requête, et n'en ont pas besoin pour donner l'alerte. Signal le moins coûteux et le plus rapide, elles portent les SLO, les alertes et les tableaux de bord.
 
 ### Événements
 
-**Définition.** Des faits ponctuels qui modifient le système : un déploiement, un changement de configuration, une bascule, le début d'un incident.
-
-**À ne pas confondre avec** un journal applicatif : un événement est rare et décrit un changement ; un journal est fréquent et décrit un fonctionnement.
-
-**Exemple.** Dans Grafana, un déploiement devient une annotation : un trait vertical sur tous les graphiques, à l'heure exacte du changement. Les annotations s'alimentent par l'API HTTP de Grafana ou par une requête sur une source de données, par exemple Loki.
-
-**En pratique.** Une courbe qui se dégrade juste après un trait de déploiement oriente le diagnostic plus vite que n'importe quelle requête.
+Un fait ponctuel qui modifie le système : déploiement, changement de configuration, bascule, début d'incident. Rare, il décrit un changement, là où le journal décrit un fonctionnement. Dans Grafana, il devient une annotation, un trait vertical sur tous les graphiques, alimentée par l'API HTTP ou une requête sur Loki. Une courbe qui plonge juste après ce trait oriente le diagnostic plus vite que n'importe quelle requête.
 
 ### Journaux
 
-**Définition.** Des enregistrements horodatés émis par les applications et les systèmes, de préférence structurés. Loki les stocke en n'indexant que quelques étiquettes ; LogQL les interroge.
-
-**À ne pas confondre avec** une base de recherche plein texte : Loki sélectionne d'abord les flux par étiquettes, puis filtre leur contenu.
-
-**Exemple.** Reçu en OTLP, l'attribut de ressource `service.name` devient l'étiquette `service_name` ; les autres attributs, dont l'identifiant de trace, deviennent des **métadonnées structurées**, filtrables sans être indexées.
-
-**En pratique.** Gardez peu d'étiquettes, à faible nombre de valeurs ; tout le reste va en métadonnées structurées ou dans le message.
+Des enregistrements horodatés, de préférence structurés. Loki n'indexe que quelques étiquettes : LogQL sélectionne des flux, puis filtre leur contenu, ce qui n'a rien d'une recherche plein texte. Reçu en OTLP, `service.name` devient l'étiquette `service_name`, et les autres attributs, dont l'identifiant de trace, des métadonnées structurées filtrables sans être indexées. Peu d'étiquettes, donc, et le reste en métadonnées.
 
 ### Traces
 
-**Définition.** Le chemin d'une requête à travers les services, découpé en *spans* (une opération, sa durée, son statut, ses attributs) reliés par un `trace_id`. Tempo les stocke, TraceQL les interroge.
-
-**À ne pas confondre avec** un journal qui porterait un identifiant de requête : la trace donne la structure (qui appelle qui, combien de temps chacun).
-
-**Exemple.** Une requête de paiement lente se décompose en un appel au service de stock, rapide, et une requête en base, qui porte toute la latence.
-
-**En pratique.** Le générateur de métriques de Tempo calcule à partir des traces des métriques RED (taux, erreurs, durée) et une carte des dépendances entre services, sans instrumentation supplémentaire.
+Une trace suit une requête à travers les services, découpée en *spans* (opération, durée, statut, attributs) reliés par un `trace_id` ; Tempo les stocke, TraceQL les interroge. Elle donne la structure, qui appelle qui et combien de temps, là où un journal ne donne que des événements isolés. Le générateur de métriques de Tempo en tire des métriques RED (taux, erreurs, durée) et une carte des dépendances, sans instrumentation supplémentaire.
 
 ### Corrélation
 
-**Définition.** La capacité de passer d'un signal à un autre pour la même requête, le même service ou le même instant.
-
-**À ne pas confondre avec** l'affichage côte à côte : trois graphiques sur un même tableau de bord ne sont pas corrélés s'ils ne partagent aucun identifiant.
-
-**Exemple.** Un point d'un graphique PromQL porte un *exemplar*, l'identifiant d'une trace représentative : un clic ouvre la trace dans Tempo, puis un autre ouvre les journaux du même `trace_id` dans Loki.
-
-**En pratique.** La corrélation repose sur trois conventions : le même `service.name` partout, le `trace_id` dans les journaux, les exemplars activés côté métriques.
+Passer d'un signal à l'autre pour la même requête, le même service ou le même instant. Trois graphiques côte à côte sans identifiant commun ne sont pas corrélés. Un point d'un graphique PromQL porte un *exemplar*, l'identifiant d'une trace : un clic ouvre la trace dans Tempo, un autre ses journaux dans Loki. Trois conventions suffisent : le même `service.name`, le `trace_id` dans les journaux, les exemplars activés.
 
 ### Collecteur unique
 
-**Définition.** Un seul agent par machine ou par nœud, qui reçoit tous les signaux en OTLP, les enrichit (attributs Kubernetes, environnement), les échantillonne et les route vers chaque stockage. Dans la stack Grafana, c'est Alloy, une distribution du collecteur OpenTelemetry qui sait aussi exécuter des pipelines Prometheus. Le projet OpenTelemetry publie son propre collecteur, l'[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), neutre vis-à-vis des éditeurs : comme Mimir, Loki et Tempo acceptent l'OTLP, il peut remplacer Alloy sans changer les stockages.
-
-**À ne pas confondre avec** l'instrumentation : le SDK OpenTelemetry, dans l'application, produit les signaux ; le collecteur les transporte.
-
-**Exemple.** Beyla, l'instrumentation par eBPF de Grafana Labs, produit métriques et traces pour des services qu'on ne peut pas modifier, et les confie au même collecteur.
-
-**En pratique.** Les règles d'enrichissement et d'échantillonnage vivent en un seul endroit, versionné comme le reste de l'infrastructure.
+Un seul agent par nœud reçoit tous les signaux en OTLP, les enrichit, les échantillonne et les route. Côté Grafana, c'est Alloy, une distribution du collecteur OpenTelemetry qui exécute aussi des pipelines Prometheus. L'[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), neutre vis-à-vis des éditeurs, peut le remplacer sans toucher aux stockages, qui acceptent l'OTLP. Le collecteur transporte ; l'instrumentation (SDK OpenTelemetry, ou Beyla par eBPF pour les services qu'on ne peut pas modifier) produit les signaux.
 
 ### Cardinalité
 
-**Définition.** Le nombre de combinaisons distinctes d'étiquettes. Chaque combinaison est une série temporelle dans Mimir, un flux dans Loki.
-
-**À ne pas confondre avec** le volume de données : dix étiquettes à deux valeurs coûtent moins qu'une seule étiquette à un million de valeurs.
-
-**Exemple.** Un identifiant d'utilisateur en étiquette de métrique crée une série par utilisateur.
-
-**En pratique.** Les valeurs à forte cardinalité (identifiant d'utilisateur, de requête, de commande) vont dans les traces, les métadonnées structurées ou le corps des journaux, jamais en étiquettes.
+Le nombre de combinaisons distinctes d'étiquettes, chacune devenant une série dans Mimir ou un flux dans Loki. Ce n'est pas le volume : dix étiquettes à deux valeurs coûtent moins qu'une seule à un million de valeurs. Un identifiant d'utilisateur en étiquette crée une série par utilisateur. Identifiants de requête, d'utilisateur ou de commande vont dans les traces ou les métadonnées, jamais en étiquettes.
 
 ## Référence rapide
-
-### Concepts
-
-| Concept | Définition courte | Ce que ça change en pratique | À ne pas confondre avec |
-|---|---|---|---|
-| Métriques | Valeurs agrégées dans le temps | Portent SLO, alertes et tableaux de bord | Des journaux comptés |
-| Événements | Faits ponctuels qui changent le système | Relient une dégradation à sa cause probable | Les journaux applicatifs |
-| Journaux | Enregistrements horodatés, structurés | Expliquent le pourquoi d'une erreur | Une recherche plein texte |
-| Traces | Chemin d'une requête en *spans* | Localisent où le temps et les erreurs se produisent | Un journal avec identifiant |
-| Corrélation | Passer d'un signal à l'autre | Diagnostic en minutes, pas en heures | L'affichage côte à côte |
-| Collecteur unique | Un agent pour tous les signaux | Règles d'enrichissement centralisées | L'instrumentation |
-| Cardinalité | Combinaisons distinctes d'étiquettes | Coût et performance des stockages | Le volume de données |
 
 ### Un signal, un composant
 
@@ -207,10 +151,7 @@ otelcol.exporter.otlphttp "tempo" {
 }
 ```
 
-1. `otelcol.receiver.otlp` ouvre un serveur gRPC et un serveur HTTP, sur leurs ports par défaut.
-2. `otelcol.exporter.prometheus` convertit les métriques OpenTelemetry pour `prometheus.remote_write`, qui pousse vers `/api/v1/push` de Mimir.
-3. L'exportateur `otlphttp` ajoute `/v1/logs` au point d'entrée `/otlp` de Loki.
-4. En production, ajoutez le chiffrement TLS et l'authentification de chaque stockage.
+`otelcol.exporter.prometheus` convertit les métriques pour `prometheus.remote_write`, qui pousse vers `/api/v1/push` de Mimir ; l'exportateur `otlphttp` ajoute `/v1/logs` au point d'entrée `/otlp` de Loki. En production, ajoutez TLS et l'authentification de chaque stockage.
 
 ### Alloy ou OpenTelemetry Collector
 
@@ -252,46 +193,26 @@ Les métriques HTTP prises en exemple viennent de votre instrumentation : adapte
 
 ### Les séries de métriques explosent
 
-**Symptôme.** La mémoire de Prometheus ou la facture de Mimir grimpe sans hausse du trafic.
-
-**Cause.** Une étiquette à forte cardinalité : identifiant d'utilisateur, de requête, chemin d'URL avec identifiants.
-
-**Correction.** Retirez l'étiquette, normalisez les chemins (`/orders/{id}`) et portez le détail dans les traces.
+**Symptôme.** La mémoire de Prometheus ou la facture de Mimir grimpe sans hausse du trafic. **Cause.** Une étiquette à forte cardinalité (identifiant d'utilisateur, chemin d'URL avec identifiants). **Correction.** Retirez-la, normalisez les chemins (`/orders/{id}`) et portez le détail dans les traces.
 
 ### Loki refuse des journaux
 
-**Symptôme.** Des erreurs de limite de flux actifs côté Loki, ou des requêtes lentes sur peu de données.
-
-**Cause.** Trop d'étiquettes, ou des étiquettes à trop de valeurs : chaque combinaison est un flux.
-
-**Correction.** Ne gardez en étiquettes que le service, l'environnement et quelques dimensions stables ; le reste va en métadonnées structurées.
+**Symptôme.** Des erreurs de limite de flux actifs, ou des requêtes lentes sur peu de données. **Cause.** Trop d'étiquettes, ou à trop de valeurs. **Correction.** Gardez en étiquettes le service, l'environnement et quelques dimensions stables ; le reste en métadonnées structurées.
 
 ### Impossible de passer d'un journal à sa trace
 
-**Symptôme.** Les journaux d'une requête en erreur ne proposent aucun lien vers Tempo.
-
-**Cause.** Les journaux ne portent pas le `trace_id`, ou la source Loki n'a pas de champ dérivé configuré.
-
-**Correction.** Émettez les journaux par le SDK OpenTelemetry, qui ajoute le contexte de trace, puis configurez le champ dérivé vers Tempo.
+**Symptôme.** Aucun lien vers Tempo depuis les journaux d'une requête en erreur. **Cause.** Pas de `trace_id` dans les journaux, ou pas de champ dérivé dans la source Loki. **Correction.** Émettez les journaux par le SDK OpenTelemetry, qui ajoute le contexte de trace, puis configurez le champ dérivé.
 
 ### Une requête TraceQL ne renvoie rien
 
-**Symptôme.** `{ span.http.response.status_code >= 500 }` ne trouve aucune trace, alors que des erreurs existent.
-
-**Cause.** Le nom de l'attribut dépend de la version des conventions sémantiques suivie par l'instrumentation : `http.status_code` dans les anciennes, `http.response.status_code` dans les récentes.
-
-**Correction.** Vérifiez dans une trace réelle le nom exact de l'attribut, ou filtrez sur le statut du span (`status = error`), indépendant des conventions.
+**Symptôme.** `{ span.http.response.status_code >= 500 }` ne trouve rien, alors que des erreurs existent. **Cause.** Le nom de l'attribut dépend des conventions sémantiques suivies : `http.status_code` dans les anciennes, `http.response.status_code` dans les récentes. **Correction.** Vérifiez le nom dans une trace réelle, ou filtrez sur `status = error`.
 
 ### Les traces d'erreurs manquent
 
-**Symptôme.** L'échantillonnage garde 1 % des traces, et les requêtes en erreur sont rarement parmi elles.
-
-**Cause.** Un échantillonnage décidé en tête de requête, avant de savoir si elle échouera.
-
-**Correction.** Échantillonnez en fin de trace dans le collecteur (`otelcol.processor.tail_sampling` dans Alloy), en gardant toutes les traces en erreur ou lentes.
+**Symptôme.** Avec 1 % des traces conservées, les requêtes en erreur y figurent rarement. **Cause.** L'échantillonnage est décidé en tête de requête. **Correction.** Échantillonnez en fin de trace dans le collecteur (`otelcol.processor.tail_sampling` dans Alloy), en gardant erreurs et lenteurs.
 
 !!! warning "Attention"
-    L'échantillonnage en fin de trace demande que tous les spans d'une même trace arrivent au même collecteur. Avec plusieurs instances d'Alloy, il faut répartir les spans par `trace_id` avant l'échantillonnage.
+    L'échantillonnage en fin de trace exige que tous les spans d'une trace arrivent au même collecteur. Avec plusieurs instances d'Alloy, répartissez les spans par `trace_id` avant.
 
 ## Aide-mémoire
 
@@ -300,21 +221,19 @@ Les métriques HTTP prises en exemple viennent de votre instrumentation : adapte
 - **Journaux** : pourquoi ? Loki, LogQL, peu d'étiquettes.
 - **Traces** : où ? Tempo, TraceQL.
 - **Profils** : quelle fonction ? Pyroscope, hors MELT.
-- **Collecte** : un seul collecteur en OTLP pour tous les signaux, Alloy ou OpenTelemetry Collector.
+- **Collecte** : un seul collecteur en OTLP, Alloy ou OpenTelemetry Collector.
 - **Corrélation** : même `service.name`, `trace_id` dans les journaux, exemplars activés.
 - **Cardinalité** : identifiants en traces ou métadonnées, jamais en étiquettes.
-- **Échantillonnage** : en fin de trace, en gardant erreurs et lenteurs.
-- **Ordre d'instrumentation** : métriques des SLO, traces, `trace_id` dans les journaux, événements de déploiement.
+- **Échantillonnage** : en fin de trace, erreurs et lenteurs gardées.
 
 ## Pour aller plus loin
 
-- [Objectifs de service : les définir, les mesurer, s'en servir](2026-07-10-objectifs-de-service.md), sur ce blog : les SLO que l'observabilité sert à mesurer.
-- [SRE en 2026 : la pile de compétences à maîtriser](2026-07-03-competences-sre-2026.md), sur ce blog : l'observabilité parmi les sept familles de compétences.
-- [Signaux OpenTelemetry](https://opentelemetry.io/docs/concepts/signals/) : métriques, journaux, traces et le statut de chaque signal.
-- [Grafana Alloy](https://grafana.com/docs/alloy/latest/) : composants `otelcol.*` et `prometheus.*`.
-- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) : [configuration](https://opentelemetry.io/docs/collector/configuration/) et [distributions](https://opentelemetry.io/docs/collector/distributions/).
-- [Envoyer des journaux à Loki en OpenTelemetry](https://grafana.com/docs/loki/latest/send-data/otel/) et [métadonnées structurées](https://grafana.com/docs/loki/latest/get-started/labels/structured-metadata/).
-- [Construire des requêtes TraceQL](https://grafana.com/docs/tempo/latest/traceql/construct-traceql-queries/) et [métriques issues des traces](https://grafana.com/docs/tempo/latest/metrics-from-traces/).
-- [Relier les traces aux autres signaux](https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/) et [exemplars](https://grafana.com/docs/grafana/latest/fundamentals/exemplars/), documentation Grafana.
+- [Objectifs de service](2026-07-10-objectifs-de-service.md) et [SRE en 2026](2026-07-03-competences-sre-2026.md), sur ce blog.
+- [Signaux OpenTelemetry](https://opentelemetry.io/docs/concepts/signals/) et [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) ([configuration](https://opentelemetry.io/docs/collector/configuration/), [distributions](https://opentelemetry.io/docs/collector/distributions/)).
+- [Grafana Alloy](https://grafana.com/docs/alloy/latest/).
+- [Loki et OpenTelemetry](https://grafana.com/docs/loki/latest/send-data/otel/), [métadonnées structurées](https://grafana.com/docs/loki/latest/get-started/labels/structured-metadata/).
+- [Requêtes TraceQL](https://grafana.com/docs/tempo/latest/traceql/construct-traceql-queries/) et [métriques issues des traces](https://grafana.com/docs/tempo/latest/metrics-from-traces/).
+- [Relier les traces aux autres signaux](https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/) et [exemplars](https://grafana.com/docs/grafana/latest/fundamentals/exemplars/).
 
 Vos diagnostics passent par trois outils et une heure de recherche ? [Construisons une observabilité qui relie vos signaux](../../contact.md).
+
