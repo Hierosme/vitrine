@@ -14,12 +14,12 @@ versions_testees: ["promtool 2.45 (Prometheus)"]
 derniere_verification: 2026-11-06
 ---
 
+Thème : :material-speedometer: [SRE : fiabilité & performance](../../services.md#sre)
+{ .vt-post-service }
+
 # Objectifs de service : les définir, les mesurer, s'en servir
 
 Un objectif de service transforme « le service est-il fiable ? » en une question à laquelle on répond par un chiffre et une décision. Cet article définit SLI, SLO et budget d'erreur, montre comment les mesurer avec Prometheus et les relie aux métriques DORA.
-
-Catégorie : [SRE : fiabilité & performance](../../services.md#sre)
-{ .vt-post-service }
 
 <!-- more -->
 

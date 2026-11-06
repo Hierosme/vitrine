@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-#MISE description="Vérifie que chaque article de blog est rattaché à un seul service (catégorie), renvoie vers son détail, et n'affiche pas de bloc de métadonnées dans « En bref »"
+#MISE description="Vérifie que chaque article de blog est rattaché à un seul service (catégorie), affiche son thème (pictogramme et lien vers le détail du service) au-dessus du titre, et n'affiche pas de bloc de métadonnées dans « En bref »"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
 python3 - <<'PY'
 import glob, re, sys
-services = dict(re.findall(r"^## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read(), re.M))
+svc = {t: (a, i) for i, t, a in re.findall(r":material-([\w-]+):</span>\n\n## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read())}
+services = {t: a for t, (a, i) in svc.items()}
 bad, n = [], 0
 for f in sorted(glob.glob("site/blog/posts/*.md")):
     n += 1
@@ -24,10 +25,11 @@ for f in sorted(glob.glob("site/blog/posts/*.md")):
         bad.append(f"{f} : « En bref » contient un bloc de métadonnées (Type, Niveau, Public, Prérequis…) : interdit")
     for h in re.findall(r"^## (Cas analysé|Démonstration commentée|Exercices|Mises en situation|Auto-évaluation)\s*$", text, re.M):
         bad.append(f"{f} : section « {h} » interdite (ni cas, ni exercices, ni auto-évaluation)")
-    link = f"](../../services.md#{services[cats[0]]})"
-    m = re.search(r"^Catégorie : \[[^\]]+\]\(\.\./\.\./services\.md#[\w-]+\)\n\{ \.vt-post-service \}$", text, re.M)
-    if not m or link not in m.group(0):
-        bad.append(f"{f} : ligne « Catégorie : [{cats[0]}]{link[1:]} » + {{ .vt-post-service }} absente ou incorrecte")
+    anchor, icon = svc[cats[0]]
+    want = f"Thème : :material-{icon}: [{cats[0]}](../../services.md#{anchor})\n{{ .vt-post-service }}\n\n# "
+    body = text[fm.end():].lstrip("\n")
+    if not body.startswith(want):
+        bad.append(f"{f} : l'article doit commencer, juste au-dessus du titre, par « Thème : :material-{icon}: [{cats[0]}](../../services.md#{anchor}) » + {{ .vt-post-service }}")
 for b in bad:
     print(f"  ✘ {b}")
 if not bad:

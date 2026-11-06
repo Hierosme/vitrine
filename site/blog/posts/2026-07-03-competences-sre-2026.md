@@ -13,12 +13,12 @@ niveau: confirmé
 derniere_verification: 2026-07-03
 ---
 
+Thème : :material-speedometer: [SRE : fiabilité & performance](../../services.md#sre)
+{ .vt-post-service }
+
 # SRE en 2026 : la pile de compétences à maîtriser
 
 Sept familles de compétences font un Site Reliability Engineer, et aucune ne se résume à un outil. Cet article les définit, les distingue des notions voisines et vous aide à choisir celles à travailler en premier.
-
-Catégorie : [SRE : fiabilité & performance](../../services.md#sre)
-{ .vt-post-service }
 
 <!-- more -->
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Crée un brouillon d'article de blog daté"
 #USAGE arg "<title>" help="Titre de l'article (entre guillemets)"
-#USAGE flag "-c --category <category>" required=#true help="Catégorie = service associé (titre exact d'un service, voir plugins.blog.categories_allowed de zensical.toml)"
+#USAGE flag "-c --category <category>" required=#true help="Thème = catégorie = service associé (titre exact d'un service, voir plugins.blog.categories_allowed de zensical.toml)"
 #USAGE flag "--publish" help="Crée l'article publié directement (sans draft: true)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
@@ -27,12 +27,13 @@ if ! grep -qxF "$category" <<<"$allowed"; then
 fi
 
 # Ancre du service sur la page Services (« ## Titre { #ancre } »)
-anchor="$(python3 -c '
+# Ancre et pictogramme du service sur la page Services (« :material-x:</span> » puis « ## Titre { #ancre } »)
+read -r anchor icon <<<"$(python3 -c '
 import re, sys
-for t, a in re.findall(r"^## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read(), re.M):
-    if t == sys.argv[1]: print(a)
+for i, t, a in re.findall(r":material-([\w-]+):</span>\n\n## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read()):
+    if t == sys.argv[1]: print(a, i)
 ' "$category")"
-[[ -n "$anchor" ]] || { echo "✘ Aucun service « $category » dans site/services.md" >&2; exit 1; }
+[[ -n "${anchor:-}" ]] || { echo "✘ Aucun service « $category » dans site/services.md" >&2; exit 1; }
 
 file="site/blog/posts/${date}-${slug}.md"
 [[ -e "$file" ]] && { echo "✘ Existe déjà : $file" >&2; exit 1; }
@@ -49,12 +50,12 @@ file="site/blog/posts/${date}-${slug}.md"
   [[ "${usage_publish:-false}" == "true" ]] || echo "draft: true"
   echo "---"
   echo
+  echo "Thème : :material-${icon}: [${category}](../../services.md#${anchor})"
+  echo "{ .vt-post-service }"
+  echo
   echo "# ${title}"
   echo
   echo "Accroche de l'article (affichée dans la liste du blog)."
-  echo
-  echo "Catégorie : [${category}](../../services.md#${anchor})"
-  echo "{ .vt-post-service }"
   echo
   echo "<!-- more -->"
   echo

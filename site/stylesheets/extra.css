@@ -616,6 +616,15 @@
   line-height: var(--vt-type-body2-line);
 }
 .md-typeset :is(.vt-mission-meta, .vt-post-service) .twemoji { color: var(--vt-accent); }
+/* Thème d'un article (blog) : au-dessus du titre, en petit, avec le pictogramme du service */
+.md-typeset .vt-post-service {
+  margin: 0 0 var(--vt-spacing-0-5);
+  font-size: var(--vt-type-caption-size);
+  line-height: var(--vt-type-caption-line);
+}
+.md-typeset .vt-post-service + :is(h1, h2) { margin-top: 0; }
+/* Liste du blog : le thème est affiché au-dessus du titre, inutile de le répéter dans les métadonnées */
+.md-post--excerpt .md-meta__item:has(> .md-meta__link[href*="category/"]) { display: none; }
 
 /* Frise chronologique : <div class="vt-timeline" markdown> autour des H3 d'expérience */
 .vt-timeline {

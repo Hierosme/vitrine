@@ -130,7 +130,7 @@ post_url_format = "{slug}"   # URL courtes et pérennes : /blog/<slug>/
 post_readtime = true
 authors = false              # pas d'auteur ni d'avatar affichés : le site présente un service, pas une personne
 archive_name = "Archives"
-categories_name = "Catégories"
+categories_name = "Thèmes"
 # Une catégorie = un service (titre exact de site/services.md), dans l'ordre de la page Services
 categories_allowed = [
   "Conformité du SI",
