@@ -14,11 +14,12 @@ site_url = "https://galaxie.eu.org/"
 docs_dir = "site"    # sources du site
 site_dir = "build"   # sortie du build (≠ « site », déjà pris par les sources)
 
-copyright = "&copy; Jérôme Ornech — Expert DevOps freelance · <a href=\"/mentions-legales/\">Mentions légales</a>"
+copyright = "&copy; Jérôme Ornech — Expert DevOps freelance · <a href=\"/mentions-legales/\">Mentions légales</a> · <a href=\"/charte-ia/\">Charte IA</a>"
 
 # Pages publiées hors du menu (chaîne multiligne, un chemin par ligne)
 not_in_nav = """
 /mentions-legales.md
+/charte-ia.md
 """
 
 extra_css = ["stylesheets/extra.css"]
