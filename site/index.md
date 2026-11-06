@@ -61,7 +61,7 @@ C'est le bon moment si…
 
 Un audit approche, un client ou un partenaire exige un niveau de sécurité démontré, ou une réglementation comme NIS 2 s'applique désormais à votre activité, sans que personne en interne ait le temps d'en faire un projet.
 
-[Détail du service :material-arrow-right:](services.md#conformite-si){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#conformite-si){ .vt-next }
 
 </section>
 
@@ -79,7 +79,7 @@ C'est le bon moment si…
 
 Vos ressources se créent à la main dans une console, vos déploiements dépendent de procédures manuelles ou d'une seule personne, votre base Ansible est devenue un monolithe que plus personne n'ose toucher, ou votre réseau se configure encore équipement par équipement.
 
-[Détail du service :material-arrow-right:](services.md#infrastructure-as-code){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#infrastructure-as-code){ .vt-next }
 
 </section>
 
@@ -97,7 +97,7 @@ C'est le bon moment si…
 
 Un module manque pour piloter une API interne ou un équipement particulier, et votre automatisation s'arrête là où commencent les spécificités de votre système d'information.
 
-[Détail du service :material-arrow-right:](services.md#python){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#python){ .vt-next }
 
 </section>
 
@@ -115,7 +115,7 @@ C'est le bon moment si…
 
 Vos équipes utilisent déjà des assistants IA sans cadre commun, hésitent à confier leur code à un fournisseur externe, ou la facture de tokens et de GPU grimpe sans que personne sache dire ce qu'elle rapporte.
 
-[Détail du service :material-arrow-right:](services.md#ia-generative){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#ia-generative){ .vt-next }
 
 </section>
 
@@ -133,7 +133,7 @@ C'est le bon moment si…
 
 Chaque mise en production mobilise l'équipe pendant des heures, vos environnements divergent les uns des autres, et les livraisons s'espacent par peur de casser quelque chose.
 
-[Détail du service :material-arrow-right:](services.md#continuous-delivery){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#continuous-delivery){ .vt-next }
 
 </section>
 
@@ -151,7 +151,7 @@ C'est le bon moment si…
 
 Des environnements entiers sont à provisionner, votre datacenter s'administre encore machine par machine, ou une plateforme critique doit absorber une montée en charge.
 
-[Détail du service :material-arrow-right:](services.md#infrastructures){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#infrastructures){ .vt-next }
 
 </section>
 
@@ -169,7 +169,7 @@ C'est le bon moment si…
 
 Les mêmes incidents reviennent, des lenteurs restent inexpliquées, et vos équipes d'exploitation passent plus de temps à éteindre des incendies qu'à améliorer le service.
 
-[Détail du service :material-arrow-right:](services.md#sre){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#sre){ .vt-next }
 
 </section>
 
@@ -187,7 +187,7 @@ C'est le bon moment si…
 
 Le savoir repose sur une ou deux personnes, les nouveaux arrivants mettent des semaines à être opérationnels, ou la documentation ne reflète plus l'architecture réelle.
 
-[Détail du service :material-arrow-right:](services.md#formation){ .vt-next }
+[En savoir plus :material-arrow-right:](services.md#formation){ .vt-next }
 
 </section>
 

@@ -116,6 +116,12 @@ if [[ -n "$bad" ]]; then printf "%b" "$bad"; fail=1; else echo "  ✔ OK"; fi
 echo "• Contenu : chaque service fait au moins 500 caractères et se formule en mission type (N8)"
 "$(dirname "$0")/content/services" || fail=1
 
+echo "• Contenu : comptes-rendus de mission sans date ni nom de client, liés à un service"
+"$(dirname "$0")/content/realisations" || fail=1
+
+echo "• Contenu : chaque article de blog est rattaché à un service, avec un lien vers son détail"
+"$(dirname "$0")/content/blog-services" || fail=1
+
 echo "• Contenu : aucun TODO dans les sources publiées (commentaires compris)"
 "$(dirname "$0")/content/todo-visible" || fail=1
 
@@ -133,8 +139,5 @@ build_step() {
 
 echo "• Build strict du site (Zensical) + robots.txt"
 build_step "$(dirname "$0")/site/build"
-
-echo "• Build strict de la doc projet (Zensical)"
-build_step "$(dirname "$0")/docs/build"
 
 exit "$fail"

@@ -1,6 +1,5 @@
 .venv/
 build/
-build-docs/
 .cache/
 __pycache__/
 .DS_Store
@@ -8,5 +7,6 @@ __pycache__/
 _to_delete/
 Claude outputs/
 .*.offline.toml
+.playwright-mcp
 # Notes privées (dépôt annexe)
-private/
+vitrine-back/

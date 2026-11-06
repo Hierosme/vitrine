@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#MISE description="Build strict de la documentation projet dans build-docs/"
-#MISE depends=["install"]
-set -euo pipefail
-cd "${MISE_PROJECT_ROOT:-.}"
-
-zensical build -f zensical.docs.toml --strict
-echo "✔ Doc projet générée dans build-docs/"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Aperçu simultané du site (:8000) et de la doc projet (:8001)"
+#MISE description="Aperçu du site (:8000) ; la doc projet se prévisualise dans vitrine-back (mise run docs:serve)"
 #MISE depends=["install"]
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
@@ -9,9 +9,7 @@ trap 'kill $(jobs -p) 2>/dev/null || true' EXIT INT TERM
 
 cfg="$(zensical_config zensical.toml)"
 zensical serve -f "$cfg"               -a 127.0.0.1:8000 2>&1 | sed -u 's/^/[site] /' &
-zensical serve -f zensical.docs.toml -a 127.0.0.1:8001 2>&1 | sed -u 's/^/[docs] /' &
 
 echo "▶ Site       : http://127.0.0.1:8000"
-echo "▶ Doc projet : http://127.0.0.1:8001"
 echo "  (Ctrl-C pour arrêter)"
 wait

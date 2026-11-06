@@ -3,5 +3,5 @@
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
-rm -rf build build-docs .cache .zensical.offline.toml
+rm -rf build .cache .zensical.offline.toml
 echo "✔ Nettoyé"

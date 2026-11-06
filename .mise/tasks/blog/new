@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 #MISE description="Crée un brouillon d'article de blog daté"
 #USAGE arg "<title>" help="Titre de l'article (entre guillemets)"
-#USAGE flag "-c --category <category>" help="Catégorie (doit figurer dans plugins.blog.categories_allowed de zensical.toml)"
+#USAGE flag "-c --category <category>" required=#true help="Catégorie = service associé (titre exact d'un service, voir plugins.blog.categories_allowed de zensical.toml)"
 #USAGE flag "--publish" help="Crée l'article publié directement (sans draft: true)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 source .mise/lib/zensical.sh
 
 title="${usage_title:?titre requis}"
-category="${usage_category:-}"
+category="${usage_category:?catégorie requise, -c suivi du titre exact du service}"
 date="$(date +%Y-%m-%d)"
 
 # Slug : minuscules, sans accents, kebab-case
@@ -20,11 +20,19 @@ print(re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-"))
 
 # Catégories autorisées, lues dans zensical.toml
 allowed="$(toml_get zensical.toml plugins.blog.categories_allowed)"
-if [[ -n "$category" ]] && ! grep -qxF "$category" <<<"$allowed"; then
+if ! grep -qxF "$category" <<<"$allowed"; then
   echo "✘ Catégorie inconnue : '$category'" >&2
   echo "  Autorisées : $(paste -sd, - <<<"$allowed" | sed 's/,/, /g')" >&2
   exit 1
 fi
+
+# Ancre du service sur la page Services (« ## Titre { #ancre } »)
+anchor="$(python3 -c '
+import re, sys
+for t, a in re.findall(r"^## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read(), re.M):
+    if t == sys.argv[1]: print(a)
+' "$category")"
+[[ -n "$anchor" ]] || { echo "✘ Aucun service « $category » dans site/services.md" >&2; exit 1; }
 
 file="site/blog/posts/${date}-${slug}.md"
 [[ -e "$file" ]] && { echo "✘ Existe déjà : $file" >&2; exit 1; }
@@ -34,7 +42,8 @@ file="site/blog/posts/${date}-${slug}.md"
   echo "date: ${date}"
   echo "authors:"
   echo "  - jerome"
-  if [[ -n "$category" ]]; then echo "categories:"; echo "  - ${category}"; fi
+  echo "categories:"
+  echo "  - \"${category}\""
   echo "slug: ${slug}"
   echo "description: \"Résumé de l'article pour les moteurs de recherche (70 à 160 caractères).\""
   [[ "${usage_publish:-false}" == "true" ]] || echo "draft: true"
@@ -43,6 +52,9 @@ file="site/blog/posts/${date}-${slug}.md"
   echo "# ${title}"
   echo
   echo "Accroche de l'article (affichée dans la liste du blog)."
+  echo
+  echo "Catégorie : [${category}](../../services.md#${anchor})"
+  echo "{ .vt-post-service }"
   echo
   echo "<!-- more -->"
   echo

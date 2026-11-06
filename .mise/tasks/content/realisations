@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie les comptes-rendus de mission (site/realisations.md) : expertise principale liée à un service, durée, actions, bénéfice ; ni date ni nom de client"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - site/realisations.md site/services.md <<'PY'
+import os, re, sys
+
+text = open(sys.argv[1], encoding="utf-8").read()
+services = open(sys.argv[2], encoding="utf-8").read()
+anchors = set(re.findall(r"^## [^\n{]+\{ *#([\w-]+) *\}", services, re.M))
+
+# Noms à ne jamais publier (employeurs, clients) : lus dans vitrine-back/parcours.md, hors dépôt.
+# Sans ce fichier (clone public), seules les règles génériques s'appliquent.
+names = set()
+if os.path.exists("vitrine-back/parcours.md"):
+    parcours = open("vitrine-back/parcours.md", encoding="utf-8").read()
+    for h in re.findall(r"^### .+? — (.+?)(?: \(|$)", parcours, re.M):
+        names.update(x.strip() for x in re.split(r",\s*pour\s+", h))
+    names.update(n.strip() for n in re.findall(r"^\*\*([^*]+)\*\* :", parcours, re.M))
+
+bad = []
+if re.search(r"\b(19|20)\d{2}\b", re.sub(r"^---\n.*?\n---\n", "", text, flags=re.S)):
+    bad.append("une année apparaît : les comptes-rendus n'ont pas de date, seulement une durée")
+for n in sorted(names):
+    if n and re.search(re.escape(n), text, re.I):
+        bad.append(f"nom de client ou d'employeur cité ({n}) : désigner le client par son secteur")
+
+missions = re.findall(r'<section class="vt-mission" markdown>(.*?)</section>', text, re.S)
+if not missions:
+    bad.append("aucun compte-rendu <section class=\"vt-mission\" markdown> trouvé")
+for body in missions:
+    title = (re.search(r"^## (.+)$", body, re.M) or [None, "?"])[1]
+    m = re.search(r"\*\*Expertise principale\*\* : \[[^\]]+\]\(services\.md#([\w-]+)\)", body)
+    if not m:
+        bad.append(f"{title} : pas d'« Expertise principale » liée à un service")
+    elif m.group(1) not in anchors:
+        bad.append(f"{title} : l'ancre #{m.group(1)} n'existe pas dans services.md")
+    for label, rx in [("Durée", r"\*\*Durée\*\* : "), ("Actions menées", r"^Actions menées$"), ("Bénéfice client", r"^Bénéfice client$")]:
+        if not re.search(rx, body, re.M):
+            bad.append(f"{title} : rubrique « {label} » absente")
+
+for b in bad:
+    print(f"  ✘ {b}")
+if not bad:
+    print(f"  ✔ OK ({len(missions)} comptes-rendus, sans date ni nom de client)")
+sys.exit(1 if bad else 0)
+PY

@@ -1,6 +1,6 @@
 # Configuration du site public — Zensical (https://zensical.org), successeur de Material for MkDocs.
-# Navigation : voir docs/skills/site-navigation/SKILL.md
-# Look & feel : norme docs/skills/oxygen-ui-design-guidelines/SKILL.md, implémentation docs/skills/site-look-and-feel/SKILL.md
+# Navigation : voir vitrine-back/docs/skills/site-navigation/SKILL.md
+# Look & feel : norme vitrine-back/docs/skills/oxygen-ui-design-guidelines/SKILL.md, implémentation vitrine-back/docs/skills/site-look-and-feel/SKILL.md
 # Ne pas lancer `zensical` directement : passer par les tâches mise (`mise tasks`).
 
 [project]
@@ -28,7 +28,7 @@ extra_javascript = ["javascripts/expertises.js"]   # expertises : pas de saut de
 nav = [
   { "Accueil" = "index.md" },
   { "Services" = "services.md" },
-  { "Parcours" = "parcours.md" },
+  { "Réalisations" = "realisations.md" },
   { "Blog" = ["blog/index.md"] },
   { "Contact" = "contact.md" },
 ]
@@ -50,7 +50,7 @@ features = [
 
 [project.theme.font]
 text = "Inter"
-code = "Fira Code"   # typographie Oxygen UI (norme : docs/skills/oxygen-ui-design-guidelines)
+code = "Fira Code"   # typographie Oxygen UI (norme : vitrine-back/docs/skills/oxygen-ui-design-guidelines)
 
 [project.theme.icon]
 logo = "material/infinity"
@@ -131,15 +131,16 @@ post_readtime = true
 authors = false              # pas d'auteur ni d'avatar affichés : le site présente un service, pas une personne
 archive_name = "Archives"
 categories_name = "Catégories"
+# Une catégorie = un service (titre exact de site/services.md), dans l'ordre de la page Services
 categories_allowed = [
-  "Ansible",
-  "Network as Code",
-  "CI/CD",
-  "Python",
-  "Sécurité",
-  "Culture DevOps",
-  "IA",
-  "Freelance",
+  "Conformité du SI",
+  "Infrastructure as Code",
+  "Développement Python",
+  "IA générative maîtrisée",
+  "Continuous Delivery",
+  "Infrastructures à grande échelle",
+  "SRE : fiabilité & performance",
+  "Formation & documentation",
 ]
 
 [project.markdown_extensions]

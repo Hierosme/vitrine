@@ -11,7 +11,7 @@ for f in sorted(pathlib.Path(sys.argv[1]).rglob("*.md")):
     if re.search(r"^draft:\s*true", text, re.M):
         continue                                        # brouillon : non publié
     # Les commentaires HTML du Markdown sont recopiés tels quels dans le HTML publié :
-    # un TODO n'a donc sa place que dans le backlog privé (private/backlog.md).
+    # un TODO n'a donc sa place que dans le backlog privé (vitrine-back/backlog.md).
     for n, line in enumerate(text.splitlines(), 1):
         if "TODO" in line:
             print(f"  ✘ {f}:{n} : {line.strip()}"); bad += 1

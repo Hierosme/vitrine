@@ -23,13 +23,14 @@ sections = list(re.finditer(r"^## ([^\n{]+?) \{ *#[\w-]+ *\}\n(.*?)(?=^## |\Z)",
 if not sections:
     sys.exit(print("  ✘ aucun service détaillé trouvé dans site/services.md"))
 # Missions types : un service ne cite ni expérience (employeur, client, année) ni passé à la 1re personne.
-# Les noms viennent de site/parcours.md (titres « ### Poste — Entreprise, pour Client (années) »
-# et clients en gras « **Client** : … »), où les expériences ont leur place.
-parcours = open("site/parcours.md", encoding="utf-8").read()
+# Les noms viennent de vitrine-back/parcours.md, hors dépôt (titres « ### Poste — Entreprise, pour Client (années) »
+# et clients en gras « **Client** : … ») ; sans ce fichier (clone public), seules les règles génériques s'appliquent.
 names = set()
-for h in re.findall(r"^### .+? — (.+?)(?: \(|$)", parcours, re.M):
-    names.update(x.strip() for x in re.split(r",\s*pour\s+", h))
-names.update(n.strip() for n in re.findall(r"^\*\*([^*]+)\*\* :", parcours, re.M))
+if os.path.exists("vitrine-back/parcours.md"):
+    parcours = open("vitrine-back/parcours.md", encoding="utf-8").read()
+    for h in re.findall(r"^### .+? — (.+?)(?: \(|$)", parcours, re.M):
+        names.update(x.strip() for x in re.split(r",\s*pour\s+", h))
+    names.update(n.strip() for n in re.findall(r"^\*\*([^*]+)\*\* :", parcours, re.M))
 forbidden = [(n, re.compile(re.escape(n), re.I)) for n in names if n]
 forbidden += [("année", re.compile(r"\b(19|20)\d{2}\b")), ("« j'ai »", re.compile(r"\bj'ai\b", re.I))]
 

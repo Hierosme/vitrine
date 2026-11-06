@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Liste les TODO égarés dans le site et la configuration (le travail en attente vit dans private/backlog.md)"
+#MISE description="Liste les TODO égarés dans le site et la configuration (le travail en attente vit dans vitrine-back/backlog.md)"
 set -euo pipefail
 cd "${MISE_PROJECT_ROOT:-.}"
 
@@ -7,5 +7,5 @@ if grep -rn --color=auto 'TODO' site zensical.toml; then
   echo
   echo "$(grep -rc 'TODO' site zensical.toml | awk -F: '{s+=$2} END{print s}') TODO restant(s)."
 else
-  echo "✔ Aucun TODO dans les sources. Travail en attente : private/backlog.md (dépôt privé)."
+  echo "✔ Aucun TODO dans les sources. Travail en attente : vitrine-back/backlog.md (dépôt privé)."
 fi

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#MISE description="Vérifie que chaque article de blog est rattaché à un seul service (catégorie), renvoie vers son détail, et n'affiche pas de bloc de métadonnées dans « En bref »"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+python3 - <<'PY'
+import glob, re, sys
+services = dict(re.findall(r"^## ([^\n{]+?) \{ *#([\w-]+) *\}", open("site/services.md", encoding="utf-8").read(), re.M))
+bad, n = [], 0
+for f in sorted(glob.glob("site/blog/posts/*.md")):
+    n += 1
+    text = open(f, encoding="utf-8").read()
+    fm = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    block = re.search(r"^categories:\n((?:[ \t]+-.*\n?)+)", fm.group(1) + "\n", re.M) if fm else None
+    cats = [c.strip().strip('"\'') for c in re.findall(r"^[ \t]+-\s*(.+)$", block.group(1), re.M)] if block else []
+    if len(cats) != 1:
+        bad.append(f"{f} : une seule catégorie attendue (le service associé), trouvé {cats or 'aucune'}")
+        continue
+    if cats[0] not in services:
+        bad.append(f"{f} : catégorie « {cats[0]} » qui n'est pas un service de site/services.md")
+        continue
+    brief = re.search(r"^## En bref\n(.*?)(?=^## )", text, re.S | re.M)
+    if brief and (re.search(r'class="vt-tiles"', brief.group(1)) or re.search(r"\*\*(Type|Niveau|Public|Prérequis|Pratique|Versions testées)\*\*", brief.group(1))):
+        bad.append(f"{f} : « En bref » contient un bloc de métadonnées (Type, Niveau, Public, Prérequis…) : interdit")
+    for h in re.findall(r"^## (Cas analysé|Démonstration commentée|Exercices|Mises en situation|Auto-évaluation)\s*$", text, re.M):
+        bad.append(f"{f} : section « {h} » interdite (ni cas, ni exercices, ni auto-évaluation)")
+    link = f"](../../services.md#{services[cats[0]]})"
+    m = re.search(r"^Catégorie : \[[^\]]+\]\(\.\./\.\./services\.md#[\w-]+\)\n\{ \.vt-post-service \}$", text, re.M)
+    if not m or link not in m.group(0):
+        bad.append(f"{f} : ligne « Catégorie : [{cats[0]}]{link[1:]} » + {{ .vt-post-service }} absente ou incorrecte")
+for b in bad:
+    print(f"  ✘ {b}")
+if not bad:
+    print(f"  ✔ OK ({n} article(s), chacun rattaché à un service)")
+sys.exit(1 if bad else 0)
+PY

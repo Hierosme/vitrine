@@ -1,8 +1,8 @@
 /* ==========================================================================
    Design system de la vitrine — SOURCE DE VÉRITÉ du look & feel
-   Norme      : docs/skills/oxygen-ui-design-guidelines/SKILL.md (Oxygen UI × Nord)
-   Traduction : docs/skills/site-look-and-feel/SKILL.md (tokens, rôles, composants Zensical)
-   Pourquoi   : docs/explanation/design-system.md
+   Norme      : vitrine-back/docs/skills/oxygen-ui-design-guidelines/SKILL.md (Oxygen UI × Nord)
+   Traduction : vitrine-back/docs/skills/site-look-and-feel/SKILL.md (tokens, rôles, composants Zensical)
+   Pourquoi   : vitrine-back/docs/explanation/design-system.md
    Palette Nord fermée (16 couleurs + 3 dérivés AA), design plat (aucune ombre), rayon unique
    de 8px, typographie Oxygen UI (Inter, Fira Code), espacement sur une base de 8px.
    Aucune valeur littérale (couleur, rayon, ombre, taille de texte, durée) hors de la section TOKENS.
@@ -286,6 +286,9 @@
 /* Longueur de ligne du texte courant */
 .md-typeset > :is(p, ul, ol, dl, blockquote),
 .md-typeset .vt-timeline > :is(p, ul, ol) { max-width: var(--vt-measure); }
+/* Exception demandée par le propriétaire : texte en pleine largeur (paragraphe { .vt-full } ou <div class="vt-full" markdown>) */
+.md-typeset > p.vt-full,
+.md-typeset > .vt-full > :is(p, ul, ol) { max-width: none; }
 
 /* Liens soulignés : le sens n'est jamais porté par la seule couleur */
 .md-typeset a:not(.md-button):not(.headerlink):not(.vt-exp-item) {
@@ -593,6 +596,26 @@
   background: var(--vt-bg-paper);
   color: var(--vt-text-primary);
 }
+
+/* Compte-rendu de mission (page Réalisations) : <section class="vt-mission" markdown>, H2, lignes
+   { .vt-mission-meta } (expertise principale, durée, expertises associées), puis « Actions menées » et
+   « Bénéfice client » ({ .vt-exp-label }, { .vt-exp-checks }, { .vt-exp-lead } du composant Expertises).
+   Surface de niveau 1, comme un panneau d'expertise. */
+.vt-mission {
+  margin: var(--vt-spacing-3) 0;
+  padding: var(--vt-spacing-3);
+  border: var(--vt-border-width) solid var(--vt-divider);
+  border-radius: var(--vt-radius);
+  background-color: var(--vt-bg-paper);
+}
+.md-typeset .vt-mission h2 { margin-top: 0; }
+.md-typeset :is(.vt-mission-meta, .vt-post-service) {
+  margin: var(--vt-spacing-1) 0 0;
+  color: var(--vt-text-secondary);
+  font-size: var(--vt-type-body2-size);
+  line-height: var(--vt-type-body2-line);
+}
+.md-typeset :is(.vt-mission-meta, .vt-post-service) .twemoji { color: var(--vt-accent); }
 
 /* Frise chronologique : <div class="vt-timeline" markdown> autour des H3 d'expérience */
 .vt-timeline {
