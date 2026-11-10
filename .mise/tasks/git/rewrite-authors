@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#MISE description="Réécrit auteur et committer de tous les commits avec user.name et user.email actuels (git filter-repo)"
+#USAGE flag "-y --yes" help="Ne pas demander de confirmation"
+#USAGE flag "--strip-attribution" help="Retire aussi les lignes Co-Authored-By et Claude-Session des messages"
+set -euo pipefail
+cd "${MISE_PROJECT_ROOT:-.}"
+
+command -v git-filter-repo >/dev/null || {
+  echo "✘ git-filter-repo requis : brew install git-filter-repo (ou pip install git-filter-repo)" >&2; exit 1; }
+
+name="$(git config user.name || true)"
+email="$(git config user.email || true)"
+[[ -n "$name" && -n "$email" ]] || { echo "✘ user.name et user.email doivent être définis (git config)" >&2; exit 1; }
+
+# filter-repo termine par un « git reset --hard » : refuser tant qu'il reste du travail non commité
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "✘ Modifications non commitées : commitez ou mettez-les de côté (git stash -u) avant de réécrire l'historique." >&2
+  exit 1
+fi
+
+origin="$(git remote get-url origin 2>/dev/null || true)"
+echo "Identité appliquée à tous les commits (auteur, committer, tags) : $name <$email>"
+echo "Identités actuelles dans l'historique :"
+git log --all --format='  %an <%ae> | %cn <%ce>' | sort | uniq -c
+if [[ "${usage_yes:-false}" != "true" ]]; then
+  read -r -p "Réécrire tout l'historique ? Les signatures GPG seront perdues. [o/N] " answer
+  [[ "$answer" == "o" || "$answer" == "O" ]] || { echo "Abandon."; exit 1; }
+fi
+
+# Sauvegarde complète hors de l'historique (filter-repo réécrit toutes les branches, une branche de secours ne suffirait pas)
+mkdir -p .cache
+backup=".cache/avant-reecriture-$(date +%Y%m%d-%H%M%S).bundle"
+git bundle create "$backup" --all
+echo "✔ Sauvegarde : $backup (restaurer : git clone $backup)"
+
+# Valeurs passées par l'environnement : aucun souci d'accent ni d'apostrophe dans le nom
+export REWRITE_NAME="$name" REWRITE_EMAIL="$email"
+args=(--force
+  --name-callback  "import os; return os.environ['REWRITE_NAME'].encode('utf-8')"
+  --email-callback "import os; return os.environ['REWRITE_EMAIL'].encode('utf-8')")
+if [[ "${usage_strip_attribution:-false}" == "true" ]]; then
+  args+=(--message-callback "import re; return re.sub(rb'\n(Co-Authored-By|Claude-Session):[^\n]*', b'', message).rstrip() + b'\n'")
+fi
+git filter-repo "${args[@]}"
+
+# filter-repo retire « origin » par sécurité : on le remet tel qu'il était
+if [[ -n "$origin" ]] && ! git remote get-url origin >/dev/null 2>&1; then
+  git remote add origin "$origin"
+  echo "✔ Remote origin rétabli : $origin"
+fi
+
+echo "Identités après réécriture :"
+git log --all --format='  %an <%ae> | %cn <%ce>' | sort | uniq -c
+echo "Pour publier : git push --force-with-lease origin --all && git push --force origin --tags"
