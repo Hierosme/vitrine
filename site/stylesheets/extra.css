@@ -3,7 +3,7 @@
    Norme      : vitrine-back/docs/skills/oxygen-ui-design-guidelines/SKILL.md (Oxygen UI × Nord)
    Traduction : vitrine-back/docs/skills/site-look-and-feel/SKILL.md (tokens, rôles, composants Zensical)
    Pourquoi   : vitrine-back/docs/explanation/design-system.md
-   Palette Nord fermée (16 couleurs + 3 dérivés AA), design plat (aucune ombre), rayon unique
+   Palette fermée : Nord (16 couleurs + 3 dérivés AA) en clair, palette Neural Craft (5 couleurs + 4 dérivés) en sombre ; design plat (aucune ombre), rayon unique
    de 8px, typographie Oxygen UI (Inter, Fira Code), espacement sur une base de 8px.
    Aucune valeur littérale (couleur, rayon, ombre, taille de texte, durée) hors de la section TOKENS.
    ========================================================================== */
@@ -47,7 +47,7 @@
   --vt-border-width:  1px;
   --vt-accent-bar:    3px;      /* liseré de repère (intertitre) */
   --vt-callout-bar:   4px;      /* bordure gauche d'un encadré de mise en valeur */
-  --vt-gradient-band: 4px;      /* bande décorative du dégradé de marque (hero) */
+  --vt-hero-band:     4px;      /* bande décorative au-dessus du hero */
 
   /* 1.d Ombres — design plat : aucune ombre, nulle part */
   --vt-shadow-none: none;
@@ -102,6 +102,19 @@
 
   /* 1.j Points de rupture (MUI) — rappel, les variables CSS sont interdites dans @media :
          valeurs écrites dans la section 4. xs < 37.5em (600px) · sm 37.5em · md 56.25em (900px) */
+
+  /* 1.k Palette du thème sombre « Neural Craft » (choix de l'opérateur, remplace Polar Night et Frost en sombre).
+         Couleurs de marque, puis dérivés : surfaces = texte posé sur le fond à 6, 10 et 16 %,
+         texte secondaire = texte à 85 % sur le fond. */
+  --vt-nc-background: #19181f;
+  --vt-nc-text:       #a4a4a6;  /* 7.1:1 sur background */
+  --vt-nc-primary:    #8b7ae1;  /* liens, bouton principal, bande du hero : 5.0:1 sur background, 4.6:1 sur paper */
+  --vt-nc-secondary:  #b743f0;  /* réservée (aucun usage actuel : trop juste pour porter du texte on-state) */
+  --vt-nc-accent:     #2b7fff;  /* repères non textuels, focus, contours : 4.7:1 sur background */
+  --vt-nc-paper:          #212027;  /* niveau 1 */
+  --vt-nc-raised:         #27262c;  /* niveau 2 */
+  --vt-nc-divider:        #2f2e35;
+  --vt-nc-text-secondary: #8f8f92;  /* 4.6:1 sur raised */
 }
 
 /* ---------- 2. THÈMES (rôles de couleur) ---------- */
@@ -137,26 +150,26 @@
   --vt-code-border:    var(--vt-nord0);      /* invisible : le bloc sombre se détache seul */
 }
 
-/* Thème sombre — Polar Night : base nord0, surfaces nord1 puis nord2 */
+/* Thème sombre — palette Neural Craft (1.k) : base background, surfaces paper puis raised */
 [data-md-color-scheme="slate"] {
-  --vt-bg-default:      var(--vt-nord0);
-  --vt-bg-paper:        var(--vt-nord1);
-  --vt-bg-raised:       var(--vt-nord2);
-  --vt-text-primary:    var(--vt-nord6);
-  --vt-text-secondary:  var(--vt-nord4);
-  --vt-divider:         var(--vt-nord2);
-  --vt-field-border:    var(--vt-nord9);
-  --vt-action-hover:    var(--vt-nord1);
-  --vt-action-selected: var(--vt-nord2);
-  --vt-primary:          var(--vt-nord8);
-  --vt-primary-contrast: var(--vt-nord0);
-  --vt-accent:           var(--vt-nord8);
-  --vt-focus:            var(--vt-nord8);
+  --vt-bg-default:      var(--vt-nc-background);
+  --vt-bg-paper:        var(--vt-nc-paper);
+  --vt-bg-raised:       var(--vt-nc-raised);
+  --vt-text-primary:    var(--vt-nc-text);
+  --vt-text-secondary:  var(--vt-nc-text-secondary);
+  --vt-divider:         var(--vt-nc-divider);
+  --vt-field-border:    var(--vt-nc-accent);
+  --vt-action-hover:    var(--vt-nc-paper);
+  --vt-action-selected: var(--vt-nc-raised);
+  --vt-primary:          var(--vt-nc-primary);
+  --vt-primary-contrast: var(--vt-nc-background);
+  --vt-accent:           var(--vt-nc-accent);
+  --vt-focus:            var(--vt-nc-accent);
   --vt-error:      var(--vt-nord11);
   --vt-error-text: var(--vt-nord11-soft);
-  --vt-code-inline-bg: var(--vt-nord2);
-  --vt-code-inline-fg: var(--vt-nord6);
-  --vt-code-border:    var(--vt-nord2);      /* bloc nord0 sur page nord0 : séparé par une bordure */
+  --vt-code-inline-bg: var(--vt-nc-raised);
+  --vt-code-inline-fg: var(--vt-nc-text);
+  --vt-code-border:    var(--vt-nc-divider);  /* bloc nord0 sur page sombre : séparé par une bordure */
 }
 
 /* Rôles communs aux deux thèmes */
@@ -169,8 +182,9 @@
   --vt-highlight: var(--vt-nord7);
   --vt-on-state:  var(--vt-nord0);
 
-  /* Dégradé de marque : 1 par page (hero), décoratif uniquement, jamais de texte dessus */
-  --vt-gradient-primary: linear-gradient(90deg, var(--vt-nord9), var(--vt-nord10));
+  /* Bande du hero : 1 par page, couleur primary pleine (aucun dégradé), décorative, jamais de texte dessus.
+     Écrite en linear-gradient pour être dimensionnée par background-size. */
+  --vt-hero-band-fill: linear-gradient(var(--vt-primary), var(--vt-primary));
 
   /* Encadrés (articles) : couleur d'état selon le sens réel */
   --vt-admonition-info:     var(--vt-info);
@@ -263,6 +277,13 @@
   --md-code-hl-variable-color:      var(--vt-code-fg);
 }
 
+/* Thème sombre : rôles communs redéfinis (bloc placé après les rôles communs, même spécificité) */
+[data-md-color-scheme="slate"] {
+  --vt-info:      var(--vt-nc-accent);
+  --vt-highlight: var(--vt-nc-primary);   /* secondary (4.3:1) ne porte pas le texte on-state */
+  --vt-on-state:  var(--vt-nc-background);
+}
+
 /* ---------- 3. COMPOSANTS ---------- */
 
 /* Typographie de contenu : échelle Oxygen UI (corps body1, titres h1 à h4) */
@@ -298,7 +319,7 @@
 }
 .md-typeset a:not(.md-button):not(.headerlink):not(.vt-exp-item):hover { text-decoration-thickness: 2px; }
 
-/* Focus clavier toujours visible : anneau de 2px, nord10 (clair) / nord8 (sombre) */
+/* Focus clavier toujours visible : anneau de 2px, nord10 (clair) / accent Neural Craft (sombre) */
 :focus-visible,
 .md-typeset :is(a, summary, button, [tabindex]):is(:focus-visible, .focus-visible) {   /* le thème colore sinon le focus du contenu avec sa couleur d'accent */
   outline: var(--vt-focus-ring-width) solid var(--vt-focus);
@@ -389,7 +410,7 @@
 /* Hero de page d'accueil : <div class="vt-hero" markdown> puis <div class="vt-hero-text" markdown> (titre, accroche, boutons).
    Pas de portrait : le site met en avant un service, pas une personne.
    Ouvert (sans cadre ni fond) : il suit le thème et se détache par l'espace qui l'entoure, pas par un cadre.
-   Bande supérieure au dégradé de marque : décorative, aucun texte posé dessus. Mobile d'abord : colonne. */
+   Bande supérieure couleur primary (pleine, sans dégradé) : décorative, aucun texte posé dessus. Mobile d'abord : colonne. */
 .vt-hero {
   display: flex;
   flex-direction: column;
@@ -397,9 +418,9 @@
   gap: var(--vt-spacing-3);
   margin: 0 0 var(--vt-spacing-8);
   padding: var(--vt-spacing-5) 0 0;
-  background-image: var(--vt-gradient-primary);
+  background-image: var(--vt-hero-band-fill);
   background-repeat: no-repeat;
-  background-size: 100% var(--vt-gradient-band);
+  background-size: 100% var(--vt-hero-band);
   color: var(--vt-text-primary);
 }
 .vt-hero-text { flex: 1 1 auto; min-width: 0; }
@@ -418,8 +439,8 @@
 .md-typeset .vt-hero-logo .twemoji svg { width: 100%; max-height: none; }
 
 /* CTA de fin de page : <div class="vt-cta" data-md-color-scheme="slate" markdown>.
-   Section inversée : rôles du thème sombre (texte nord6, accent nord8, bouton nord8 + nord0),
-   surface de niveau 1 (nord1) + bordure divider pour rester distincte d'une page déjà sombre. */
+   Section inversée : rôles du thème sombre (palette Neural Craft, 1.k),
+   surface de niveau 1 (paper) + bordure divider pour rester distincte d'une page déjà sombre. */
 .vt-cta {
   border: var(--vt-border-width) solid var(--vt-divider);
   border-radius: var(--vt-radius);
