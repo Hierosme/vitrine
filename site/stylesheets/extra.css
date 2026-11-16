@@ -411,6 +411,11 @@
   line-height: var(--vt-type-subtitle1-line);
 }
 .vt-hero .md-button { margin-right: var(--vt-spacing-1); }
+/* Logo grand format à côté du cartouche texte : <div class="vt-hero-logo" aria-hidden="true" markdown="span">:neuralcraft-glider:</div>.
+   Décoratif (aria-hidden), couleur d'accent (repère non textuel), masqué en mobile (xs) pour garder le texte en tête. */
+.vt-hero-logo { display: none; flex: 0 0 auto; color: var(--vt-accent); line-height: 0; }
+.md-typeset .vt-hero-logo .twemoji { --md-icon-size: 9rem; width: var(--md-icon-size); height: var(--md-icon-size); }
+.md-typeset .vt-hero-logo .twemoji svg { width: 100%; max-height: none; }
 
 /* CTA de fin de page : <div class="vt-cta" data-md-color-scheme="slate" markdown>.
    Section inversée : rôles du thème sombre (texte nord6, accent nord8, bouton nord8 + nord0),
@@ -731,6 +736,14 @@
   [dir] .md-typeset .vt-tiles ul:has(> li:nth-child(4):last-child) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  /* Hero : texte et logo grand format côte à côte */
+  .vt-hero { flex-direction: row; align-items: center; gap: var(--vt-spacing-5); }
+  .vt-hero-logo { display: block; }
+}
+
+/* lg et plus (≥ 1200px) : logo du hero agrandi */
+@media screen and (min-width: 75em) {
+  .md-typeset .vt-hero-logo .twemoji { --md-icon-size: 12rem; }
 }
 
 /* md et plus (≥ 900px) : expertises en deux colonnes, un seul panneau visible */

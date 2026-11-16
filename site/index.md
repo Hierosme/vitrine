@@ -10,14 +10,16 @@ hide:
 
 <div class="vt-hero-text" markdown>
 
-# Infrastructures automatisées, livraisons fiables, IA maîtrisée
+# L'artisanat DevOps, augmenté par l'IA
 
-Automatisation Ansible et Python, Network as Code, livraison continue, agents de code IA et maîtrise des coûts de l'IA : des missions DevOps portées par plus de 25 ans d'expérience.
+Infrastructures automatisées, livraisons fiables et IA générative maîtrisée : plus de 25 ans de métier, au service de vos équipes et de vos objectifs.
 
 [Décrire mon projet](contact.md){ .md-button .md-button--primary }
 [Voir les services](services.md){ .md-button }
 
 </div>
+
+<div class="vt-hero-logo" aria-hidden="true" markdown="span">:neuralcraft-glider:</div>
 
 </div>
 

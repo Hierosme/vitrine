@@ -4,12 +4,12 @@
 # Ne pas lancer `zensical` directement : passer par les tâches mise (`mise tasks`).
 
 [project]
-site_name = "Jérôme Ornech"
+site_name = "Neural Craft"
 site_description = "Expert DevOps freelance — automatisation systèmes et réseaux (Ansible, Python), Network as Code, Continuous Delivery, agents de code IA et maîtrise des coûts de l'IA"
 site_author = "Jérôme Ornech"
 # Domaine de production. Sans effet sur l'aperçu local : les liens sont relatifs, seuls canonical,
 # sitemap, robots.txt, Open Graph et JSON-LD utilisent cette URL.
-site_url = "https://galaxie.eu.org/"
+site_url = "https://neuralcraft.page/"
 
 docs_dir = "site"    # sources du site
 site_dir = "build"   # sortie du build (≠ « site », déjà pris par les sources)
@@ -36,7 +36,7 @@ nav = [
 
 [project.theme]
 variant = "classic"        # rendu et classes CSS de Material for MkDocs, sur lesquels repose extra.css
-custom_dir = "overrides"   # SEO : balises Open Graph, JSON-LD, apple-touch-icon (overrides/main.html)
+custom_dir = "overrides"   # SEO : balises Open Graph, JSON-LD, apple-touch-icon (overrides/main.html) ; icône du logo (overrides/.icons/)
 language = "fr"
 favicon = "assets/images/favicon.svg"
 features = [
@@ -54,7 +54,7 @@ text = "Inter"
 code = "Fira Code"   # typographie Oxygen UI (norme : vitrine-back/docs/skills/oxygen-ui-design-guidelines)
 
 [project.theme.icon]
-logo = "material/infinity"
+logo = "neuralcraft/glider"   # overrides/.icons/neuralcraft/glider.svg : planeur du jeu de la vie en réseau (currentColor)
 
 # Thèmes Nord clair (default) / sombre (slate) : rôles de couleur définis dans site/stylesheets/extra.css
 # (une section inversée porte data-md-color-scheme="slate" dans le Markdown)
@@ -81,7 +81,7 @@ generator = false
 [project.extra.seo]
 job_title = "Expert DevOps freelance"
 image = "assets/images/apple-touch-icon.png"   # image de partage provisoire (logo) — voir backlog B-14
-image_alt = "Logo du site"
+image_alt = "Logo Neural Craft"
 locality = "Propriano"
 region = "Corse"
 country = "FR"
@@ -157,3 +157,4 @@ pymdownx.highlight.anchor_linenums = true
 pymdownx.inlinehilite = {}
 pymdownx.emoji.emoji_index = "zensical.extensions.emoji.twemoji"
 pymdownx.emoji.emoji_generator = "zensical.extensions.emoji.to_svg"
+pymdownx.emoji.options.custom_icons = ["overrides/.icons"]   # icônes du site en shortcode, ex. :neuralcraft-glider: (logo grand format du hero)
