@@ -45,4 +45,4 @@ Chaque production assistée est relue en détail, pas survolée :
 
 ## Contact
 
-Une question sur cette charte : [contact@galaxie.eu.org](mailto:contact@galaxie.eu.org).
+Une question sur cette charte : [contact@neuralcraft.page](mailto:contact@neuralcraft.page).

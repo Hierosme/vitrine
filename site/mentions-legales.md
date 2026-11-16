@@ -12,7 +12,7 @@ hide:
 
 Ce site est édité par **Jérôme Ornech**, consultant DevOps exerçant son activité en portage salarial.
 
-Contact : [contact@galaxie.eu.org](mailto:contact@galaxie.eu.org)
+Contact : [contact@neuralcraft.page](mailto:contact@neuralcraft.page)
 
 ## Société de portage
 

@@ -10,7 +10,7 @@ hide:
 
 Une mission d'automatisation, un besoin d'audit ou d'accompagnement ? Écrivez-moi : je travaille à distance depuis la Corse et me déplace ponctuellement sur site si la mission le demande, sur planification.
 
-[:material-email: contact@galaxie.eu.org](mailto:contact@galaxie.eu.org?subject=Projet%20DevOps){ .md-button .md-button--primary }
+[:material-email: contact@neuralcraft.page](mailto:contact@neuralcraft.page?subject=Projet%20DevOps){ .md-button .md-button--primary }
 [:fontawesome-brands-linkedin: LinkedIn](https://www.linkedin.com/in/j%C3%A9r%C3%B4me-ornech-5a6281356){ .md-button }
 [:fontawesome-brands-github: GitHub](https://github.com/Hierosme){ .md-button }
 

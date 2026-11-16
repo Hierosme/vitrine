@@ -112,7 +112,7 @@ name = "GitHub"
 
 [[project.extra.social]]
 icon = "material/email"
-link = "mailto:contact@galaxie.eu.org"
+link = "mailto:contact@neuralcraft.page"
 name = "Email"
 
 [project.plugins.search]
