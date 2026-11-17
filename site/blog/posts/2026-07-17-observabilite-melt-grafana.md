@@ -39,7 +39,7 @@ Pour aller vite :
 
 Une alerte de SLO se déclenche sur le service de paiement. L'équipe confirme la hausse des erreurs dans les métriques, cherche dans les journaux sans savoir quel service interroger, puis ouvre l'outil de traces, où rien ne relie une requête en erreur à ses journaux. Trois outils, trois requêtes, une heure de diagnostic, pour une cause qui tenait en une ligne de journal.
 
-Ce n'est pas un manque de données, c'est un manque de **liens**. MELT (*Metrics, Events, Logs, Traces*) nomme les quatre signaux d'une observabilité complète ; leur intérêt tient surtout à la possibilité de passer de l'un à l'autre. OpenTelemetry fournit le format commun de collecte, et la stack open source de Grafana Labs un stockage par signal avec une interface unique pour les corréler. C'est elle qui illustre cet article ; les concepts valent pour d'autres outils.
+Les données existaient ; il manquait les **liens** entre elles. MELT (*Metrics, Events, Logs, Traces*) nomme les quatre signaux d'une observabilité complète ; leur intérêt tient surtout à la possibilité de passer de l'un à l'autre. OpenTelemetry fournit le format commun de collecte, et la stack open source de Grafana Labs un stockage par signal avec une interface unique pour les corréler. C'est elle qui illustre cet article ; les concepts valent pour d'autres outils.
 
 ## Concepts clés
 
@@ -60,7 +60,7 @@ Des enregistrements horodatés, de préférence structurés. Loki n'indexe que q
 
 ### Traces
 
-Une trace suit une requête à travers les services, découpée en *spans* (opération, durée, statut, attributs) reliés par un `trace_id` ; Tempo les stocke, TraceQL les interroge. Elle donne la structure, qui appelle qui et combien de temps, là où un journal ne donne que des événements isolés. Le générateur de métriques de Tempo en tire des métriques RED (taux, erreurs, durée) et une carte des dépendances, sans instrumentation supplémentaire.
+Une trace suit une requête à travers les services, découpée en *spans* (opération, durée, statut, attributs) reliés par un `trace_id` ; Tempo les stocke, TraceQL les interroge. Elle donne la structure (qui appelle qui, et combien de temps), quand un journal ne livre que des événements isolés. Le générateur de métriques de Tempo en tire des métriques RED (taux, erreurs, durée) et une carte des dépendances, sans instrumentation supplémentaire.
 
 ### Corrélation
 

@@ -33,13 +33,13 @@ L'essentiel :
 
 1. Un SBOM décrit ce que contient **une version** ; Dependency-Track garde ces descriptions pour **tout le portefeuille** et les réanalyse quand une vulnérabilité est publiée.
 2. On génère le SBOM au build, on applique une barrière avant la livraison, et la surveillance continue prend le relais en exploitation.
-3. Le SBOM n'est pas une formalité de conformité : c'est la condition pour répondre vite, et le CRA en fait une obligation.
+3. Le SBOM sert d'abord à répondre vite à une vulnérabilité ; le CRA en fait en plus une obligation.
 
 ## Contexte
 
 Le 9 décembre 2021, la vulnérabilité Log4Shell (CVE-2021-44228) est rendue publique. Dans de nombreuses organisations, il faut des jours, parfois des semaines, pour savoir quelles applications embarquent `log4j-core`, directement ou par une dépendance de dépendance. Le 29 mars 2024, la porte dérobée insérée dans `xz-utils` (CVE-2024-3094) rappelle que la menace peut aussi venir d'un composant compromis en amont.
 
-Dans les deux cas, le problème n'est pas de corriger : c'est de **savoir**. Une application moderne assemble des centaines de composants tiers, et cette liste change à chaque build.
+Dans les deux cas, la correction attend une information que peu d'équipes ont sous la main : **savoir** quels produits sont touchés. Une application moderne assemble des centaines de composants tiers, et cette liste change à chaque build.
 
 Le cadre réglementaire suit. NIS2 range la sécurité de la chaîne d'approvisionnement parmi les mesures obligatoires de son article 21. Le **Cyber Resilience Act** impose aux fabricants de signaler les vulnérabilités activement exploitées à partir du **11 septembre 2026**, dans les 24 heures. Ses exigences essentielles, applicables au 11 décembre 2027, demandent d'établir une nomenclature logicielle « dans un format couramment utilisé et lisible par machine » couvrant au minimum les dépendances de premier niveau. Signaler en 24 heures suppose de savoir en quelques minutes ce que contient chaque produit livré. Cet article n'est pas un avis juridique.
 

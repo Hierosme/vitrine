@@ -73,7 +73,7 @@ Le taux de consommation (*burn rate*) compare la vitesse de dépense du budget �
 
 ### Politique de budget d'erreur
 
-Un document court, validé par le produit, le développement et l'exploitation, dit ce qui se passe quand le budget est épuisé : gel des fonctionnalités, priorité aux correctifs, post-mortem obligatoire au-delà d'un seuil. Ce n'est pas une sanction, mais la fin des arbitrages au cas par cas. Sans elle, un SLO reste un indicateur ; avec elle, il devient un outil de décision.
+Un document court, validé par le produit, le développement et l'exploitation, dit ce qui se passe quand le budget est épuisé : gel des fonctionnalités, priorité aux correctifs, post-mortem obligatoire au-delà d'un seuil. Elle tranche à l'avance les arbitrages qui, sinon, se rejouent à chaque incident. Sans elle, un SLO reste un indicateur ; avec elle, il devient un outil de décision.
 
 ## Référence rapide
 

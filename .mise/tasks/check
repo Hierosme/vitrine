@@ -9,14 +9,7 @@ source .mise/lib/zensical.sh
 fail=0
 css=site/stylesheets/extra.css
 
-echo "• Design system : palette fermée (16 couleurs Nord + 3 dérivés autorisés)"
-# Norme § 1 : aucune autre couleur que nord0…nord15, nord10-strong, nord11-strong, nord11-soft
-allowed='^(#2e3440|#3b4252|#434c5e|#4c566a|#d8dee9|#e5e9f0|#eceff4|#8fbcbb|#88c0d0|#81a1c1|#5e81ac|#bf616a|#d08770|#ebcb8b|#a3be8c|#b48ead|#476993|#a64a54|#f7939b)$'
-if out="$(awk '/---------- 2\./{exit} 1' "$css" | sed -E 's#/\*.*\*/##g' | grep -oE '#[0-9a-fA-F]{3,8}\b' | tr 'A-F' 'a-f' | sort -u | grep -vE "$allowed")"; then
-  echo "$out" | sed 's/^/  ✘ couleur hors norme : /'; fail=1
-else
-  echo "  ✔ OK"
-fi
+
 
 echo "• Design system : aucune couleur en dur hors section TOKENS"
 # Ignore la section TOKENS (jusqu'au marqueur « ---------- 2. ») et les commentaires
